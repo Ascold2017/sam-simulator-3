@@ -42,8 +42,7 @@ export const missionController = async (io, socket) => {
     });
 
     socket.on('stop_mission', async (payload) => {
-        // TODO
-
+        coreInstance.stopMission()
         socket.emit('mission_stopped', { success: true });
     });
 }
