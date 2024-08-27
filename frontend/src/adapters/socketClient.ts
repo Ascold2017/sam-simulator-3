@@ -5,7 +5,7 @@ class SocketClient {
 
   constructor(url: string) {
     this.socket = io(url, {
-      path: "/socket/game",
+      path: "/socket.io",
       transports: ["websocket"], // Указываем, что используем только WebSocket
     });
 

@@ -2,16 +2,38 @@ import { coreInstance } from "../config/coreInstance";
 import { AppDataSource } from "../config/dataSource";
 import { missionDto, radarDTO } from "../dto/mission.dto";
 import { Mission } from "../entities/mission.entity";
+import { MissionEnvironmentPayload, MissionStartedResponse, MissionStoppedResponse, StartMissionPayload } from "@shared/models/mission.model";
 
 /**
-
- * Controller to handle the start of a mission.
+ * Controller to handle the start and stop of a mission.
  * 
  * @param {Object} io - The Socket.IO server instance.
  * @param {Object} socket - The Socket.IO socket instance.
+ * 
+ * @event start_mission
+ * @param {Object} payload - The payload for starting a mission.
+ * @param {number} payload.missionId - The ID of the mission to start.
+ * 
+ * @event mission_started
+ * @param {Object} payload - The payload for mission started event.
+ * @param {boolean} payload.success - Indicates if the mission started successfully.
+ * @param {number} [payload.missionId] - The ID of the mission that was started.
+ * @param {string} [payload.message] - Error message if the mission did not start.
+ * 
+ * @event mission_environment
+ * @param {Object} payload - The payload for mission environment event.
+ * @param {Object} payload.map - The heightmap terrain data.
+ * @param {Array} payload.radars - The list of radars.
+ * 
+ * @event stop_mission
+ * @param {Object} payload - The payload for stopping a mission.
+ * 
+ * @event mission_stopped
+ * @param {Object} payload - The payload for mission stopped event.
+ * @param {boolean} payload.success - Indicates if the mission stopped successfully.
  */
 export const missionController = async (io, socket) => {
-    socket.on('start_mission', async (payload) => {
+    socket.on('start_mission', async (payload: StartMissionPayload) => {
         const { missionId } = payload;
         // Получаем данные миссии из базы данных
         try {
@@ -26,23 +48,27 @@ export const missionController = async (io, socket) => {
             if (missionData) {
                 // Вызываем метод startMission у coreInstance
                 coreInstance.startMission(parsedMissionData);
-                socket.emit('mission_started', { success: true, missionId });
+                socket.emit('mission_started', { success: true, missionId } as MissionStartedResponse);
+                const heightmapTerrain = coreInstance.getHeightmapTerrain();
                 socket.emit('mission_environment', {
-                    map: coreInstance.getHeightmapTerrain(),
+                    map: {
+                        data: heightmapTerrain.data,
+                        size: heightmapTerrain.elementSize
+                    },
                     radars: coreInstance.getRadars().map(radarDTO),
                     // cameras: coreInstance.getCameras()
-                })
+                } satisfies MissionEnvironmentPayload)
             } else {
-                socket.emit('mission_started', { success: false, message: 'Mission not found' });
+                socket.emit('mission_started', { success: false, message: 'Mission not found' } as MissionStartedResponse);
             }
         } catch (error) {
             console.error('Error starting mission:', error);
-            socket.emit('mission_started', { success: false, message: 'Error starting mission' });
+            socket.emit('mission_started', { success: false, message: 'Error starting mission' } as MissionStartedResponse);
         }
     });
 
     socket.on('stop_mission', async (payload) => {
         coreInstance.stopMission()
-        socket.emit('mission_stopped', { success: true });
+        socket.emit('mission_stopped', { success: true } as MissionStoppedResponse);
     });
 }

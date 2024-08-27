@@ -1,3 +1,4 @@
+import { RadarResponse } from "@shared/models/mission.model";
 import { MissionData, RadarDTO } from "../../core/app";
 import { Mission } from "../entities/mission.entity";
 
@@ -29,11 +30,12 @@ export const missionDto = (missionData: Mission): MissionData => ({
     })),
 })
 
-export const radarDTO = (radar: RadarDTO) => ({
-    id: radar.id,
-    position: radar.position,
-    type: radar.type,
-    minElevationAngle: radar.minElevationAngle,
-    maxElevationAngle: radar.maxElevationAngle,
-    maxDistance: radar.detectionRange,
+export const radarDTO = (radar: RadarDTO): RadarResponse => ({
+   id: radar.id,
+   position: radar.position,
+   type: radar.type,
+   minElevationAngle: radar.minElevationAngle,
+   maxElevationAngle: radar.maxElevationAngle,
+   detectionRange: radar.detectionRange,
+   isEnabled: radar.isEnabled,
 })
