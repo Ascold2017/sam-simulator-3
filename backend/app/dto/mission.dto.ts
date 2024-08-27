@@ -1,4 +1,4 @@
-import { MissionData } from "../../core/app";
+import { MissionData, RadarDTO } from "../../core/app";
 import { Mission } from "../entities/mission.entity";
 
 export const missionDto = (missionData: Mission): MissionData => ({
@@ -27,4 +27,13 @@ export const missionDto = (missionData: Mission): MissionData => ({
         azimuthAngle: camera.azimuthAngle,
         viewAngle: camera.viewAngle,
     })),
+})
+
+export const radarDTO = (radar: RadarDTO) => ({
+    id: radar.id,
+    position: radar.position,
+    type: radar.type,
+    minElevationAngle: radar.minElevationAngle,
+    maxElevationAngle: radar.maxElevationAngle,
+    maxDistance: radar.detectionRange,
 })

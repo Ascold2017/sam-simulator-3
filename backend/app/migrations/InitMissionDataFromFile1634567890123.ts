@@ -16,16 +16,16 @@ export class InitMissionDataFromFile1634567890123 implements MigrationInterface 
         const radarRepository = queryRunner.manager.getRepository(Radar);
         const cameraRepository = queryRunner.manager.getRepository(Camera);
 
-        const missionData = missionDataRepository.create({
+        const mission = missionDataRepository.create({
             name: data.name,
             map: data.map,
         });
-        await missionDataRepository.save(missionData);
+        await missionDataRepository.save(mission);
 
         for (const targetData of data.targets) {
             const target = targetRepository.create({
                 ...targetData,
-                missionData,
+                mission,
             });
             await targetRepository.save(target);
         }
@@ -33,7 +33,7 @@ export class InitMissionDataFromFile1634567890123 implements MigrationInterface 
         for (const radarData of data.radars) {
             const radar = radarRepository.create({
                 ...radarData,
-                missionData,
+                mission,
             });
             await radarRepository.save(radar);
         }
@@ -41,7 +41,7 @@ export class InitMissionDataFromFile1634567890123 implements MigrationInterface 
         for (const cameraData of data.cameras) {
             const camera = cameraRepository.create({
                 ...cameraData,
-                missionData,
+                mission,
             });
             await cameraRepository.save(camera);
         }

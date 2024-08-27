@@ -1,6 +1,6 @@
 import { coreInstance } from "../config/coreInstance";
 import { AppDataSource } from "../config/dataSource";
-import { missionDto } from "../dto/mission.dto";
+import { missionDto, radarDTO } from "../dto/mission.dto";
 import { Mission } from "../entities/mission.entity";
 
 /**
@@ -27,6 +27,11 @@ export const startMissionController = async (io, socket) => {
                 // Вызываем метод startMission у coreInstance
                 coreInstance.startMission(parsedMissionData);
                 socket.emit('mission_started', { success: true, missionId });
+                socket.emit('mission_environment', {
+                    map: coreInstance.getHeightmapTerrain(),
+                    radars: coreInstance.getRadars().map(radarDTO),
+                    // cameras: coreInstance.getCameras()
+                })
             } else {
                 socket.emit('mission_started', { success: false, message: 'Mission not found' });
             }
