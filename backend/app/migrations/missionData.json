@@ -850,26 +850,26 @@
       "name": "search-radar-0",
       "type": "search",
       "position": {
-        "x": 5,
-        "y": 10,
+        "x": 1500,
+        "y": 1200,
         "z": 15
       },
       "minElevationAngle": 0,
       "maxElevationAngle": 0.7853981633974483,
-      "maxDistance": 5000,
+      "maxDistance": 50000,
       "sweepSpeed": 0.5
     },
     {
       "name": "sector-radar-0",
       "type": "sector",
       "position": {
-        "x": 5,
-        "y": 20,
+        "x": 50000,
+        "y": 25000,
         "z": 5
       },
       "minElevationAngle": 0,
       "maxElevationAngle": 0.5235987755982988,
-      "maxDistance": 4000,
+      "maxDistance": 40000,
       "viewAngle": 0.5235987755982988
     }
   ],
