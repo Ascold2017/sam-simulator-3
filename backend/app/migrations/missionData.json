@@ -1,0 +1,57 @@
+{
+  "name": "test-mission",
+    "map": {
+      "size": 100,
+      "data": []
+    },
+    "targets": [
+      {
+        "name": "target-1",
+        "rcs": 0.5,
+        "temperature": 50,
+        "size": 2,
+        "waypoints": [
+          { "position": { "x": 0, "y": 0, "z": 100 }, "speed": 200 },
+          { "position": { "x": 200, "y": -100, "z": 100 }, "speed": 170 },
+          { "position": { "x": 400, "y": 100, "z": 100 }, "speed": 170 },
+          { "position": { "x": 600, "y": -200, "z": 100 }, "speed": 170 },
+          { "position": { "x": 800, "y": 0, "z": 100 }, "speed": 170 },
+          { "position": { "x": 1000, "y": -300, "z": 100 }, "speed": 170 },
+          { "position": { "x": 1200, "y": 300, "z": 100 }, "speed": 170 },
+          { "position": { "x": 1500, "y": 0, "z": 100 }, "speed": 170 },
+          { "position": { "x": 2000, "y": 1000, "z": 100 }, "speed": 150 }
+        ]
+      }
+    ],
+    "radars": [
+      {
+        "name": "search-radar-0",
+        "type": "search",
+        "position": { "x": 5, "y": 10, "z": 15 },
+        "minElevationAngle": 0,
+        "maxElevationAngle": 0.7853981633974483,
+        "maxDistance": 5000,
+        "sweepSpeed": 0.5
+      },
+      {
+        "name": "sector-radar-0",
+        "type": "sector",
+        "position": { "x": 5, "y": 20, "z": 5 },
+        "minElevationAngle": 0,
+        "maxElevationAngle": 0.5235987755982988,
+        "maxDistance": 4000,
+        "viewAngle": 0.5235987755982988
+      }
+    ],
+    "cameras": [
+      {
+        "name": "tv-camera-1",
+        "type": "tv",
+        "position": { "x": 2, "y": 7, "z": 7 },
+        "minElevationAngle": -0.5235987755982988,
+        "maxElevationAngle": 0.5235987755982988,
+        "azimuthAngle": 0.7853981633974483,
+        "viewAngle": 1.0471975511965976
+      }
+    ]
+  }
