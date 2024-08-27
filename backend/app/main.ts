@@ -1,8 +1,10 @@
 import "reflect-metadata";
 import express from "express";
+import { Server } from 'socket.io';
 import http from "http";
 import cors from "cors";
 import { AppDataSource } from "./config/dataSource";
+import { startMissionController } from "./controllers/mission.controller";
 
 
 const app = express();
@@ -15,6 +17,14 @@ app.use(cors());
 (async () => {
     await AppDataSource.initialize();
     await AppDataSource.runMigrations();
+    const io = new Server(server);
+
+    io.on('connection', (socket) => {
+        console.log('a user connected');
+        
+        // Подключаем обработчики событий
+        startMissionController(io, socket);
+    });
     server.listen(port, () => {
         console.log(`Server is running on port ${port}`);
     });
