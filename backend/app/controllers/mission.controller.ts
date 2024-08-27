@@ -41,3 +41,12 @@ export const startMissionController = async (io, socket) => {
         }
     });
 }
+
+
+export const stopMissionController = async (io, socket) => {
+    socket.on('stop_mission', async (payload) => {
+        // TODO
+
+        socket.emit('mission_stopped', { success: true });
+    });
+}
