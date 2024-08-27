@@ -10,7 +10,7 @@ import { Mission } from "../entities/mission.entity";
  * @param {Object} io - The Socket.IO server instance.
  * @param {Object} socket - The Socket.IO socket instance.
  */
-export const startMissionController = async (io, socket) => {
+export const missionController = async (io, socket) => {
     socket.on('start_mission', async (payload) => {
         const { missionId } = payload;
         // Получаем данные миссии из базы данных
@@ -40,10 +40,7 @@ export const startMissionController = async (io, socket) => {
             socket.emit('mission_started', { success: false, message: 'Error starting mission' });
         }
     });
-}
 
-
-export const stopMissionController = async (io, socket) => {
     socket.on('stop_mission', async (payload) => {
         // TODO
 

@@ -4,8 +4,8 @@ import { Server } from 'socket.io';
 import http from "http";
 import cors from "cors";
 import { AppDataSource } from "./config/dataSource";
-import { startMissionController, stopMissionController } from "./controllers/mission.controller";
-import { coreInstance } from "./config/coreInstance";
+import { missionController } from "./controllers/mission.controller";
+import { radarController } from "./controllers/radars.controller";
 
 
 const app = express();
@@ -24,8 +24,8 @@ app.use(cors());
         console.log('a user connected');
         
         // Подключаем обработчики событий
-        startMissionController(io, socket);
-        stopMissionController(io, socket);
+        missionController(io, socket);
+        radarController(io, socket)
     });
 
     server.listen(port, () => {
