@@ -9,6 +9,6 @@
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true
     },
-    "include": ["src", "core"],
+    "include": ["app", "core"],
     "exclude": ["node_modules"]
   }
