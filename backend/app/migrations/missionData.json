@@ -844,48 +844,5 @@
         }
       ]
     }
-  ],
-  "radars": [
-    {
-      "name": "search-radar-0",
-      "type": "search",
-      "position": {
-        "x": 1500,
-        "y": 1200,
-        "z": 15
-      },
-      "minElevationAngle": 0,
-      "maxElevationAngle": 0.7853981633974483,
-      "maxDistance": 50000,
-      "sweepSpeed": 0.5
-    },
-    {
-      "name": "sector-radar-0",
-      "type": "sector",
-      "position": {
-        "x": 50000,
-        "y": 25000,
-        "z": 5
-      },
-      "minElevationAngle": 0,
-      "maxElevationAngle": 0.5235987755982988,
-      "maxDistance": 40000,
-      "viewAngle": 0.5235987755982988
-    }
-  ],
-  "cameras": [
-    {
-      "name": "tv-camera-1",
-      "type": "tv",
-      "position": {
-        "x": 2,
-        "y": 7,
-        "z": 7
-      },
-      "minElevationAngle": -0.5235987755982988,
-      "maxElevationAngle": 0.5235987755982988,
-      "azimuthAngle": 0.7853981633974483,
-      "viewAngle": 1.0471975511965976
-    }
   ]
 }

@@ -1,6 +1,6 @@
 import { coreInstance } from "../config/coreInstance";
 import { AppDataSource } from "../config/dataSource";
-import { missionDto, radarDTO } from "../dto/mission.dto";
+import { missionDto } from "../dto/mission.dto";
 import { Mission } from "../entities/mission.entity";
 import { MissionEnvironmentPayload, MissionStartedResponse, MissionStoppedResponse, StartMissionPayload } from "@shared/models/mission.model";
 
@@ -23,7 +23,6 @@ import { MissionEnvironmentPayload, MissionStartedResponse, MissionStoppedRespon
  * @event mission_environment
  * @param {Object} payload - The payload for mission environment event.
  * @param {Object} payload.map - The heightmap terrain data.
- * @param {Array} payload.radars - The list of radars.
  * 
  * @event stop_mission
  * @param {Object} payload - The payload for stopping a mission.
@@ -41,7 +40,7 @@ export const missionController = async (io, socket) => {
                 where: {
                     id: missionId
                 },
-                relations: ['targets', 'radars', 'cameras']
+                relations: ['targets']
             })
 
             const parsedMissionData = missionDto(missionData)
@@ -55,8 +54,6 @@ export const missionController = async (io, socket) => {
                         data: heightmapTerrain.data,
                         size: heightmapTerrain.elementSize
                     },
-                    radars: coreInstance.getRadars().map(radarDTO),
-                    // cameras: coreInstance.getCameras()
                 } satisfies MissionEnvironmentPayload)
             } else {
                 socket.emit('mission_started', { success: false, message: 'Mission not found' } as MissionStartedResponse);

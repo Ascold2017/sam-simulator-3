@@ -6,7 +6,6 @@ import { ref } from "vue";
 
 export const useMissionStore = defineStore('mission', () => {
     const router = useRouter();
-    const radars = ref<MissionEnvironmentPayload['radars']>([]);
     const map = ref<MissionEnvironmentPayload['map']>({ size: 0, data: [] });
     const isInitialized = ref(false);
 
@@ -24,7 +23,6 @@ export const useMissionStore = defineStore('mission', () => {
 
     socketClient.listenToEvent<MissionEnvironmentPayload>('mission_environment', (data) => {
         console.log(data);
-        radars.value = data.radars;
         map.value = data.map;
         isInitialized.value = true;
     })
@@ -33,7 +31,6 @@ export const useMissionStore = defineStore('mission', () => {
     return {
         startMission,
         isInitialized,
-        radars,
         map
     }
 });

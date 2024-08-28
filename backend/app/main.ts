@@ -5,7 +5,6 @@ import http from "http";
 import cors from "cors";
 import { AppDataSource } from "./config/dataSource";
 import { missionController } from "./controllers/mission.controller";
-import { radarController } from "./controllers/radars.controller";
 
 
 const app = express();
@@ -25,7 +24,6 @@ app.use(cors());
         
         // Подключаем обработчики событий
         missionController(io, socket);
-        radarController(io, socket)
     });
 
     server.listen(port, () => {

@@ -1,14 +1,13 @@
 <template>
     <div class="main-screen">
         <div class="main-screen__canvas-container">
-            <Display :radars="missionStore.radars" />
+            <h1>Main screen</h1>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { useMissionStore } from '../../stores/mission';
-import Display from './components/Display.vue'
 const missionStore = useMissionStore();
 </script>
 

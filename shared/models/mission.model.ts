@@ -1,4 +1,4 @@
-import type { MapData, Position, RadarDTO } from "../../backend/core/app";
+import type { MapData, Position } from "../../backend/core/app";
 
 export interface StartMissionPayload {
     missionId: number;
@@ -22,7 +22,6 @@ export interface RadarResponse {
 
 export interface MissionEnvironmentPayload {
     map: MapData
-    radars: RadarResponse[];
 }
 
 export interface StopMissionPayload {}

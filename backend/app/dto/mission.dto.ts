@@ -1,5 +1,4 @@
-import { RadarResponse } from "@shared/models/mission.model";
-import { MissionData, RadarDTO } from "../../core/app";
+import { MissionData } from "../../core/app";
 import { Mission } from "../entities/mission.entity";
 
 export const missionDto = (missionData: Mission): MissionData => ({
@@ -11,31 +10,4 @@ export const missionDto = (missionData: Mission): MissionData => ({
         size: target.size,
         waypoints: target.waypoints,
     })),
-    radars: missionData.radars.map(radar => ({
-        id: radar.name,
-        position: radar.position,
-        type: radar.type,
-        minElevationAngle: radar.minElevationAngle,
-        maxElevationAngle: radar.maxElevationAngle,
-        maxDistance: radar.maxDistance,
-    })),
-    cameras: missionData.cameras.map(camera => ({
-        id: camera.name,
-        position: camera.position,
-        type: camera.type,
-        minElevationAngle: camera.minElevationAngle,
-        maxElevationAngle: camera.maxElevationAngle,
-        azimuthAngle: camera.azimuthAngle,
-        viewAngle: camera.viewAngle,
-    })),
-})
-
-export const radarDTO = (radar: RadarDTO): RadarResponse => ({
-   id: radar.id,
-   position: radar.position,
-   type: radar.type,
-   minElevationAngle: radar.minElevationAngle,
-   maxElevationAngle: radar.maxElevationAngle,
-   detectionRange: radar.detectionRange,
-   isEnabled: radar.isEnabled,
 })
