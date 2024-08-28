@@ -32,6 +32,24 @@ import { MissionEnvironmentPayload, MissionStartedResponse, MissionStoppedRespon
  * @param {boolean} payload.success - Indicates if the mission stopped successfully.
  */
 export const missionController = async (io, socket) => {
+    socket.on('restore_mission', async (payload: StartMissionPayload) => {
+        const { missionId } = payload;
+        if (!coreInstance.engineIsStarted) {
+            socket.emit('mission_started', { success: false, message: 'Mission not found' } as MissionStartedResponse);
+            return;
+        };
+
+        socket.emit('mission_started', { success: true, missionId } as MissionStartedResponse);
+        const heightmapTerrain = coreInstance.getHeightmapTerrain();
+        socket.emit('mission_environment', {
+            map: {
+                data: heightmapTerrain.data,
+                size: heightmapTerrain.elementSize
+            },
+        } satisfies MissionEnvironmentPayload)
+
+    });
+
     socket.on('start_mission', async (payload: StartMissionPayload) => {
         const { missionId } = payload;
         // Получаем данные миссии из базы данных

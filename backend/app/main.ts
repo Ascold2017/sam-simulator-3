@@ -5,6 +5,7 @@ import http from "http";
 import cors from "cors";
 import { AppDataSource } from "./config/dataSource";
 import { missionController } from "./controllers/mission.controller";
+import { coreInstance } from "./config/coreInstance";
 
 
 const app = express();
@@ -25,6 +26,10 @@ app.use(cors());
         // Подключаем обработчики событий
         missionController(io, socket);
     });
+
+    coreInstance.updateListener = () => {
+        io.emit('flight_objects_update', coreInstance.getFlightObjects());
+    }
 
     server.listen(port, () => {
         console.log(`Server is running on port ${port}`);

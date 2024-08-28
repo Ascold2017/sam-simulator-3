@@ -1,4 +1,4 @@
-import type { MapData, Position } from "../../backend/core/app";
+import type { FlightObjectDTO, MapData, Position } from "../../backend/core/app";
 
 export interface StartMissionPayload {
     missionId: number;
@@ -29,3 +29,5 @@ export interface StopMissionPayload {}
 export interface MissionStoppedResponse {
     success: boolean;
 }
+
+export type FlightObjectsUpdateResponse = FlightObjectDTO[]
