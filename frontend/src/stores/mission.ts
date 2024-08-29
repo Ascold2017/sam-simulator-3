@@ -59,6 +59,7 @@ export const useMissionStore = defineStore('mission', () => {
         startMission,
         stopMission,
         isInitialized,
-        map
+        map,
+        flightObjects
     }
 });
