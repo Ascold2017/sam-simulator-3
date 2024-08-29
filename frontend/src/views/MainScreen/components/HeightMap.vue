@@ -1,6 +1,7 @@
 <template>
-    <TresMesh ref="terrainMesh">
-        <TresPlaneGeometry :width="map.size * map.data.length" :height="map.size * map.data[0]?.length || 0" />
+    <TresAxesHelper />
+    <TresMesh ref="terrainMesh" name="heightMap">
+        <TresPlaneGeometry :args="planeGeometryArgs" />
         <TresMeshStandardMaterial color="green" />
     </TresMesh>
 </template>
@@ -9,12 +10,20 @@
 import { storeToRefs } from 'pinia';
 import { useMissionStore } from '../../../stores/mission';
 import * as THREE from 'three';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import _ from 'lodash'
 
 const missionStore = useMissionStore();
 const { map } = storeToRefs(missionStore);
 
 const terrainMesh = ref<THREE.Mesh | null>(null);
+
+const planeGeometryArgs = computed(() => [
+  map.value.size * map.value.data.length,
+  map.value.size * _.get(map.value.data, '[0].length', 0),
+  map.value.data.length - 1,
+  _.get(map.value.data, '[0].length', 0) - 1
+]);
 
 const createHeightmap = () => {
     if (!terrainMesh.value) return;
@@ -34,5 +43,5 @@ const createHeightmap = () => {
 };
 
 
-watch(map, () => createHeightmap())
+watch(map, () => createHeightmap(), { deep: true })
 </script>
