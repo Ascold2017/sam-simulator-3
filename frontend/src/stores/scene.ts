@@ -1,18 +1,21 @@
-import { defineStore } from 'pinia';
+import { defineStore, storeToRefs } from 'pinia';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.js';
 import { computed, ref, watch } from 'vue';
 import { useMissionStore } from './mission';
 import { FlightObjectsUpdateResponse } from '../../../shared/models/mission.model';
 
 export const useSceneStore = defineStore('scene', () => {
     const missionStore = useMissionStore();
+    const { isInitialized, map } = storeToRefs(missionStore)
 
     let scene: THREE.Scene | null = null;
     let camera: THREE.PerspectiveCamera | null = null;
     let renderer: THREE.WebGLRenderer | null = null;
-    let controls: OrbitControls | null = null;
+    let controls: FirstPersonControls | null = null;
+    const clock = new THREE.Clock();
 
+    const isSceneInitializaed = ref(false);
     const currentFlightObjects = ref<Set<string>>(new Set());
     const smokeParticles = ref<Map<string, THREE.Points>>(new Map());
 
@@ -27,7 +30,6 @@ export const useSceneStore = defineStore('scene', () => {
         scene.background = new THREE.Color(0x87CEEB); // Светло-голубой цвет
 
         const gridHelper = new THREE.GridHelper();
-        gridHelper.rotateX(Math.PI / 2);
         scene.add(gridHelper);
 
         // Создание камеры
@@ -37,36 +39,36 @@ export const useSceneStore = defineStore('scene', () => {
             0.1,
             10000,
         );
-        camera.position.set(0, -500, 300);
-        camera.up.set(0, 0, 1);
-        camera.lookAt(0, 0, 0);
-
+        camera.position.set(0, 25, 0);
+        camera.lookAt(1, 25, 0);
         // Настройка рендерера
         renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(container.clientWidth, container.clientHeight);
         container.appendChild(renderer.domElement);
 
         // Настройка OrbitControls
-        controls = new OrbitControls(camera, renderer.domElement);
-        controls.listenToKeyEvents(window);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
-        controls.screenSpacePanning = false;
-        controls.minDistance = 100;
-        controls.maxDistance = 1000;
-        controls.maxPolarAngle = Math.PI / 2;
+        controls = new FirstPersonControls(camera, renderer.domElement);
+        // Установка оси вращения
+        controls.lookVertical = true; // Включаем вертикальный взгляд
+        controls.verticalMin = Math.PI / 4;
+        controls.verticalMax = Math.PI / 2
+        controls.constrainVertical = true; // Ограничиваем вертикальное вращение
+        controls.movementSpeed = 0;
+        controls.lookSpeed = 0.2;
 
         // Добавление освещения
         addLighting();
 
+        isSceneInitializaed.value = true;
         animate();
     }
 
     function updateScene() {
         if (renderer && scene && camera) {
             renderer.render(scene, camera);
-            controls?.update();
+            controls?.update(clock.getDelta());
             updateSmokeTrails();
+
         }
     }
 
@@ -152,11 +154,13 @@ export const useSceneStore = defineStore('scene', () => {
             data[0].length - 1,
         );
 
+        terrainGeometry.rotateX( - Math.PI / 2 );
+
         const positionAttribute = terrainGeometry.attributes.position;
         for (let i = 0; i < positionAttribute.count; i++) {
             const x = i % data.length;
             const y = Math.floor(i / data.length);
-            positionAttribute.setZ(i, data[y][x] / 10);
+            positionAttribute.setY(i, data[y][x] / 10);
         }
 
         positionAttribute.needsUpdate = true;
@@ -215,16 +219,16 @@ export const useSceneStore = defineStore('scene', () => {
 
     function updateFlightObjects() {
         const flightObjects = missionStore.flightObjects;
-        const existingMeshes = scene!.children.filter((obj) =>
+        const existingMeshes = scene?.children.filter((obj) =>
             currentFlightObjects.value.has(obj.name),
-        );
+        ) || [];
 
         // Обновление или добавление объектов
         flightObjects.forEach((flightObject) => {
-            let mesh = scene!.getObjectByName(flightObject.id);
+            let mesh = scene?.getObjectByName(flightObject.id);
             if (!mesh) {
                 mesh = createMeshForFlightObject(flightObject);
-                scene!.add(mesh);
+                scene?.add(mesh);
                 currentFlightObjects.value.add(flightObject.id);
             } else {
                 mesh.position.set(
@@ -248,7 +252,7 @@ export const useSceneStore = defineStore('scene', () => {
         existingMeshes.forEach((mesh) => {
             const objectExists = flightObjects.some((obj) => obj.id === mesh.name);
             if (!objectExists) {
-                scene!.remove(mesh);
+                scene?.remove(mesh);
                 currentFlightObjects.value.delete(mesh.name);
             }
         });
@@ -269,16 +273,22 @@ export const useSceneStore = defineStore('scene', () => {
         controls = null;
         currentFlightObjects.value.clear();
         smokeParticles.value.clear();
+        isSceneInitializaed.value = false;
     }
 
-    watch(computed(() => missionStore.map), (v) => {
-        addHeightmapTerrain()
+    watch([isInitialized, map, isSceneInitializaed], () => {
+        if (isInitialized.value && isSceneInitializaed.value) {
+            addHeightmapTerrain()
+        }
+    })
+
+    watch(computed(() => missionStore.flightObjects), () => {
+        scene &&
+            updateFlightObjects()
     })
 
     return {
         initializeScene,
-        addHeightmapTerrain,
-        updateFlightObjects,
         $reset
     };
 });

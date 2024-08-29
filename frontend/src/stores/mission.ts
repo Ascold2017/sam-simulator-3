@@ -19,7 +19,7 @@ export const useMissionStore = defineStore('mission', () => {
             localStorage.setItem('missionId', data.missionId!.toString())
             router.push({ name: 'main', params: { id: data.missionId } });
         } else {
-            router.push({ name: 'error', query: { message: data.message } });
+            router.push({ name: 'start', query: { message: data.message } });
         }
     })
 

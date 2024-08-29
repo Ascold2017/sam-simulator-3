@@ -1,4 +1,10 @@
 <template>
+    <div class="main-screen__header">
+        <h1 class="text-xl">Mission Control</h1>
+        <button class="btn-stop-mission" @click="missionStore.stopMission">
+            Stop Mission
+        </button>
+    </div>
     <div class="main-screen" style="height: 100%;">
 
     </div>
@@ -9,7 +15,9 @@
 import { onUnmounted } from 'vue';
 import { useSceneStore } from '../../stores/scene';
 import { onMounted } from 'vue';
+import { useMissionStore } from '../../stores/mission';
 
+const missionStore = useMissionStore()
 const scene = useSceneStore()
 
 onMounted(() => {
@@ -20,3 +28,13 @@ onUnmounted(() => {
     scene.$reset();
 })
 </script>
+
+<style>
+.main-screen__header {
+    @apply fixed top-0 left-0 w-full bg-gray-800 text-white p-4 flex justify-between items-center;
+}
+
+.btn-stop-mission {
+    @apply bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded;
+}
+</style>
