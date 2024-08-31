@@ -18,10 +18,17 @@ app.use(cors());
 (async () => {
     await AppDataSource.initialize();
     await AppDataSource.runMigrations();
-    const io = new Server(server);
+    const io = new Server(server, {
+        cors: {
+            origin: "*", // Разрешить все домены
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Разрешенные методы
+    allowedHeaders: ["*"], // Разрешенные заголовки
+    credentials: true // Разрешить отправку учетных данных
+        }
+    });
 
     io.on('connection', (socket) => {
-        console.log('a user connected');
+        console.log('a user connected', socket);
         
         // Подключаем обработчики событий
         missionController(io, socket);

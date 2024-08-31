@@ -8,7 +8,7 @@ class SocketClient {
       path: "/socket.io",
       transports: ["websocket"], // Указываем, что используем только WebSocket
     });
-
+    
 
     window.addEventListener("beforeunload", () => this.disconnect());
   }

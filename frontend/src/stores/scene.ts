@@ -17,7 +17,7 @@ export const useSceneStore = defineStore('scene', () => {
 
     const isSceneInitializaed = ref(false);
     const currentFlightObjects = ref<Set<string>>(new Set());
-    const smokeParticles = ref<Map<string, THREE.Points>>(new Map());
+    const smokeParticles = new Map<string, THREE.Points>();
 
     function initializeScene(containerSelector: string) {
         const container = document.querySelector(containerSelector);
@@ -29,9 +29,6 @@ export const useSceneStore = defineStore('scene', () => {
         scene = new THREE.Scene();
         scene.background = new THREE.Color(0x87CEEB); // Светло-голубой цвет
 
-        const gridHelper = new THREE.GridHelper();
-        scene.add(gridHelper);
-
         // Создание камеры
         camera = new THREE.PerspectiveCamera(
             75,
@@ -41,8 +38,9 @@ export const useSceneStore = defineStore('scene', () => {
         );
         camera.position.set(0, 25, 0);
         camera.lookAt(1, 25, 0);
+        camera.layers.enableAll()
         // Настройка рендерера
-        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(container.clientWidth, container.clientHeight);
         container.appendChild(renderer.domElement);
 
@@ -50,7 +48,7 @@ export const useSceneStore = defineStore('scene', () => {
         controls = new FirstPersonControls(camera, renderer.domElement);
         // Установка оси вращения
         controls.lookVertical = true; // Включаем вертикальный взгляд
-        controls.verticalMin = Math.PI / 4;
+        controls.verticalMin = Math.PI / 6;
         controls.verticalMax = Math.PI / 2
         controls.constrainVertical = true; // Ограничиваем вертикальное вращение
         controls.movementSpeed = 0;
@@ -80,7 +78,7 @@ export const useSceneStore = defineStore('scene', () => {
         scene.add(ambientLight);
 
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-        directionalLight.position.set(50, 50, 500).normalize();
+        directionalLight.position.set(50, 500, 50).normalize();
         directionalLight.lookAt(0, 0, 0);
         scene.add(directionalLight);
 
@@ -154,7 +152,7 @@ export const useSceneStore = defineStore('scene', () => {
             data.length - 1, data[0].length - 1
         );
 
-         // Модифицируем вершины геометрии на основе матрицы высот
+        // Модифицируем вершины геометрии на основе матрицы высот
         for (let i = 0; i < data.length; i++) {
             for (let j = 0; j < data[i].length; j++) {
                 const vertexIndex = i * data[i].length + j;
@@ -187,31 +185,36 @@ export const useSceneStore = defineStore('scene', () => {
         return mesh;
     }
 
-    function addSmokeTrail(missileId: string, missileMesh: THREE.Mesh) {
+    function addSmokeTrail(entityId: string, entityMesh: THREE.Mesh) {
         const particleCount = 100;
         const particlesGeometry = new THREE.BufferGeometry();
         const positions = new Float32Array(particleCount * 3);
 
+        for (let i = 0; i < particleCount; i++) {
+            positions[i * 3] = entityMesh.position.x + i * 0.1; // Убедитесь, что частицы не все в одной точке
+            positions[i * 3 + 1] = entityMesh.position.y;
+            positions[i * 3 + 2] = entityMesh.position.z;
+        }
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         const particlesMaterial = new THREE.PointsMaterial({
             color: 0x555555,
-            size: 10,
+            size: 20, // Увеличенный размер частиц
             transparent: true,
             opacity: 0.7,
+            blending: THREE.AdditiveBlending // Аддитивное смешивание для лучшей видимости
         });
 
         const smokeTrail = new THREE.Points(particlesGeometry, particlesMaterial);
-        smokeTrail.userData = { missileMesh, lastPosition: new THREE.Vector3() };
-        scene!.add(smokeTrail);
-        smokeParticles.value.set(missileId, smokeTrail);
+        smokeTrail.userData = { entityMesh, lastPosition: new THREE.Vector3() };
+        scene?.add(smokeTrail)
+        smokeParticles.set(entityId, smokeTrail);
     }
 
     function updateSmokeTrails() {
-        smokeParticles.value.forEach((smokeTrail) => {
-            const { missileMesh, lastPosition } = smokeTrail.userData;
+        smokeParticles.forEach((smokeTrail) => {
+            const { entityMesh, lastPosition } = smokeTrail.userData;
             const positions = smokeTrail.geometry.attributes.position.array;
-
-            lastPosition.copy(missileMesh.position);
+            lastPosition.copy(entityMesh.position);
 
             for (let i = positions.length - 3; i > 0; i -= 3) {
                 positions[i] = positions[i - 3];
@@ -219,9 +222,9 @@ export const useSceneStore = defineStore('scene', () => {
                 positions[i + 2] = positions[i - 1];
             }
 
-            positions[0] = missileMesh.position.x;
-            positions[1] = missileMesh.position.y;
-            positions[2] = missileMesh.position.z;
+            positions[0] = entityMesh.position.x;
+            positions[1] = entityMesh.position.y;
+            positions[2] = entityMesh.position.z;
 
             smokeTrail.geometry.attributes.position.needsUpdate = true;
         });
@@ -282,7 +285,7 @@ export const useSceneStore = defineStore('scene', () => {
         renderer = null;
         controls = null;
         currentFlightObjects.value.clear();
-        smokeParticles.value.clear();
+        smokeParticles.clear();
         isSceneInitializaed.value = false;
     }
 
