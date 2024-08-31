@@ -146,32 +146,42 @@ export const useSceneStore = defineStore('scene', () => {
 
     function createMeshForTerrain(terrain: any): THREE.Mesh {
         const { data, size } = terrain;
-
+        const width = (data.length - 1) * size;
+        const height = (data[0].length - 1) * size;
         const terrainGeometry = new THREE.PlaneGeometry(
-            size * (data.length - 1),
-            size * (data[0].length - 1),
-            data.length - 1,
-            data[0].length - 1,
+            width * size, // ширина плоскости
+            height * size, // высота плоскости
+            data.length - 1, data[0].length - 1
         );
 
-        terrainGeometry.rotateX( - Math.PI / 2 );
+         // Модифицируем вершины геометрии на основе матрицы высот
+        for (let i = 0; i < data.length; i++) {
+            for (let j = 0; j < data[i].length; j++) {
+                const vertexIndex = i * data[i].length + j;
+                const heightValue = data[i][j];
 
-        const positionAttribute = terrainGeometry.attributes.position;
-        for (let i = 0; i < positionAttribute.count; i++) {
-            const x = i % data.length;
-            const y = Math.floor(i / data.length);
-            positionAttribute.setY(i, data[y][x] / 10);
+                // Устанавливаем высоту (Z) для каждой вершины
+                terrainGeometry.attributes.position.setZ(vertexIndex, heightValue);
+                // Устанавливаем позиции X и Y с учетом elementSize
+                const x = (j - (data[i].length - 1) / 2) * size;
+                const y = (i - (data.length - 1) / 2) * size;
+                terrainGeometry.attributes.position.setX(vertexIndex, x);
+                terrainGeometry.attributes.position.setY(vertexIndex, y);
+            }
         }
 
-        positionAttribute.needsUpdate = true;
+        terrainGeometry.attributes.position.needsUpdate = true;
         terrainGeometry.computeVertexNormals();
+
 
         const material = new THREE.MeshStandardMaterial({
             color: 0x0000ff,
             wireframe: false,
+            side: THREE.BackSide
         });
 
         const mesh = new THREE.Mesh(terrainGeometry, material);
+        mesh.rotation.x = -Math.PI / 2;
         mesh.name = terrain.id;
 
         return mesh;
