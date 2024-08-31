@@ -32,7 +32,6 @@ export const useMissionStore = defineStore('mission', () => {
     })
 
     socketClient.listenToEvent<MissionEnvironmentPayload>('mission_environment', (data) => {
-        console.log(data);
         map.value = data.map;
         isInitialized.value = true;
     })

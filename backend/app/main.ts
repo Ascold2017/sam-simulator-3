@@ -1,7 +1,8 @@
 import "reflect-metadata";
+import fs from 'fs'
 import express from "express";
 import { Server } from 'socket.io';
-import http from "http";
+import https from "https";
 import cors from "cors";
 import { AppDataSource } from "./config/dataSource";
 import { missionController } from "./controllers/mission.controller";
@@ -9,7 +10,10 @@ import { coreInstance } from "./config/coreInstance";
 
 
 const app = express();
-const server = http.createServer(app);
+const server = https.createServer( {
+    key: fs.readFileSync(__dirname + '/../../shared/cert.key'),
+    cert: fs.readFileSync(__dirname +  '/../../shared/cert.crt')
+}, app);
 const port = process.env.PORT || 3000;
 
 app.use(express.json()); // Поддержка JSON-формата
@@ -21,15 +25,15 @@ app.use(cors());
     const io = new Server(server, {
         cors: {
             origin: "*", // Разрешить все домены
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Разрешенные методы
-    allowedHeaders: ["*"], // Разрешенные заголовки
-    credentials: true // Разрешить отправку учетных данных
+            methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Разрешенные методы
+            allowedHeaders: ["*"], // Разрешенные заголовки
+            credentials: true // Разрешить отправку учетных данных
         }
     });
 
     io.on('connection', (socket) => {
-        console.log('a user connected', socket);
-        
+        console.log('a user connected');
+
         // Подключаем обработчики событий
         missionController(io, socket);
     });

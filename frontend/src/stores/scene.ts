@@ -1,9 +1,11 @@
 import { defineStore, storeToRefs } from 'pinia';
 import * as THREE from 'three';
 import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.js';
+
 import { computed, ref, watch } from 'vue';
 import { useMissionStore } from './mission';
 import { FlightObjectsUpdateResponse } from '../../../shared/models/mission.model';
+import { DeviceOrientationControls } from '../helpers/DeviceOrientationControls';
 
 export const useSceneStore = defineStore('scene', () => {
     const missionStore = useMissionStore();
@@ -12,7 +14,7 @@ export const useSceneStore = defineStore('scene', () => {
     let scene: THREE.Scene | null = null;
     let camera: THREE.PerspectiveCamera | null = null;
     let renderer: THREE.WebGLRenderer | null = null;
-    let controls: FirstPersonControls | null = null;
+    let controls: FirstPersonControls | DeviceOrientationControls | null = null;
     const clock = new THREE.Clock();
 
     const isSceneInitializaed = ref(false);
@@ -44,21 +46,30 @@ export const useSceneStore = defineStore('scene', () => {
         renderer.setSize(container.clientWidth, container.clientHeight);
         container.appendChild(renderer.domElement);
 
-        // Настройка OrbitControls
+        // Определяем тип устройства
+    if (isMobileDevice()) {
+        // Настройка GyroscopeControls для мобильных устройств
+        controls = new DeviceOrientationControls(camera);
+    } else {
+        // Настройка FirstPersonControls для десктопов
         controls = new FirstPersonControls(camera, renderer.domElement);
-        // Установка оси вращения
         controls.lookVertical = true; // Включаем вертикальный взгляд
         controls.verticalMin = Math.PI / 6;
-        controls.verticalMax = Math.PI / 2
+        controls.verticalMax = Math.PI / 2;
         controls.constrainVertical = true; // Ограничиваем вертикальное вращение
         controls.movementSpeed = 0;
         controls.lookSpeed = 0.2;
+    }
 
         // Добавление освещения
         addLighting();
 
         isSceneInitializaed.value = true;
         animate();
+    }
+
+    function isMobileDevice(): boolean {
+        return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }
 
     function updateScene() {

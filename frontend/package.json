@@ -6,13 +6,15 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "mkcert": "mkcert create-cert"
   },
   "dependencies": {
     "@tresjs/cientos": "^4.0.0",
     "@tresjs/core": "^4.2.7",
     "konva": "^9.3.14",
     "lodash": "^4.17.21",
+    "mkcert": "^3.2.0",
     "pinia": "^2.1.7",
     "socket.io-client": "^4.7.5",
     "three": "^0.167.1",
