@@ -33,7 +33,7 @@ export const useCameraStore = defineStore('camera', () => {
         } else {
             // Настройка FirstPersonControls для десктопов
             controls = new CustomFirstPersonControls(camera, {
-                lookSpeed: 0.2,
+                lookSpeed: 0.5,
                 minElevation: -Math.PI/20,
                 maxElevation: Math.PI/4
             });
