@@ -1,7 +1,7 @@
 <template>
     <div class="main-screen__header">
 
-        <span>{{ cameraStore.orientation }}</span>
+        <span>{{ device.orientation }}</span>
 
         <button class="btn-stop-mission" @click="missionStore.stopMission">
             Exit
@@ -25,10 +25,12 @@ import { onMounted } from 'vue';
 import { useMissionStore } from '../../stores/mission';
 import { useCameraStore } from '../../stores/camera';
 import { computed } from 'vue';
+import { useDevice } from '../../stores/device';
 
 const missionStore = useMissionStore()
 const scene = useSceneStore()
 const cameraStore = useCameraStore()
+const device = useDevice()
 
 const azimuth = computed(() => cameraStore.azimuth * (180 / Math.PI))
 const elevation = computed(() => cameraStore.elevation * (180 / Math.PI))
@@ -63,6 +65,9 @@ onUnmounted(() => {
     font-size: 100px;
 }
 
+.aim-target:hover .material-icons {
+    font-size: 120px;
+}
 .aim-target__azimuth {
     @apply text-white absolute left-1/2 transform -translate-x-1/2;
     bottom: -10px;
