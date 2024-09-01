@@ -8,10 +8,11 @@ import { addHeightmapTerrain } from './helpers/addHeightmapTerraing';
 import { createFlightObject } from './helpers/addFlightObject';
 import { updateFlightObject } from './helpers/updateFlightObject';
 import { useCameraStore } from '../camera';
+import { createAAObject } from './helpers/addAAObject';
 
 export const useSceneStore = defineStore('scene', () => {
     const missionStore = useMissionStore();
-    const { isInitialized, map } = storeToRefs(missionStore)
+    const { isInitialized, map, aas } = storeToRefs(missionStore)
     const cameraStore = useCameraStore()
 
     let scene: THREE.Scene | null = null;
@@ -114,9 +115,10 @@ export const useSceneStore = defineStore('scene', () => {
         window.removeEventListener('resize', onWindowResize);
     }
 
-    watch([isInitialized, map, isSceneInitializaed], () => {
+    watch([isInitialized, isSceneInitializaed], () => {
         if (isInitialized.value && isSceneInitializaed.value) {
             addHeightmapTerrain(scene!, map.value)
+            aas.value.map(aa => createAAObject(scene!, aa))
         }
     })
 

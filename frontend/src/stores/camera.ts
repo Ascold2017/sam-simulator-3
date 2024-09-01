@@ -1,12 +1,16 @@
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import * as THREE from 'three'
 import { DeviceOrientationControls } from "../helpers/DeviceOrientationControls";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { CustomFirstPersonControls } from "../helpers/CustomFirstPersonControls";
 import { useDevice } from "./device";
+import { useMissionStore } from "./mission";
 
 export const useCameraStore = defineStore('camera', () => {
     const device = useDevice()
+    const mission = useMissionStore();
+    const { currentAA } = storeToRefs(mission)
+
     const position = ref([0, 25, 0])
     const azimuth = ref(0)
     const elevation = ref(0);
@@ -49,6 +53,10 @@ export const useCameraStore = defineStore('camera', () => {
         elevation.value = camera.rotation.x
         controls.update();
     }
+
+    watch(currentAA, (v) => {
+        // TODO
+    })
      
 
     return {

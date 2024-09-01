@@ -96,5 +96,29 @@
         }
       ]
     }
+  ],
+  "aas": [
+    {
+      "name": "aa-01",
+      "type": "active-missile",
+      "position": {
+        "x": 0,
+        "y": 5,
+        "z": 0
+      },
+      "ammoMaxRange": 8000,
+      "ammoVelocity": 900
+    },
+    {
+      "name": "aa-02",
+      "type": "active-missile",
+      "position": {
+        "x": 760,
+        "y": 5,
+        "z": 1200
+      },
+      "ammoMaxRange": 8000,
+      "ammoVelocity": 900
+    }
   ]
 }

@@ -41,11 +41,13 @@ export const missionController = async (io, socket) => {
 
         socket.emit('mission_started', { success: true, missionId } as MissionStartedResponse);
         const heightmapTerrain = coreInstance.getHeightmapTerrain();
+        const aas = coreInstance.getAAs()
         socket.emit('mission_environment', {
             map: {
                 data: heightmapTerrain.data,
                 size: heightmapTerrain.elementSize
             },
+            aas
         } satisfies MissionEnvironmentPayload)
 
     });
@@ -58,8 +60,9 @@ export const missionController = async (io, socket) => {
                 where: {
                     id: missionId
                 },
-                relations: ['targets']
+                relations: ['targets', 'aas']
             })
+
 
             const parsedMissionData = missionDto(missionData)
             if (missionData) {
@@ -67,11 +70,13 @@ export const missionController = async (io, socket) => {
                 coreInstance.startMission(parsedMissionData);
                 socket.emit('mission_started', { success: true, missionId } as MissionStartedResponse);
                 const heightmapTerrain = coreInstance.getHeightmapTerrain();
+                const aas = coreInstance.getAAs()
                 socket.emit('mission_environment', {
                     map: {
                         data: heightmapTerrain.data,
                         size: heightmapTerrain.elementSize
                     },
+                    aas
                 } satisfies MissionEnvironmentPayload)
             } else {
                 socket.emit('mission_started', { success: false, message: 'Mission not found' } as MissionStartedResponse);

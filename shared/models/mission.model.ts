@@ -1,4 +1,5 @@
-import type { FlightObjectDTO, MapData, Position } from "../../backend/core/app";
+import type { FlightObjectDTO, MapData, } from "../../backend/core/app";
+import { AAObjectDTO } from "../../backend/core/app/dto/AAObject.dto";
 
 export interface StartMissionPayload {
     missionId: number;
@@ -10,21 +11,13 @@ export interface MissionStartedResponse {
     message?: string;
 }
 
-export interface RadarResponse {
-    id: string;
-    position: Position;
-    type: "search-radar" | "sector-radar" | "unknown";
-    minElevationAngle: number;
-    maxElevationAngle: number;
-    detectionRange: number;
-    isEnabled: boolean;
-}
 
 export interface MissionEnvironmentPayload {
-    map: MapData
+    map: MapData;
+    aas: AAObjectDTO[]
 }
 
-export interface StopMissionPayload {}
+export interface StopMissionPayload { }
 
 export interface MissionStoppedResponse {
     success: boolean;
