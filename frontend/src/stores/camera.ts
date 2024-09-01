@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import * as THREE from 'three'
 import { DeviceOrientationControls } from "../helpers/DeviceOrientationControls";
 import { isMobileDevice } from "../helpers/isMobile";
-import { ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { CustomFirstPersonControls } from "../helpers/CustomFirstPersonControls";
 
 export const useCameraStore = defineStore('camera', () => {
@@ -19,8 +19,8 @@ export const useCameraStore = defineStore('camera', () => {
             0.1,
             10000,
         );
-        camera.position.set(0, 25, 0);
-        camera.lookAt(1, 25, 0);
+        camera.position.set(position.value[0], position.value[1], position.value[2]);
+        camera.lookAt(position.value[0] + 1, position.value[1], position.value[2]);
         camera.layers.enableAll()
         // Определяем тип устройстваL
         if (isMobileDevice()) {
@@ -48,6 +48,25 @@ export const useCameraStore = defineStore('camera', () => {
         elevation.value = camera.rotation.x
         controls.update();
     }
+
+    function handleOrientationChange() {
+        if (window.orientation === 0 || window.orientation === 180) {
+            orientation.value = 'portrait';
+        } else {
+            orientation.value = 'landscape';
+        }
+    }
+
+     // Следим за изменением ориентации экрана
+     onMounted(() => {
+        window.addEventListener('orientationchange', handleOrientationChange);
+        // Инициализируем начальную ориентацию
+        handleOrientationChange();
+    });
+
+    onUnmounted(() => {
+        window.removeEventListener('orientationchange', handleOrientationChange);
+    });
 
     return {
         azimuth,

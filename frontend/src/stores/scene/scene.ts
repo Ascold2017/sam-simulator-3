@@ -40,18 +40,31 @@ export const useSceneStore = defineStore('scene', () => {
         container.appendChild(renderer.domElement);
 
         // Создание камеры и контролов
-        camera = cameraStore.createCameraWithControls(renderer.domElement)
+        camera = cameraStore.createCameraWithControls()
 
         // Добавление освещения
         addLighting(scene);
 
         isSceneInitializaed.value = true;
+
+        window.addEventListener('resize', onWindowResize);
         animate();
     }
 
     function animate() {
         requestAnimationFrame(animate);
         updateScene();
+    }
+
+    function onWindowResize() {
+        if (camera && renderer) {
+            const container = renderer.domElement.parentElement;
+            if (container) {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            }
+        }
     }
 
     function updateScene() {
@@ -98,6 +111,7 @@ export const useSceneStore = defineStore('scene', () => {
         renderer = null;
         currentFlightObjects.value.clear();
         isSceneInitializaed.value = false;
+        window.removeEventListener('resize', onWindowResize);
     }
 
     watch([isInitialized, map, isSceneInitializaed], () => {

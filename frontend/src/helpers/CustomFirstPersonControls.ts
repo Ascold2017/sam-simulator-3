@@ -41,7 +41,9 @@ export class CustomFirstPersonControls {
     }
 
     private normalizeAngle(angle: number): number {
-        return angle < 0 ? angle + 2 * Math.PI : angle;
+        if (angle < 0) return angle + 2 * Math.PI;
+        if (angle > 2 * Math.PI)  return 0;
+        return angle;
     }
 
     private updateCameraRotation(): void {
