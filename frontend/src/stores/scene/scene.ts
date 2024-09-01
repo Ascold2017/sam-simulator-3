@@ -1,0 +1,118 @@
+import { defineStore, storeToRefs } from 'pinia';
+import * as THREE from 'three';
+
+import { computed, ref, watch } from 'vue';
+import { useMissionStore } from '../mission';
+import { addLighting } from './helpers/addLighting';
+import { addHeightmapTerrain } from './helpers/addHeightmapTerraing';
+import { createFlightObject } from './helpers/addFlightObject';
+import { updateFlightObject } from './helpers/updateFlightObject';
+import { useCameraStore } from '../camera';
+
+export const useSceneStore = defineStore('scene', () => {
+    const missionStore = useMissionStore();
+    const { isInitialized, map } = storeToRefs(missionStore)
+    const cameraStore = useCameraStore()
+
+    let scene: THREE.Scene | null = null;
+    let camera: THREE.PerspectiveCamera | null = null;
+    let renderer: THREE.WebGLRenderer | null = null;
+    
+
+    const isSceneInitializaed = ref(false);
+    const currentFlightObjects = ref<Set<string>>(new Set());
+
+    function initializeScene(containerSelector: string) {
+        const container = document.querySelector(containerSelector);
+        if (!container) {
+            throw new Error(`Container with selector "${containerSelector}" not found.`);
+        }
+
+        // Создание сцены
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x87CEEB); // Светло-голубой цвет
+
+
+
+        // Настройка рендерера
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        container.appendChild(renderer.domElement);
+
+        // Создание камеры и контролов
+        camera = cameraStore.createCameraWithControls(renderer.domElement)
+
+        // Добавление освещения
+        addLighting(scene);
+
+        isSceneInitializaed.value = true;
+        animate();
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        updateScene();
+    }
+
+    function updateScene() {
+        if (renderer && scene && camera) {
+            renderer.render(scene, camera);
+            cameraStore.updateCameraAndControls(camera);
+        }
+    }
+
+    function updateFlightObjects() {
+        const flightObjects = missionStore.flightObjects;
+        const existingMeshes = scene?.children.filter((obj) =>
+            currentFlightObjects.value.has(obj.name),
+        ) || [];
+
+        // Обновление или добавление объектов
+        flightObjects.forEach((flightObject) => {
+            let mesh = scene?.getObjectByName(flightObject.id) as THREE.Mesh;
+            if (!mesh) {
+                createFlightObject(scene!, flightObject);
+                currentFlightObjects.value.add(flightObject.id);
+            } else {
+                updateFlightObject(mesh, flightObject)
+            }
+        });
+
+        // Удаление объектов, которых нет в списке flightObjects
+        existingMeshes.forEach((mesh) => {
+            const objectExists = flightObjects.some((obj) => obj.id === mesh.name);
+            if (!objectExists) {
+                scene?.remove(mesh);
+                currentFlightObjects.value.delete(mesh.name);
+            }
+        });
+    }
+
+
+    function $reset() {
+        if (renderer) {
+            renderer.dispose();
+        }
+        scene = null;
+        camera = null;
+        renderer = null;
+        currentFlightObjects.value.clear();
+        isSceneInitializaed.value = false;
+    }
+
+    watch([isInitialized, map, isSceneInitializaed], () => {
+        if (isInitialized.value && isSceneInitializaed.value) {
+            addHeightmapTerrain(scene!, map.value)
+        }
+    })
+
+    watch(computed(() => missionStore.flightObjects), () => {
+        scene &&
+            updateFlightObjects()
+    })
+
+    return {
+        initializeScene,
+        $reset
+    };
+});

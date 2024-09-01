@@ -1,10 +1,15 @@
 <template>
     <div class="main-screen__header">
         <h1 class="text-xl">Mission Control</h1>
+        <div >
+        <span>Azimuth: {{ azimuth.toFixed(0)  }}</span>
+        <span>Elevation: {{ elevation.toFixed(0)  }}</span>
+    </div>
         <button class="btn-stop-mission" @click="missionStore.stopMission">
             Stop Mission
         </button>
     </div>
+    
     <div class="main-screen" style="height: 100%;">
 
     </div>
@@ -13,12 +18,18 @@
 
 <script setup lang="ts">
 import { onUnmounted } from 'vue';
-import { useSceneStore } from '../../stores/scene';
+import { useSceneStore } from '../../stores/scene/scene';
 import { onMounted } from 'vue';
 import { useMissionStore } from '../../stores/mission';
+import { useCameraStore } from '../../stores/camera';
+import { computed } from 'vue';
 
 const missionStore = useMissionStore()
 const scene = useSceneStore()
+const cameraStore = useCameraStore()
+
+const azimuth = computed(() => cameraStore.azimuth * (180 / Math.PI))
+const elevation = computed(() => cameraStore.elevation * (180 / Math.PI))
 
 onMounted(() => {
     scene.initializeScene('.main-screen')
