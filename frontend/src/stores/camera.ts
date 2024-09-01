@@ -1,18 +1,18 @@
 import { defineStore } from "pinia";
 import * as THREE from 'three'
-import { FirstPersonControls } from "three/examples/jsm/Addons.js";
 import { DeviceOrientationControls } from "../helpers/DeviceOrientationControls";
 import { isMobileDevice } from "../helpers/isMobile";
 import { ref } from "vue";
+import { CustomFirstPersonControls } from "../helpers/CustomFirstPersonControls";
 
 export const useCameraStore = defineStore('camera', () => {
+    const position = ref([0, 25, 0])
     const azimuth = ref(0)
     const elevation = ref(0);
     const orientation = ref<'landscape' | 'portrait'>('landscape')
-    let controls: DeviceOrientationControls | FirstPersonControls;
-    const clock = new THREE.Clock();
+    let controls: DeviceOrientationControls | CustomFirstPersonControls;
 
-    function createCameraWithControls(domElement: HTMLElement) {
+    function createCameraWithControls() {
         const camera = new THREE.PerspectiveCamera(
             75,
             window.innerWidth / window.innerHeight,
@@ -25,25 +25,28 @@ export const useCameraStore = defineStore('camera', () => {
         // Определяем тип устройстваL
         if (isMobileDevice()) {
             // Настройка GyroscopeControls для мобильных устройств
-            controls = new DeviceOrientationControls(camera);
+            controls = new DeviceOrientationControls(camera, {
+                minElevation: -Math.PI/20,
+                maxElevation: Math.PI/4
+            });
         } else {
             // Настройка FirstPersonControls для десктопов
-            controls = new FirstPersonControls(camera, domElement);
-            controls.lookVertical = true; // Включаем вертикальный взгляд
-            controls.verticalMin = Math.PI / 6;
-            controls.verticalMax = Math.PI / 2;
-            controls.constrainVertical = true; // Ограничиваем вертикальное вращение
-            controls.movementSpeed = 0;
-            controls.lookSpeed = 0.2;
+            controls = new CustomFirstPersonControls(camera, {
+                lookSpeed: 0.2,
+                minElevation: -Math.PI/20,
+                maxElevation: Math.PI/4
+            });
         }
         return camera
     }
 
     function updateCameraAndControls(camera: THREE.PerspectiveCamera) {
-        console.log(camera)
-        azimuth.value = camera.rotation.y;
+        function normalizeAngle(angle: number): number {
+            return angle < 0 ? angle + 2 * Math.PI : angle;
+        }
+        azimuth.value = normalizeAngle(camera.rotation.y);
         elevation.value = camera.rotation.x
-        controls.update(clock.getDelta());
+        controls.update();
     }
 
     return {

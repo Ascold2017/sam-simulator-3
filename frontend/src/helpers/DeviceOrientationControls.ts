@@ -11,7 +11,13 @@ export class DeviceOrientationControls {
   private betaOffsetAngle: number;
   private gammaOffsetAngle: number;
 
-  constructor(object: THREE.Object3D) {
+  private minElevation: number;
+  private maxElevation: number;
+
+  constructor(
+    object: THREE.Object3D,
+    options?: { minElevation?: number; maxElevation?: number }
+  ) {
     this.object = object;
     this.object.rotation.reorder("YXZ");
 
@@ -24,6 +30,11 @@ export class DeviceOrientationControls {
     this.alphaOffsetAngle = 0;
     this.betaOffsetAngle = 0;
     this.gammaOffsetAngle = 0;
+
+    // Инициализируем опции
+    this.minElevation = options?.minElevation || 0;
+    this.maxElevation = options?.maxElevation || Math.PI;
+
     this.connect();
   }
 
@@ -43,14 +54,35 @@ export class DeviceOrientationControls {
 
     return (quaternion: THREE.Quaternion, alpha: number, beta: number, gamma: number, orient: number): void => {
       euler.set(beta, alpha, -gamma, 'YXZ'); // 'ZXY' for the device, but 'YXZ' for us
-
-      quaternion.setFromEuler(euler); // orient the device
+      quaternion.setFromEuler(euler);
 
       quaternion.multiply(q1); // camera looks out the back of the device, not the top
 
       quaternion.multiply(q0.setFromAxisAngle(zee, -orient)); // adjust for screen orientation
+
+      // Применяем ограничения углов возвышения через кватернион
+      this.applyElevationConstraints(quaternion);
     };
   })();
+
+  private applyElevationConstraints(quaternion: THREE.Quaternion): void {
+    // Извлекаем вектор направления "вперед"
+    const forward = new THREE.Vector3(0, 0, -1);
+    forward.applyQuaternion(quaternion);
+
+    // Извлекаем текущий угол возвышения (угол между вектором вперед и плоскостью XZ)
+    let elevation = Math.asin(forward.y);
+
+    // Проверяем и ограничиваем угол возвышения
+    if (elevation < this.minElevation || elevation > this.maxElevation) {
+      const constrainedElevation = Math.max(this.minElevation, Math.min(this.maxElevation, elevation));
+
+      // Применяем ограничение через вращение кватерниона
+      const deltaElevation = constrainedElevation - elevation;
+      const qElevation = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), deltaElevation);
+      quaternion.multiply(qElevation);
+    }
+  }
 
   public connect(): void {
     this.onScreenOrientationChangeEvent(); // run once on load
@@ -84,21 +116,6 @@ export class DeviceOrientationControls {
 
     this.setObjectQuaternion(this.object.quaternion, alpha, beta, gamma, orient);
     this.alpha = alpha;
-  }
-
-  public updateAlphaOffsetAngle(angle: number): void {
-    this.alphaOffsetAngle = angle;
-    this.update();
-  }
-
-  public updateBetaOffsetAngle(angle: number): void {
-    this.betaOffsetAngle = angle;
-    this.update();
-  }
-
-  public updateGammaOffsetAngle(angle: number): void {
-    this.gammaOffsetAngle = angle;
-    this.update();
   }
 
   public dispose(): void {
