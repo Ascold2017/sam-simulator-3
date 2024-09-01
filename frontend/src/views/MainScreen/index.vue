@@ -1,7 +1,7 @@
 <template>
     <div class="main-screen__header">
 
-        <span>{{ device.orientation }}</span>
+        <span>{{ device.orientation === 'landscape' ? 'SEARCH' : 'CAPTURE' }}</span>
 
         <button class="btn-stop-mission" @click="missionStore.stopMission">
             Exit
@@ -10,10 +10,15 @@
 
     <div class="main-screen" style="height: 100%;"></div>
 
-    <div class="aim-target" @click="captureTarget">
+    <div class="aim-target" :class="{ 'aim-target_landscape': device.orientation === 'landscape'}" @click="captureTarget">
         <span class="aim-target__elevation">{{ elevation.toFixed(0) }}*</span>
         <span class="material-icons">fullscreen</span>
         <span class="aim-target__azimuth">{{ azimuth.toFixed(0) }}*</span>
+    </div>
+
+    <div class="main-screen__actions">
+        <button class="action-button" @click="captureTarget">CAPTURE</button>
+        <button class="action-button">FIRE</button>
     </div>
 
 </template>
@@ -65,6 +70,10 @@ onUnmounted(() => {
     font-size: 100px;
 }
 
+.aim-target_landscape .material-icons {
+    font-size: 200px;
+}
+
 .aim-target:hover .material-icons {
     font-size: 120px;
 }
@@ -77,5 +86,24 @@ onUnmounted(() => {
     @apply text-white absolute top-1/2 transform -translate-y-1/2;
     right: -10px;
 
+}
+
+.main-screen__actions {
+    @apply fixed bottom-0 left-0 right-0 flex py-2 px-4;
+}
+
+.action-button {
+    @apply bg-white;
+    border-radius: 50%;
+    width: 90px;
+    height: 90px;
+
+    
+}
+.action-button:nth-child(1) {
+    margin-right: auto;
+}
+.action-button:nth-child(2) {
+    @apply bg-red-500 text-white;
 }
 </style>
