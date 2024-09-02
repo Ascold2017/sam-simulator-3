@@ -11,57 +11,58 @@ export const useCameraStore = defineStore('camera', () => {
     const mission = useMissionStore();
     const { currentAA } = storeToRefs(mission)
 
-    const position = ref([0, 25, 0])
+    const camera = ref<THREE.PerspectiveCamera | null>(null);
     const azimuth = ref(0)
     const elevation = ref(0);
-   
+
     let controls: DeviceOrientationControls | CustomFirstPersonControls;
 
     function createCameraWithControls() {
-        const camera = new THREE.PerspectiveCamera(
+        camera.value = new THREE.PerspectiveCamera(
             75,
             window.innerWidth / window.innerHeight,
             0.1,
             10000,
         );
-        camera.position.set(position.value[0], position.value[1], position.value[2]);
-        camera.lookAt(position.value[0] + 1, position.value[1], position.value[2]);
-        camera.layers.enableAll()
+        camera.value.layers.enableAll()
         // Определяем тип устройстваL
         if (device.isMobile) {
             // Настройка GyroscopeControls для мобильных устройств
-            controls = new DeviceOrientationControls(camera, {
-                minElevation: -Math.PI/20,
-                maxElevation: Math.PI/4
+            controls = new DeviceOrientationControls(camera.value, {
+                minElevation: -Math.PI / 20,
+                maxElevation: Math.PI / 4
             });
         } else {
             // Настройка FirstPersonControls для десктопов
-            controls = new CustomFirstPersonControls(camera, {
+            controls = new CustomFirstPersonControls(camera.value, {
                 lookSpeed: 0.5,
-                minElevation: -Math.PI/20,
-                maxElevation: Math.PI/4
+                minElevation: -Math.PI / 20,
+                maxElevation: Math.PI / 4
             });
         }
-        return camera
     }
 
-    function updateCameraAndControls(camera: THREE.PerspectiveCamera) {
+    function updateCameraAndControls() {
         function normalizeAngle(angle: number): number {
             return angle < 0 ? angle + 2 * Math.PI : angle;
         }
-        azimuth.value = normalizeAngle(camera.rotation.y);
-        elevation.value = camera.rotation.x
+        azimuth.value = normalizeAngle(camera.value!.rotation.y);
+        elevation.value = camera.value!.rotation.x
         controls.update();
     }
 
     watch(currentAA, (v) => {
-        // TODO
+        if (v && camera.value) {
+            camera.value?.position.set(v.position.x, v.position.y, v.position.z)
+            camera.value.lookAt(v.position.x + 1, v.position.y, v.position.z);
+        }
     })
-     
+
 
     return {
         azimuth,
         elevation,
+        camera,
         createCameraWithControls,
         updateCameraAndControls
     }

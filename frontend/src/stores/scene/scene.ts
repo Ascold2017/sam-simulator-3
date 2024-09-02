@@ -14,9 +14,9 @@ export const useSceneStore = defineStore('scene', () => {
     const missionStore = useMissionStore();
     const { isInitialized, map, aas } = storeToRefs(missionStore)
     const cameraStore = useCameraStore()
+    const { camera } = storeToRefs(cameraStore)
 
     let scene: THREE.Scene | null = null;
-    let camera: THREE.PerspectiveCamera | null = null;
     let renderer: THREE.WebGLRenderer | null = null;
     
 
@@ -41,7 +41,7 @@ export const useSceneStore = defineStore('scene', () => {
         container.appendChild(renderer.domElement);
 
         // Создание камеры и контролов
-        camera = cameraStore.createCameraWithControls()
+        cameraStore.createCameraWithControls()
 
         // Добавление освещения
         addLighting(scene);
@@ -58,20 +58,20 @@ export const useSceneStore = defineStore('scene', () => {
     }
 
     function onWindowResize() {
-        if (camera && renderer) {
+        if (camera.value && renderer) {
             const container = renderer.domElement.parentElement;
-            if (container) {
-                camera.aspect = container.clientWidth / container.clientHeight;
-                camera.updateProjectionMatrix();
+            if (container && camera) {
+                camera.value.aspect = container.clientWidth / container.clientHeight;
+                camera.value.updateProjectionMatrix();
                 renderer.setSize(container.clientWidth, container.clientHeight);
             }
         }
     }
 
     function updateScene() {
-        if (renderer && scene && camera) {
-            renderer.render(scene, camera);
-            cameraStore.updateCameraAndControls(camera);
+        if (renderer && scene && camera.value) {
+            renderer.render(scene, camera.value);
+            cameraStore.updateCameraAndControls();
         }
     }
 
@@ -108,7 +108,6 @@ export const useSceneStore = defineStore('scene', () => {
             renderer.dispose();
         }
         scene = null;
-        camera = null;
         renderer = null;
         currentFlightObjects.value.clear();
         isSceneInitializaed.value = false;

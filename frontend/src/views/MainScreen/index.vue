@@ -1,48 +1,22 @@
 <template>
-    <div class="main-screen__header">
 
-        <span>{{ device.orientation === 'landscape' ? 'SEARCH' : 'CAPTURE' }}</span>
-
-        <button class="btn-stop-mission" @click="missionStore.stopMission">
-            Exit
-        </button>
-    </div>
-
+    <TopBar />
     <div class="main-screen" style="height: 100%;"></div>
 
-    <div class="aim-target" :class="{ 'aim-target_landscape': device.orientation === 'landscape'}" @click="captureTarget">
-        <span class="aim-target__elevation">{{ elevation.toFixed(0) }}*</span>
-        <span class="material-icons">fullscreen</span>
-        <span class="aim-target__azimuth">{{ azimuth.toFixed(0) }}*</span>
-    </div>
-
-    <div class="main-screen__actions">
-        <button class="action-button" @click="captureTarget">CAPTURE</button>
-        <button class="action-button">FIRE</button>
-    </div>
-
+    <AimGUI />
+    <ActionBar />
 </template>
 
 <script setup lang="ts">
-import { onUnmounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 import { useSceneStore } from '../../stores/scene/scene';
-import { onMounted } from 'vue';
-import { useMissionStore } from '../../stores/mission';
-import { useCameraStore } from '../../stores/camera';
-import { computed } from 'vue';
-import { useDevice } from '../../stores/device';
 
-const missionStore = useMissionStore()
+import TopBar from './components/TopBar.vue';
+import AimGUI from './components/AimGUI.vue'
+import ActionBar from './components/ActionBar.vue';
+
 const scene = useSceneStore()
-const cameraStore = useCameraStore()
-const device = useDevice()
 
-const azimuth = computed(() => cameraStore.azimuth * (180 / Math.PI))
-const elevation = computed(() => cameraStore.elevation * (180 / Math.PI))
-
-function captureTarget() {
-    console.log(azimuth.value, elevation.value)
-}
 onMounted(() => {
     scene.initializeScene('.main-screen')
 })
@@ -51,59 +25,3 @@ onUnmounted(() => {
     scene.$reset();
 })
 </script>
-
-<style>
-.main-screen__header {
-    @apply fixed top-0 left-0 w-full text-white p-4 flex justify-between items-center;
-}
-
-.btn-stop-mission {
-    @apply bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded;
-}
-
-.aim-target {
-    @apply fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer;
-}
-
-.aim-target .material-icons {
-    @apply text-white;
-    font-size: 100px;
-}
-
-.aim-target_landscape .material-icons {
-    font-size: 200px;
-}
-
-.aim-target:hover .material-icons {
-    font-size: 120px;
-}
-.aim-target__azimuth {
-    @apply text-white absolute left-1/2 transform -translate-x-1/2;
-    bottom: -10px;
-}
-
-.aim-target__elevation {
-    @apply text-white absolute top-1/2 transform -translate-y-1/2;
-    right: -10px;
-
-}
-
-.main-screen__actions {
-    @apply fixed bottom-0 left-0 right-0 flex py-2 px-4;
-}
-
-.action-button {
-    @apply bg-white;
-    border-radius: 50%;
-    width: 90px;
-    height: 90px;
-
-    
-}
-.action-button:nth-child(1) {
-    margin-right: auto;
-}
-.action-button:nth-child(2) {
-    @apply bg-red-500 text-white;
-}
-</style>

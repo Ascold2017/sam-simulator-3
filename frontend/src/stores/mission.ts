@@ -61,10 +61,15 @@ export const useMissionStore = defineStore('mission', () => {
 
     restoreMission();
 
+    function selectCurrentAA(aaId: string) {
+        currentAAId.value = aaId;
+    }
+
 
     return {
         startMission,
         stopMission,
+        selectCurrentAA,
         isInitialized,
         map,
         aas,
