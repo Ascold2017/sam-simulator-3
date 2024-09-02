@@ -1,6 +1,6 @@
 <template>
     <div class="aim-target" :class="{ 'aim-target_landscape': device.orientation === 'landscape' }"
-        @click="captureTarget">
+        @click="aaStore.captureTarget">
         <span class="aim-target__elevation">{{ elevation.toFixed(0) }}*</span>
         <span class="material-icons">fullscreen</span>
         <span class="aim-target__azimuth">{{ azimuth.toFixed(0) }}*</span>
@@ -12,17 +12,15 @@
 import { computed } from 'vue';
 import { useCameraStore } from '../../../stores/camera';
 import { useDevice } from '../../../stores/device';
-
+import { useAAStore } from '../../../stores/aa';
 
 const cameraStore = useCameraStore()
 const device = useDevice()
 
+
+const aaStore = useAAStore()
 const azimuth = computed(() => cameraStore.azimuth * (180 / Math.PI))
 const elevation = computed(() => cameraStore.elevation * (180 / Math.PI))
-
-function captureTarget() {
-    console.log(azimuth.value, elevation.value)
-}
 
 </script>
 

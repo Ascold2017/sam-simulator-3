@@ -1,25 +1,17 @@
 <template>
     <div class="action-bar">
-        <button class="action-button action-button_capture" @click="captureTarget">CAPTURE</button>
+        <button class="action-button action-button_capture" @click="aaStore.captureTarget">CAPTURE</button>
 
         <Map />
-        <button class="action-button action-button_fire">FIRE</button>
+        <button class="action-button action-button_fire" @click="aaStore.fireTarget">FIRE</button>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useCameraStore } from '../../../stores/camera';
 import Map from './Map.vue';
+import { useAAStore } from '../../../stores/aa';
 
-const cameraStore = useCameraStore()
-
-const azimuth = computed(() => cameraStore.azimuth * (180 / Math.PI))
-const elevation = computed(() => cameraStore.elevation * (180 / Math.PI))
-
-function captureTarget() {
-    console.log(azimuth.value, elevation.value)
-}
+const aaStore = useAAStore()
 </script>
 
 <style scoped>

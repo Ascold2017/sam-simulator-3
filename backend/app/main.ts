@@ -7,6 +7,7 @@ import cors from "cors";
 import { AppDataSource } from "./config/dataSource";
 import { missionController } from "./controllers/mission.controller";
 import { coreInstance } from "./config/coreInstance";
+import { gameController } from "./controllers/game.controller";
 
 
 const app = express();
@@ -36,6 +37,7 @@ app.use(cors());
 
         // Подключаем обработчики событий
         missionController(io, socket);
+        gameController(io, socket)
     });
 
     coreInstance.updateListener = () => {
