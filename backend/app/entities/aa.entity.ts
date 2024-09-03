@@ -23,6 +23,9 @@ export class AA extends BaseEntity {
     @Column({ type: 'double precision' })
     ammoVelocity: number;
 
+    @Column({ type: 'double precision' })
+    viewAngle: number;
+
     @ManyToOne(() => Mission, missionData => missionData.aas)
     mission: Mission;
 }

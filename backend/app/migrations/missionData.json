@@ -107,7 +107,8 @@
         "z": 0
       },
       "ammoMaxRange": 8000,
-      "ammoVelocity": 900
+      "ammoVelocity": 900,
+      "viewAngle": 0.523599
     },
     {
       "name": "aa-02",
@@ -118,7 +119,8 @@
         "z": 1200
       },
       "ammoMaxRange": 8000,
-      "ammoVelocity": 900
+      "ammoVelocity": 900,
+      "viewAngle": 0.523599
     }
   ]
 }

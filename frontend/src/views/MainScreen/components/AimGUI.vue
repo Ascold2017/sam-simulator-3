@@ -1,6 +1,6 @@
 <template>
     <div class="aim-target" :class="{ 'aim-target_landscape': device.orientation === 'landscape' }"
-        @click="aaStore.captureTarget">
+        @click="aaStore.captureTarget" @contextmenu.prevent="aaStore.fireTarget">
         <span class="aim-target__elevation">{{ elevation.toFixed(0) }}*</span>
         <span class="material-icons">fullscreen</span>
         <span class="aim-target__azimuth">{{ azimuth.toFixed(0) }}*</span>

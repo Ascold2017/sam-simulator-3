@@ -16,5 +16,6 @@ export const missionDto = (missionData: Mission): MissionData => ({
         ammoMaxRange: aa.ammoMaxRange,
         ammoVelocity: aa.ammoVelocity,
         type: aa.type as 'active-missile' | 'gun',
+        viewAngle: aa.viewAngle
     }))
 })
