@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 
 export const useDevice = defineStore('device', () => {
     const isMobile = ref(false);
@@ -24,10 +24,6 @@ export const useDevice = defineStore('device', () => {
         handleOrientationChange();
 
         isMobile.value = isMobileDevice()
-    });
-
-    onUnmounted(() => {
-        window.removeEventListener('orientationchange', handleOrientationChange);
     });
 
     return {
