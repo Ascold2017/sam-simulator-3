@@ -76,7 +76,7 @@ export const useSceneStore = defineStore('scene', () => {
     }
 
     function updateFlightObjects() {
-        const flightObjects = missionStore.flightObjects;
+        const flightObjects = missionStore.parsedFlightObjects;
         const existingMeshes = scene?.children.filter((obj) =>
             currentFlightObjects.value.has(obj.name),
         ) || [];
@@ -121,7 +121,7 @@ export const useSceneStore = defineStore('scene', () => {
         }
     })
 
-    watch(computed(() => missionStore.flightObjects), () => {
+    watch(computed(() => missionStore.parsedFlightObjects), () => {
         scene &&
             updateFlightObjects()
     })

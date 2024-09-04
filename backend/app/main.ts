@@ -42,6 +42,7 @@ app.use(cors());
 
     coreInstance.updateListener = () => {
         io.emit('flight_objects_update', coreInstance.getFlightObjects());
+        io.emit('captured_targets_update', coreInstance.getCapturedTargets())
     }
 
     server.listen(port, () => {

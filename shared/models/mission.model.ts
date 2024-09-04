@@ -1,4 +1,4 @@
-import type { FlightObjectDTO, MapData, } from "../../backend/core/app";
+import type { CapturedTarget, FlightObjectDTO, MapData, } from "../../backend/core/app";
 import { AAObjectDTO } from "../../backend/core/app/dto/AAObject.dto";
 
 export interface StartMissionPayload {
@@ -24,3 +24,4 @@ export interface MissionStoppedResponse {
 }
 
 export type FlightObjectsUpdateResponse = FlightObjectDTO[]
+export type CapturedTargetResponse = CapturedTarget[]

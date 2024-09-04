@@ -1,18 +1,26 @@
 import { defineStore } from "pinia";
 import { socketClient } from "../adapters/socketClient";
 import { useRouter } from "vue-router";
-import { MissionStartedResponse, StartMissionPayload, MissionEnvironmentPayload, FlightObjectsUpdateResponse } from "../../../shared/models/mission.model";
+import { MissionStartedResponse, StartMissionPayload, MissionEnvironmentPayload, FlightObjectsUpdateResponse, CapturedTargetResponse } from "../../../shared/models/mission.model";
 import { computed, ref } from "vue";
 
 export const useMissionStore = defineStore('mission', () => {
     const router = useRouter();
     const map = ref<MissionEnvironmentPayload['map']>({ size: 0, data: [] });
-    const flightObjects = ref<FlightObjectsUpdateResponse>([])
+    const flightObjects = ref<FlightObjectsUpdateResponse>([]);
+    const capturedTargetIds = ref<CapturedTargetResponse>([])
     const aas = ref<MissionEnvironmentPayload['aas']>([]);
     const currentAAId = ref<string | null>(null)
     const isInitialized = ref(false);
 
     const currentAA = computed(() => aas.value.find(aa => aa.id === currentAAId.value));
+
+    const parsedFlightObjects = computed(() => {
+        return flightObjects.value.map(fo => ({
+            ...fo,
+            isCaptured: capturedTargetIds.value.some(cti => cti.aaId === currentAAId.value && cti.targetId === fo.id)
+        }))
+    })
 
     function startMission() {
         socketClient.send<StartMissionPayload>('start_mission', { missionId: 1 })
@@ -74,6 +82,6 @@ export const useMissionStore = defineStore('mission', () => {
         map,
         aas,
         currentAA,
-        flightObjects
+        parsedFlightObjects
     }
 });
