@@ -88,7 +88,7 @@ export const useSceneStore = defineStore('scene', () => {
                 createFlightObject(scene!, flightObject);
                 currentFlightObjects.value.add(flightObject.id);
             } else {
-                updateFlightObject(mesh, flightObject)
+                updateFlightObject(mesh, flightObject, camera.value!)
             }
         });
 

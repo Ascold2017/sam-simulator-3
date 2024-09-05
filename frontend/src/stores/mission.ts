@@ -4,6 +4,10 @@ import { useRouter } from "vue-router";
 import { MissionStartedResponse, StartMissionPayload, MissionEnvironmentPayload, FlightObjectsUpdateResponse, CapturedTargetResponse } from "../../../shared/models/mission.model";
 import { computed, ref } from "vue";
 
+export type FlightObject = FlightObjectsUpdateResponse[number]
+export interface ParsedFlightObject extends FlightObject {
+    isCaptured: boolean;
+}
 export const useMissionStore = defineStore('mission', () => {
     const router = useRouter();
     const map = ref<MissionEnvironmentPayload['map']>({ size: 0, data: [] });
@@ -15,7 +19,7 @@ export const useMissionStore = defineStore('mission', () => {
 
     const currentAA = computed(() => aas.value.find(aa => aa.id === currentAAId.value));
 
-    const parsedFlightObjects = computed(() => {
+    const parsedFlightObjects = computed<ParsedFlightObject[]>(() => {
         return flightObjects.value.map(fo => ({
             ...fo,
             isCaptured: capturedTargetIds.value.some(cti => cti.aaId === currentAAId.value && cti.targetId === fo.id)
@@ -54,6 +58,10 @@ export const useMissionStore = defineStore('mission', () => {
 
     socketClient.listenToEvent<FlightObjectsUpdateResponse>('flight_objects_update', (data) => {
         flightObjects.value = data;
+    })
+
+    socketClient.listenToEvent<CapturedTargetResponse>('captured_targets_update', (data) => {
+        capturedTargetIds.value = data;
     })
 
     function restoreMission() {
