@@ -17,3 +17,7 @@ export const AppDataSource = new DataSource({
     synchronize: true,
     ssl: false,
 });
+
+export const DI = {
+    missionRepository: AppDataSource.getRepository(Mission)
+}

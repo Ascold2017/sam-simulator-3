@@ -9,7 +9,7 @@ const router = createRouter({
       component: () => import('../views/StartScreen/index.vue')
     },
     {
-      path: '/main/:id',
+      path: '/main',
       name: 'main',
       component: () => import('../views/MainScreen/index.vue')
     },

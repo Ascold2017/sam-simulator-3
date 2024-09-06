@@ -4,16 +4,15 @@ import express from "express";
 import { Server } from 'socket.io';
 import https from "https";
 import cors from "cors";
-import { AppDataSource } from "./config/dataSource";
-import { missionController } from "./controllers/mission.controller";
-import { coreInstance } from "./config/coreInstance";
-import { gameController } from "./controllers/game.controller";
+import { AppDataSource } from "./config/dataSource";;
+import { GameRoomManager } from "./services/gameRoomManager";
+import { ClientToServerEvents, ServerToClientEvents } from "../../shared/models/sockets.model";
 
 
 const app = express();
-const server = https.createServer( {
+const server = https.createServer({
     key: fs.readFileSync(__dirname + '/../../shared/cert.key'),
-    cert: fs.readFileSync(__dirname +  '/../../shared/cert.crt')
+    cert: fs.readFileSync(__dirname + '/../../shared/cert.crt')
 }, app);
 const port = process.env.PORT || 3000;
 
@@ -23,7 +22,7 @@ app.use(cors());
 (async () => {
     await AppDataSource.initialize();
     await AppDataSource.runMigrations();
-    const io = new Server(server, {
+    const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
         cors: {
             origin: "*", // Разрешить все домены
             methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Разрешенные методы
@@ -32,19 +31,35 @@ app.use(cors());
         }
     });
 
+    const gameRoomManager = new GameRoomManager(io);
     io.on('connection', (socket) => {
-        console.log('a user connected');
+        // Список комнат
+        gameRoomManager.getMissionRooms(socket)
 
-        // Подключаем обработчики событий
-        missionController(io, socket);
-        gameController(io, socket)
+        // Создать комнату
+        socket.on('create_mission_room', (missionId) => {
+            gameRoomManager.createRoom(missionId);
+        });
+
+        // Присоединиться к комнате
+        socket.on('join_mission_room', (missionId) => {
+            gameRoomManager.joinRoom(socket, missionId);
+        });
+
+        // Удалить комнату
+        socket.on('delete_mission_room', (missionId) => {
+            gameRoomManager.deleteRoom(missionId);
+        });
+
+        socket.on('leave_mission_room', (missionId) => {
+            gameRoomManager.leaveRoom(socket, missionId)
+        })
+
+        // Отключение пользователя
+        socket.on('disconnect', () => {
+            console.log(`User disconnected: ${socket.id}`);
+        });
     });
-
-    coreInstance.updateListener = () => {
-        io.emit('flight_objects_update', coreInstance.getFlightObjects());
-        io.emit('captured_targets_update', coreInstance.getCapturedTargets())
-    }
-
     server.listen(port, () => {
         console.log(`Server is running on port ${port}`);
     });

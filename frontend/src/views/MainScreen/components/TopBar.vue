@@ -3,7 +3,7 @@
 
         <span>{{ device.orientation === 'landscape' ? 'SEARCH' : 'CAPTURE' }}</span>
 
-        <button class="top-bar__button" @click="missionStore.stopMission">
+        <button class="top-bar__button" @click="roomStore.leaveRoom">
             Exit
         </button>
     </div>
@@ -11,10 +11,9 @@
 
 <script setup lang="ts">
 import { useDevice } from '../../../stores/device';
-import { useMissionStore } from '../../../stores/mission';
+import { useRooms } from '../../../stores/rooms';
 
-
-const missionStore = useMissionStore()
+const roomStore = useRooms()
 const device = useDevice()
 </script>
 

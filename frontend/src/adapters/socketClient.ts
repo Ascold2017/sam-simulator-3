@@ -1,4 +1,5 @@
 import { io, Socket } from "socket.io-client";
+import type { ClientToServerEvents, ServerToClientEvents } from '../../../shared/models/sockets.model'
 
 class SocketClient {
   private socket: Socket;
@@ -17,12 +18,13 @@ class SocketClient {
     this.socket.disconnect();
   }
 
-  send<T>(eventName: string, payload: T): void {
+  send<EventName extends keyof ClientToServerEvents>(eventName: EventName, payload: Parameters<ClientToServerEvents[EventName]>[0]): void {
     this.socket.emit(eventName, payload);
   }
 
-  listenToEvent<T>(eventName: string, cb: (payload: T) => void): void {
-    this.socket.on(eventName, (payload: T) => {
+  listenToEvent<EventName extends keyof ServerToClientEvents>(eventName: EventName, cb: (payload: Parameters<ServerToClientEvents[EventName]>[0]) => void): void {
+    // @ts-ignore
+    this.socket.on(eventName, (payload) => {
       cb(payload);
     });
   }

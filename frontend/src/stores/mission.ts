@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import { socketClient } from "../adapters/socketClient";
-import { useRouter } from "vue-router";
-import { MissionStartedResponse, StartMissionPayload, MissionEnvironmentPayload, FlightObjectsUpdateResponse, CapturedTargetResponse } from "../../../shared/models/mission.model";
+import { MissionEnvironmentPayload, FlightObjectsUpdateResponse, CapturedTargetResponse } from "../../../shared/models/mission.model";
 import { computed, ref } from "vue";
 
 export type FlightObject = FlightObjectsUpdateResponse[number]
@@ -9,7 +8,6 @@ export interface ParsedFlightObject extends FlightObject {
     isCaptured: boolean;
 }
 export const useMissionStore = defineStore('mission', () => {
-    const router = useRouter();
     const map = ref<MissionEnvironmentPayload['map']>({ size: 0, data: [] });
     const flightObjects = ref<FlightObjectsUpdateResponse>([]);
     const capturedTargetIds = ref<CapturedTargetResponse>([])
@@ -26,36 +24,14 @@ export const useMissionStore = defineStore('mission', () => {
         }))
     })
 
-    function startMission() {
-        socketClient.send<StartMissionPayload>('start_mission', { missionId: 1 })
-    }
-
-    socketClient.listenToEvent<MissionStartedResponse>('mission_started', (data) => {
-        if (data.success) {
-            localStorage.setItem('missionId', data.missionId!.toString())
-            router.push({ name: 'main', params: { id: data.missionId } });
-        } else {
-            router.push({ name: 'start', query: { message: data.message } });
-        }
-    })
-
-    socketClient.listenToEvent('mission_stopped', () => {
-        localStorage.removeItem('missionId')
-        router.push({ name: 'start' })
-        map.value = { size: 0, data: [] }
-        flightObjects.value = []
-        aas.value = []
-        currentAAId.value = null;
-        isInitialized.value = false;
-    })
-
-    socketClient.listenToEvent<MissionEnvironmentPayload>('mission_environment', (data) => {
+    socketClient.listenToEvent('mission_environment', (data) => {
         map.value = data.map;
         aas.value = data.aas;
         currentAAId.value = data.aas[0]?.id || null;
         isInitialized.value = true;
     })
 
+    /*
     socketClient.listenToEvent<FlightObjectsUpdateResponse>('flight_objects_update', (data) => {
         flightObjects.value = data;
     })
@@ -63,19 +39,8 @@ export const useMissionStore = defineStore('mission', () => {
     socketClient.listenToEvent<CapturedTargetResponse>('captured_targets_update', (data) => {
         capturedTargetIds.value = data;
     })
+        */
 
-    function restoreMission() {
-        const missionId = localStorage.getItem('missionId')
-        if (missionId) {
-            socketClient.send('restore_mission', { missionId: +missionId })
-        }
-    }
-
-    function stopMission() {
-        socketClient.send('stop_mission', undefined)
-    }
-
-    restoreMission();
 
     function selectCurrentAA(aaId: string) {
         currentAAId.value = aaId;
@@ -83,8 +48,6 @@ export const useMissionStore = defineStore('mission', () => {
 
 
     return {
-        startMission,
-        stopMission,
         selectCurrentAA,
         isInitialized,
         map,
