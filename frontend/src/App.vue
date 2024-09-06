@@ -9,7 +9,7 @@ useMissionStore();
 const router = useRouter()
 
 onMounted(() => {
-  if (!roomStore.currentMissionId) {
+  if (!roomStore.currentRoomId) {
     router.push({ name: 'start' })
   }
 })

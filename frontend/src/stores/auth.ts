@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { LoginResponse, RegisterResponse, type User } from '../../../shared/models/auth.model'
+import { LoginResponse, RegisterResponse, UserResponse, type User } from '../../../shared/models/auth.model'
 import { httpClient } from '../adapters/httpClient';
 
 export const useAuthStore = defineStore('auth', () => {
@@ -20,7 +20,7 @@ export const useAuthStore = defineStore('auth', () => {
             localStorage.setItem('token', token.value);
             router.push({ name: 'start' });
         } catch (error) {
-            console.error('Ошибка регистрации:', error);
+            alert('Ошибка регистрации: ' +  error);
             throw error;
         }
     };
@@ -35,10 +35,21 @@ export const useAuthStore = defineStore('auth', () => {
             localStorage.setItem('token', token.value);
             router.push({ name: 'start' });
         } catch (error) {
-            console.error('Ошибка авторизации:', error);
+            alert('Ошибка авторизации: ' + error);
             throw error;
         }
     };
+
+    async function getUser() {
+        try {
+            const data = await httpClient.get<UserResponse>('/user');
+            user.value = data.user;
+            isAuthenticated.value = true;
+        } catch (error) {
+            alert('Ошибка авторизации: ' + error);
+            throw error;
+        }
+    }
 
     // Выход пользователя
     function logout() {
@@ -54,6 +65,7 @@ export const useAuthStore = defineStore('auth', () => {
         token,
         user,
         isAuthenticated,
+        getUser,
         register,
         login,
         logout

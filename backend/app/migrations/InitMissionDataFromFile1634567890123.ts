@@ -76,6 +76,7 @@ export class InitMissionDataFromFile1634567890123 implements MigrationInterface 
           ammoMaxRange: aa.ammoMaxRange,
           ammoVelocity: aa.ammoVelocity,
           viewAngle: aa.viewAngle,
+          reloadTime: aa.reloadTime
         });
         await aaRepository.save(aaEntity);
       }

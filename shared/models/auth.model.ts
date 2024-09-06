@@ -12,6 +12,10 @@ export interface User {
     }
   }
 
+  export interface UserResponse {
+    user: User
+  }
+  
   export interface RegisterResponse {
     message: string;
     token: string;

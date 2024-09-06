@@ -4,13 +4,15 @@
             "type": "active-missile",
             "ammoMaxRange": 8000,
             "ammoVelocity": 900,
-            "viewAngle": 0.523599
+            "viewAngle": 0.523599,
+            "reloadTime": 3
         },
         {
             "name": "aa-02",
             "type": "gun",
             "ammoMaxRange": 3000,
             "ammoVelocity": 800,
-            "viewAngle": 0.523599
+            "viewAngle": 0.523599,
+            "reloadTime": 0.001
         }
     ]

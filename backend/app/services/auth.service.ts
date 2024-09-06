@@ -5,6 +5,10 @@ import jwt from 'jsonwebtoken';
 
 export class AuthService {
 
+    async getUser(id: number) {
+        return await DI.userRepository.findOne({ where: { id }, relations: ['aa'] });
+    }
+
     // Регистрация пользователя
     async register(username: string, password: string): Promise<{ token: string; user: User }> {
         const existingUser = await DI.userRepository.findOne({ where: { username }, relations: ['aa'] });
@@ -48,9 +52,9 @@ export class AuthService {
     }
 
     // Проверка токена (это можно использовать в middleware для проверки доступа)
-    verifyToken(token: string): any {
+    verifyToken(token: string) {
         try {
-            return jwt.verify(token, process.env.TOKEN_SECRET); // Вернется объект с данными пользователя
+            return jwt.verify(token, process.env.TOKEN_SECRET) as { id: number; username: string }; // Вернется объект с данными пользователя
         } catch (e) {
             throw new Error('Invalid token');
         }

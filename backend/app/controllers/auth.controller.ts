@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { AuthService } from "../services/auth.service";
 
 const authService = new AuthService();
@@ -25,5 +25,29 @@ export class AuthController {
         } catch (error) {
             res.status(400).json({ error: error.message });
         }
+    }
+
+    public async getUser(req: Request, res: Response) {
+        const { id } = req.body.userState;
+        try {
+            const user = await authService.getUser(id);
+            res.status(200).json({ user });
+        } catch (error) {
+            res.status(400).json({ error: error.message });
+        }
+
+    }
+
+    public async authMiddleware(req: Request, res: Response, next: NextFunction) {
+        if (req.headers['authorization']) {
+            try {
+                req.body.userState = authService.verifyToken(req.headers['authorization']);
+                next()
+            } catch {
+                next(false)
+            }
+            return;
+        }
+        next(false);
     }
 }

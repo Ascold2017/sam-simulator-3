@@ -19,6 +19,9 @@ export class AA extends BaseEntity {
     @Column({ type: 'double precision' })
     viewAngle: number;
 
+    @Column({ type: 'double precision' })
+    reloadTime: number;
+
     @ManyToOne(() => User, user => user.aa)
     users: User[]
 }

@@ -1,40 +1,36 @@
 <template>
     <div class="auth-page">
+        <h2 class="auth-page__title">AA SIMULATOR</h2>
         <div class="flip-card" :class="{ flipped: isFlipped }">
+
             <!-- Лицевая сторона (Логин) -->
             <div class="flip-card-inner">
-                <div class="flip-card-front">
-                    <div class="auth-card">
-                        <h2 class="text-xl font-semibold mb-4">Логин</h2>
-                        <form @submit.prevent="handleSubmit">
-                            <input v-model="username" type="text" placeholder="Имя пользователя" class="input"
-                                required />
-                            <input v-model="password" type="password" placeholder="Пароль" class="input" required />
-                            <button type="submit" class="btn-primary mt-4">Войти</button>
-                        </form>
-                        <p class="mt-4">
-                            Нет аккаунта?
-                            <button @click="toggleCard" class="link-button">Регистрация</button>
-                        </p>
-                    </div>
-                </div>
+                <article class="flip-card-front auth-card">
+                    <h3 class="auth-card__title">Sign In</h3>
+                    <form @submit.prevent="handleSubmit">
+                        <input v-model="username" type="text" placeholder="Username" class="input" required />
+                        <input v-model="password" type="password" placeholder="Password" class="input" required />
+                        <button type="submit" class="btn-primary mt-4">Submit</button>
+                    </form>
+                    <p class="mt-4">
+                        No account?
+                        <button @click="toggleCard" class="link-button">Sign Up</button>
+                    </p>
+                </article>
 
                 <!-- Обратная сторона (Регистрация) -->
-                <div class="flip-card-back">
-                    <div class="auth-card">
-                        <h2 class="text-xl font-semibold mb-4">Регистрация</h2>
-                        <form @submit.prevent="handleSubmit">
-                            <input v-model="username" type="text" placeholder="Имя пользователя" class="input"
-                                required />
-                            <input v-model="password" type="password" placeholder="Пароль" class="input" required />
-                            <button type="submit" class="btn-primary mt-4">Зарегистрироваться</button>
-                        </form>
-                        <p class="mt-4">
-                            Уже есть аккаунт?
-                            <button @click="toggleCard" class="link-button">Логин</button>
-                        </p>
-                    </div>
-                </div>
+                <article class="auth-card flip-card-back">
+                    <h2 class="auth-card__title">Sign Up</h2>
+                    <form @submit.prevent="handleSubmit">
+                        <input v-model="username" type="text" placeholder="Username" class="input" required />
+                        <input v-model="password" type="password" placeholder="Password" class="input" required />
+                        <button type="submit" class="btn-primary mt-4">Submit</button>
+                    </form>
+                    <p class="mt-4">
+                        Already have an account?
+                        <button @click="toggleCard" class="link-button">Sign</button>
+                    </p>
+                </article>
             </div>
         </div>
     </div>
@@ -74,12 +70,16 @@ const handleSubmit = async () => {
 
 <style scoped>
 .auth-page {
-    @apply flex justify-center items-center h-screen;
+    @apply flex flex-col justify-center items-center h-screen;
+}
+
+.auth-page__title {
+    @apply text-white mb-3 font-bold;
 }
 
 
 .flip-card {
-    @apply w-80 h-80;
+    @apply w-80 h-72;
     perspective: 1000px;
 }
 
@@ -110,6 +110,10 @@ const handleSubmit = async () => {
 
 .auth-card {
     @apply w-full p-6 text-center shadow-lg rounded-lg;
+}
+
+.auth-card__title {
+    @apply text-xl font-semibold mb-2;
 }
 
 .input {
