@@ -41,6 +41,7 @@ export const useAuthStore = defineStore('auth', () => {
     };
 
     async function getUser() {
+        if (!isAuthenticated.value) return;
         try {
             const data = await httpClient.get<UserResponse>('/user');
             user.value = data.user;
@@ -60,6 +61,8 @@ export const useAuthStore = defineStore('auth', () => {
         router.push({ name: 'auth' });
     };
 
+
+    getUser();
 
     return {
         token,
