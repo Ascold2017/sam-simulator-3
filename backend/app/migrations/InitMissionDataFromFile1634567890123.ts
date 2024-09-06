@@ -5,6 +5,7 @@ import { AA } from '../entities/aa.entity';
 import { Target } from '../entities/target.entity';
 import * as fs from 'fs';
 import * as path from 'path';
+import { Map } from '../entities/map.entity';
 
 // Функция для получения данных из файлов
 function getDataFromFile<T>(fileName: string): T {
@@ -26,8 +27,9 @@ export class InitMissionDataFromFile1634567890123 implements MigrationInterface 
     const missionTargetRepository = queryRunner.manager.getRepository(MissionTarget);
     const aaRepository = queryRunner.manager.getRepository(AA);
     const targetRepository = queryRunner.manager.getRepository(Target);
+    const mapRepository = queryRunner.manager.getRepository(Map);
 
-    // Сохраняем цели в базе данных
+    // Сохраняем цели (Target) в базе данных
     for (const target of targetData) {
       const targetEntity = targetRepository.create({
         name: target.name,
@@ -38,48 +40,65 @@ export class InitMissionDataFromFile1634567890123 implements MigrationInterface 
       await targetRepository.save(targetEntity);
     }
 
-    // Сохраняем карты (mapId должны быть связаны с картами, если нужно)
-    const savedMaps = mapsData.map(map => ({
-      size: map.size,
-      data: map.data,
-    }));
+    // Сохраняем карты (Map) в базе данных
+    const savedMaps = [];
+    for (const map of mapsData) {
+      const mapEntity = mapRepository.create({
+        name: map.name,
+        map: {
+          size: map.size,
+          data: map.data,
+        },
+      });
+      const savedMap = await mapRepository.save(mapEntity);
+      savedMaps.push(savedMap);
+    }
 
-    // Сохраняем миссии
+    // Сохраняем зенитки (AA)
+    for (const aa of aaData) {
+      const aaEntity = aaRepository.create({
+        name: aa.name,
+        type: aa.type,
+        ammoMaxRange: aa.ammoMaxRange,
+        ammoVelocity: aa.ammoVelocity,
+        viewAngle: aa.viewAngle,
+        reloadTime: aa.reloadTime, // Учитываем время перезарядки
+      });
+      await aaRepository.save(aaEntity);
+    }
+
+    // Сохраняем миссии (Mission)
     for (const mission of missionData) {
-      // Предположим, что у каждой миссии есть карта (mapsData)
-      const missionMap = savedMaps[0];
-      
+      const missionMap = savedMaps.find(map => map.id === mission.mapId);
+
+      if (!missionMap) {
+        throw new Error(`Map with id ${mission.mapId} not found`);
+      }
+
       const missionEntity = missionRepository.create({
         name: mission.name,
         map: missionMap,
-        aaPositions: [], // Здесь можем позже добавить позиции для AA
+        aaPositions: mission.aaPositions,
       });
-      await missionRepository.save(missionEntity);
+      const savedMission = await missionRepository.save(missionEntity);
 
-      // Сохраняем цели миссии
+      // Сохраняем цели миссии (MissionTarget)
       for (const target of mission.targets) {
         const targetEntity = await targetRepository.findOne({ where: { id: target.targetId } });
+
+        if (!targetEntity) {
+          throw new Error(`Target with id ${target.targetId} not found`);
+        }
 
         const missionTargetEntity = missionTargetRepository.create({
           target: targetEntity,
           waypoints: target.waypoints,
-          mission: missionEntity,
+          mission: savedMission,
         });
         await missionTargetRepository.save(missionTargetEntity);
       }
 
-      // Сохраняем зенитки для каждой миссии
-      for (const aa of aaData) {
-        const aaEntity = aaRepository.create({
-          name: aa.name,
-          type: aa.type,
-          ammoMaxRange: aa.ammoMaxRange,
-          ammoVelocity: aa.ammoVelocity,
-          viewAngle: aa.viewAngle,
-          reloadTime: aa.reloadTime
-        });
-        await aaRepository.save(aaEntity);
-      }
+      
     }
   }
 
@@ -88,5 +107,6 @@ export class InitMissionDataFromFile1634567890123 implements MigrationInterface 
     await queryRunner.manager.getRepository(Target).delete({});
     await queryRunner.manager.getRepository(AA).delete({});
     await queryRunner.manager.getRepository(Mission).delete({});
+    await queryRunner.manager.getRepository(Map).delete({});
   }
 }

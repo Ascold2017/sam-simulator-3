@@ -1,17 +1,15 @@
-import { Entity, Column, OneToMany } from "typeorm";
+import { Entity, Column, OneToMany, ManyToOne } from "typeorm";
 import { MissionTarget } from "./missionTarget.entity";
 import { BaseEntity } from "./base.entity";
+import { Map } from "./map.entity";
 
 @Entity()
 export class Mission extends BaseEntity {
     @Column()
     name: string;
 
-    @Column("jsonb")
-    map: {
-        size: number;
-        data: number[][];
-    };
+    @ManyToOne(() => Map, map => map.missions)
+    map: Map;
 
     @OneToMany(() => MissionTarget, target => target.mission)
     targets: MissionTarget[];

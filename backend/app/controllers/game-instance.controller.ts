@@ -47,14 +47,14 @@ export class GameInstanceController {
         try {
             const missionData = await DI.missionRepository.findOne({
                 where: { id: missionId },
-                relations: ['targets'],
+                relations: ['targets', 'map', 'targets.target'],
             });
 
             if (!missionData) {
                 throw new Error(`Mission with ID ${missionId} not found`);
             }
-
             const parsedMissionData = missionDto(missionData);
+
             this.coreInstance.startMission(parsedMissionData);
             console.log(`Mission ${missionId} started successfully`);
 
