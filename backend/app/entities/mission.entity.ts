@@ -1,5 +1,5 @@
 import { Entity, Column, OneToMany } from "typeorm";
-import { Target } from "./target.entity";
+import { MissionTarget } from "./missionTarget.entity";
 import { BaseEntity } from "./base.entity";
 
 @Entity()
@@ -13,6 +13,13 @@ export class Mission extends BaseEntity {
         data: number[][];
     };
 
-    @OneToMany(() => Target, target => target.mission)
-    targets: Target[];
+    @OneToMany(() => MissionTarget, target => target.mission)
+    targets: MissionTarget[];
+
+    @Column("jsonb")
+    aaPositions: {
+        x: number;
+        y: number;
+        z: number;
+    }[] = [];
 }

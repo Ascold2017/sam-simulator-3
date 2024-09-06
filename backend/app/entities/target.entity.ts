@@ -1,6 +1,6 @@
-import { Entity, Column, ManyToOne } from "typeorm";
-import { Mission } from "./mission.entity";
+import { Entity, Column, OneToMany } from "typeorm";
 import { BaseEntity } from "./base.entity";
+import { MissionTarget } from "./missionTarget.entity";
 
 @Entity()
 export class Target extends BaseEntity {
@@ -16,16 +16,6 @@ export class Target extends BaseEntity {
     @Column({ type: 'double precision' })
     size: number;
 
-    @Column("jsonb")
-    waypoints: {
-        position: {
-            x: number;
-            y: number;
-            z: number;
-        };
-        speed: number;
-    }[];
-
-    @ManyToOne(() => Mission, missionData => missionData.targets)
-    mission: Mission;
+    @OneToMany(() => MissionTarget, missionTarget => missionTarget.target)
+    missionTargets: MissionTarget[]
 }

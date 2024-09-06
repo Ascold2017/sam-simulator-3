@@ -6,22 +6,25 @@ import jwt from 'jsonwebtoken';
 export class AuthService {
 
     // Регистрация пользователя
-    async register(username: string, password: string): Promise<User> {
-        const existingUser = await DI.userRepository.findOne({ where: { username } });
+    async register(username: string, password: string): Promise<{ token: string; user: User }> {
+        const existingUser = await DI.userRepository.findOne({ where: { username }, relations: ['aa'] });
 
         if (existingUser) {
             throw new Error('User already exists');
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = DI.userRepository.create({ username, password: hashedPassword });
+        const aa = await DI.aaRepository.findOne({})
+        const user = DI.userRepository.create({ username, password: hashedPassword, aa });
 
-        return await DI.userRepository.save(user);
+        const createdUser = await DI.userRepository.save(user)
+        const token = this.generateToken(user);
+        return { user: createdUser, token };
     }
 
     // Авторизация пользователя
     async login(username: string, password: string): Promise<{ token: string; user: User }> {
-        const user = await DI.userRepository.findOne({ where: { username } });
+        const user = await DI.userRepository.findOne({ where: { username }, relations: ['aa'] });
 
         if (!user) {
             throw new Error('User not found');

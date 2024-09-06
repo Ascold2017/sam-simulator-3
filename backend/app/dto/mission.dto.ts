@@ -3,11 +3,11 @@ import { Mission } from "../entities/mission.entity";
 
 export const missionDto = (missionData: Mission): MissionData => ({
     map: missionData.map,
-    targets: missionData.targets.map(target => ({
-        id: target.name,
-        rcs: target.rcs,
-        temperature: target.temperature,
-        size: target.size,
-        waypoints: target.waypoints,
+    targets: missionData.targets.map(mTarget => ({
+        id: mTarget.target.name,
+        rcs: mTarget.target.rcs,
+        temperature: mTarget.target.temperature,
+        size: mTarget.target.size,
+        waypoints: mTarget.waypoints,
     }))
 })
