@@ -14,6 +14,6 @@ export class User extends BaseEntity {
   @Column({ default: false })
   isPremium: boolean;
 
-  @OneToOne(() => AA)
+  @OneToOne(() => AA, aa => aa.users)
   aa: AA;
 }

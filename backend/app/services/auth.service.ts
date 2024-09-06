@@ -12,9 +12,8 @@ export class AuthService {
         if (existingUser) {
             throw new Error('User already exists');
         }
-
         const hashedPassword = await bcrypt.hash(password, 10);
-        const aa = await DI.aaRepository.findOne({})
+        const aa = await DI.aaRepository.findOne({ where: { id: 1 }})
         const user = DI.userRepository.create({ username, password: hashedPassword, aa });
 
         const createdUser = await DI.userRepository.save(user)

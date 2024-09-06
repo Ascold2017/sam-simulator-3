@@ -1,5 +1,6 @@
-import { Entity, Column } from "typeorm";
+import { Entity, Column, ManyToMany, ManyToOne } from "typeorm";
 import { BaseEntity } from "./base.entity";
+import { User } from "./user.entity";
 
 @Entity()
 export class AA extends BaseEntity {
@@ -17,4 +18,7 @@ export class AA extends BaseEntity {
 
     @Column({ type: 'double precision' })
     viewAngle: number;
+
+    @ManyToOne(() => User, user => user.aa)
+    users: User[]
 }
