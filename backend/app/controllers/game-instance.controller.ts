@@ -1,12 +1,11 @@
-import { AppDataSource } from "../config/dataSource";
+import { ClientToServerEvents, ServerToClientEvents } from "@shared/models/sockets.model";
+import { DI } from "../config/dataSource";
 import { missionDto } from "../dto/mission.dto";
-import { Mission } from "../entities/mission.entity";
 import { Core } from "../../core/app";
 import { Server, Socket } from "socket.io";
-import { GameController } from "./gameController";
-import { ClientToServerEvents, ServerToClientEvents } from "@shared/models/sockets.model";
+import { GamePlayerController } from "./game-player.controller";
 
-export class GameInstance {
+export class GameInstanceController {
     private coreInstance: Core;
     private io: Server<ClientToServerEvents, ServerToClientEvents>;
     private players: Map<string, Socket> = new Map(); 
@@ -20,7 +19,7 @@ export class GameInstance {
     public addPlayer(socket: Socket) {
         this.players.set(socket.id, socket);
         console.log(`Player ${socket.id} added to the game`);
-        new GameController(this.coreInstance, socket)
+        new GamePlayerController(this.coreInstance, socket)
     }
 
     // Удаление игрока
@@ -46,9 +45,9 @@ export class GameInstance {
     // Запуск миссии
     private async startMission(missionId: number) {
         try {
-            const missionData = await AppDataSource.getRepository(Mission).findOne({
+            const missionData = await DI.missionRepository.findOne({
                 where: { id: missionId },
-                relations: ['targets', 'aas'],
+                relations: ['targets'],
             });
 
             if (!missionData) {

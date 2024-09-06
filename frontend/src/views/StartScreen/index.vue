@@ -3,10 +3,11 @@
         <h1 class="start-screen__title">AA Simulator</h1>
 
         <!-- Селектор для выбора миссии и кнопка создания комнаты -->
+        
         <div class="start-screen__mission-selector">
             <select v-model="selectedMissionId" class="start-screen__select">
-                <option v-for="room in availableRooms" :key="room.id" :value="room.id">
-                    {{ room.name }}
+                <option v-for="mission in missions" :key="mission.id" :value="mission.id">
+                    {{ mission.name }}
                 </option>
             </select>
             <button class="start-screen__button" @click="createMissionRoom" :disabled="!selectedMissionId">
@@ -23,7 +24,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="room in createdRooms" :key="room.id">
+                <tr v-for="room in parsedMissionRooms" :key="room.id">
                     <td>{{ room.name }}</td>
                     <td>
                         <button class="start-screen__button" @click="roomsStore.joinRoom(room.id)">
@@ -40,20 +41,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useRooms } from '../../stores/rooms';
 import { storeToRefs } from 'pinia';
+import { useMissions } from '../../stores/missions';
+import { onMounted } from 'vue';
 
 // Подключаем Pinia store для работы с комнатами
+const missionsStore = useMissions()
 const roomsStore = useRooms();
-const { rooms } = storeToRefs(roomsStore)
+const { parsedMissionRooms } = storeToRefs(roomsStore)
+const { missions } = storeToRefs(missionsStore)
 
 // Состояние для выбранной миссии
 const selectedMissionId = ref<number | null>(null);
-
-// Создание computed для фильтрации доступных миссий и созданных комнат
-const availableRooms = computed(() => rooms.value.filter(room => !room.isCreated)); // Доступные комнаты (не созданные)
-const createdRooms = computed(() => rooms.value.filter(room => room.isCreated)); // Созданные комнаты
 
 // Метод для создания комнаты
 function createMissionRoom() {
@@ -62,6 +63,10 @@ function createMissionRoom() {
         selectedMissionId.value = null; // Сбрасываем выбранную миссию после создания
     }
 }
+
+onMounted(() => {
+    missionsStore.getMissions()
+})
 </script>
 
 <style scoped>

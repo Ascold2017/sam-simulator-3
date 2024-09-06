@@ -1,16 +1,15 @@
 import { AAObjectDTO, MapData } from "core/app";
 
 export interface MissionRoom {
-    id: number;
-    name: string;
-    isCreated: boolean;
+    id: string;
+    missionId: number;
 }
 export type MissionID = number;
 export interface ClientToServerEvents {
     create_mission_room: (missionId: MissionID) => void;
-    join_mission_room: (missionId: MissionID) => void;
-    leave_mission_room: (missionId: MissionID) => void;
-    delete_mission_room: (missionId: MissionID) => void;
+    join_mission_room: (roomId: string) => void;
+    leave_mission_room: (roomId: string) => void;
+    delete_mission_room: (roomId: string) => void;
     disconnect: () => void;
 }
 
@@ -20,10 +19,10 @@ export interface MissionData {
 }
 export interface ServerToClientEvents {
     mission_rooms: (missions: MissionRoom[]) => void;
-    mission_room_created: (missionId: MissionID) => void;
-    player_joined: (missionId: MissionID) => void;
+    mission_room_created: (payload: { id: string; missionId: MissionID }) => void;
+    player_joined: (roomId: string) => void;
     player_leaved: (socketId: string) => void;
-    room_deleted: (missionId: MissionID) => void;
+    room_deleted: (roomId: string) => void;
     mission_environment: (missionData: MissionData) => void;
     
 }

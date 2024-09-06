@@ -9,13 +9,5 @@ export const missionDto = (missionData: Mission): MissionData => ({
         temperature: target.temperature,
         size: target.size,
         waypoints: target.waypoints,
-    })),
-    aas: missionData.aas.map(aa => ({
-        id: aa.name,
-        position: aa.position,
-        ammoMaxRange: aa.ammoMaxRange,
-        ammoVelocity: aa.ammoVelocity,
-        type: aa.type as 'active-missile' | 'gun',
-        viewAngle: aa.viewAngle
     }))
 })

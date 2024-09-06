@@ -4,9 +4,10 @@ import express from "express";
 import { Server } from 'socket.io';
 import https from "https";
 import cors from "cors";
-import { AppDataSource } from "./config/dataSource";;
-import { GameRoomManager } from "./services/gameRoomManager";
-import { ClientToServerEvents, ServerToClientEvents } from "../../shared/models/sockets.model";
+import { ClientToServerEvents, ServerToClientEvents } from "@shared/models/sockets.model";
+import router from "./router/router";
+import { GameRoomsController } from "./controllers/game-rooms.controller";
+import { AppDataSource } from "./config/dataSource";
 
 
 const app = express();
@@ -18,6 +19,7 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json()); // Поддержка JSON-формата
 app.use(cors());
+app.use(router);
 
 (async () => {
     await AppDataSource.initialize();
@@ -31,35 +33,8 @@ app.use(cors());
         }
     });
 
-    const gameRoomManager = new GameRoomManager(io);
-    io.on('connection', (socket) => {
-        // Список комнат
-        gameRoomManager.getMissionRooms(socket)
-
-        // Создать комнату
-        socket.on('create_mission_room', (missionId) => {
-            gameRoomManager.createRoom(missionId);
-        });
-
-        // Присоединиться к комнате
-        socket.on('join_mission_room', (missionId) => {
-            gameRoomManager.joinRoom(socket, missionId);
-        });
-
-        // Удалить комнату
-        socket.on('delete_mission_room', (missionId) => {
-            gameRoomManager.deleteRoom(missionId);
-        });
-
-        socket.on('leave_mission_room', (missionId) => {
-            gameRoomManager.leaveRoom(socket, missionId)
-        })
-
-        // Отключение пользователя
-        socket.on('disconnect', () => {
-            console.log(`User disconnected: ${socket.id}`);
-        });
-    });
+    new GameRoomsController(io);
+   
     server.listen(port, () => {
         console.log(`Server is running on port ${port}`);
     });

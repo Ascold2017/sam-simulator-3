@@ -11,9 +11,11 @@
     "resolveJsonModule": true,
     "baseUrl": "./",
     "paths": {
-      "@shared/*": ["../shared/*"]
+      "@shared/*": ["../shared/*"],
+      "@/*": ["./app/*"],
+      "@core/*": ["./core/*"]
     }
   },
   "include": ["app"],
-  "exclude": ["node_modules", "core"]
+  "exclude": ["node_modules"]
 }

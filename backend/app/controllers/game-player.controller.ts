@@ -1,8 +1,8 @@
+import { ClientToServerEvents, ServerToClientEvents } from "@shared/models/sockets.model";
 import { Core } from "../../core/app";
 import { Socket } from "socket.io";
-import { ClientToServerEvents, ServerToClientEvents } from "@shared/models/sockets.model";
 
-export class GameController {
+export class GamePlayerController {
     private coreInstance: Core;
     private socket: Socket<ClientToServerEvents, ServerToClientEvents>;
     constructor(core: Core, socket: Socket) {

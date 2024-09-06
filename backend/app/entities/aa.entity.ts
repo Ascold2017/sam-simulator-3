@@ -1,18 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
-import { Mission } from "./mission.entity";
+import { Entity, Column } from "typeorm";
 import { BaseEntity } from "./base.entity";
 
 @Entity()
 export class AA extends BaseEntity {
     @Column()
     name: string;
-
-    @Column("jsonb")
-    position: {
-        x: number;
-        y: number;
-        z: number;
-    };
 
     @Column()
     type: 'active-missile' | 'gun'
@@ -25,7 +17,4 @@ export class AA extends BaseEntity {
 
     @Column({ type: 'double precision' })
     viewAngle: number;
-
-    @ManyToOne(() => Mission, missionData => missionData.aas)
-    mission: Mission;
 }

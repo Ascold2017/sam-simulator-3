@@ -12,6 +12,7 @@
   "dependencies": {
     "@tresjs/cientos": "^4.0.0",
     "@tresjs/core": "^4.2.7",
+    "axios": "^1.7.7",
     "konva": "^9.3.14",
     "lodash": "^4.17.21",
     "mkcert": "^3.2.0",
