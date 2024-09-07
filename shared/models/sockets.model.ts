@@ -18,13 +18,13 @@ export interface ClientToServerEvents {
 export interface AAPosition {
     id: number;
     position: Position;
-    isOccupied: boolean
+    aaId: string;
 }
 export interface MissionData {
     map: MapData;
     aas: AAObject[];
     yourAAId: string;
-    aaPositions: AAPosition[]
+    aaPositions: AAPosition[];
 }
 
 export interface PlayerJoinedData {
@@ -40,6 +40,7 @@ export interface ServerToClientEvents {
     room_deleted: (roomId: string) => void;
     mission_environment: (missionData: MissionData) => void;
     mission_aas_update: (aas: MissionData['aas']) => void;
+    mission_aas_positions_update: (aaPositions: MissionData['aaPositions']) => void;
     error: (error: string) => void;
     
 }

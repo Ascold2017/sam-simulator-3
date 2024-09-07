@@ -8,7 +8,7 @@
         <div class="map-container">
             <img src="https://placehold.co/600x600" alt="Карта" class="map-image">
             <span v-for="aa in missionStore.aaPositions" :key="aa.id"
-                :class="['map-aa', { 'map-aa_current': false }]" :style="getAAStyle(aa)"
+                :class="['map-aa', { 'map-aa_current': aa.aaId === missionStore.currentAA.id }]" :style="getAAStyle(aa)"
                 @click="missionStore.selectCurrentAA(aa.id)">
                 ▲
             </span>

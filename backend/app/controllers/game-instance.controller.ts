@@ -129,6 +129,7 @@ export class GameInstanceController {
 
         console.log(`Player ${socket.id} moved to new position:`, newPosition);
         this.io.emit('mission_aas_update', this.coreInstance.getAAs())
+        this.io.emit('mission_aas_positions_update', this.getAAPositions())
     }
 
     // Запуск миссии
@@ -167,11 +168,7 @@ export class GameInstanceController {
             },
             aas,
             yourAAId: playerData.aaId,
-            aaPositions: this.missionData.aaPositions.map(aaPosition => ({
-                id: aaPosition.id,
-                position: aaPosition.position,
-                isOccupied: this.isPositionOccupied(aaPosition.id)
-            }))
+            aaPositions: this.getAAPositions()
         });
     }
 
@@ -186,5 +183,17 @@ export class GameInstanceController {
         return Array.from(this.players.values()).some(
             (player) => player.aaPositionId === positionId
         );
+    }
+
+    private getAAPositions() {
+        return this.missionData.aaPositions.map(aaPosition => {
+            const player = Array.from(this.players.values())
+                .find((playerData) => aaPosition.id === playerData.aaPositionId);
+            return {
+            id: aaPosition.id,
+            position: aaPosition.position,
+            aaId: player?.aaId || null///
+        }
+    })
     }
 }

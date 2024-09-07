@@ -35,6 +35,10 @@ export const useMissionStore = defineStore('mission', () => {
         aas.value = aasData;
     })
 
+    socketClient.listenToEvent('mission_aas_positions_update', update => {
+        aaPositions.value = update;
+    })
+
 
     function selectCurrentAA(aaId: number) {
         socketClient.send('change_aa_position', aaId)
