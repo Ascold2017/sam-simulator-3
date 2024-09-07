@@ -65,11 +65,11 @@ export class GameRoomsController {
 
     // Создать комнату и игру
     private createRoom(missionId: number): void {
-
+        const roomId =  uuidv4();
         const missionRoom = {
-            id: uuidv4(),
+            id:roomId,
             missionId,
-            gameInstanceController: new GameInstanceController(missionId, this.io)
+            gameInstanceController: new GameInstanceController(roomId, missionId, this.io)
         }
         this.missionRooms.push(missionRoom);
         console.log(`Mission room ${missionId} created with a new game instance`);
@@ -90,8 +90,7 @@ export class GameRoomsController {
 
         socket.join(roomId);
         room.gameInstanceController.addPlayer(socket);
-        console.log(`Player ${socket.id} joined room ${room.id}`);
-        this.io.to(room.id).emit('player_joined', room.id);
+        
 
         // Удаление игрока при отключении
         socket.on('disconnect', () => {

@@ -1,17 +1,18 @@
 import { defineStore } from "pinia";
 import { socketClient } from "../adapters/socketClient";
-import { MissionEnvironmentPayload, FlightObjectsUpdateResponse, CapturedTargetResponse } from "../../../shared/models/mission.model";
+import { FlightObjectsUpdateResponse, CapturedTargetResponse } from "../../../shared/models/mission.model";
 import { computed, ref } from "vue";
+import type { MissionData } from "../../../shared/models/sockets.model";
 
 export type FlightObject = FlightObjectsUpdateResponse[number]
 export interface ParsedFlightObject extends FlightObject {
     isCaptured: boolean;
 }
 export const useMissionStore = defineStore('mission', () => {
-    const map = ref<MissionEnvironmentPayload['map']>({ size: 0, data: [] });
+    const map = ref<MissionData['map']>({ size: 0, data: [] });
     const flightObjects = ref<FlightObjectsUpdateResponse>([]);
     const capturedTargetIds = ref<CapturedTargetResponse>([])
-    const aas = ref<MissionEnvironmentPayload['aas']>([]);
+    const aas = ref<MissionData['aas']>([]);
     const currentAAId = ref<string | null>(null)
     const isInitialized = ref(false);
 
@@ -27,9 +28,11 @@ export const useMissionStore = defineStore('mission', () => {
     socketClient.listenToEvent('mission_environment', (data) => {
         map.value = data.map;
         aas.value = data.aas;
-        currentAAId.value = data.aas[0]?.id || null;
+        currentAAId.value = data.yourAAId;
         isInitialized.value = true;
     })
+
+    // socketClient.listenToEvent('')
 
     /*
     socketClient.listenToEvent<FlightObjectsUpdateResponse>('flight_objects_update', (data) => {
@@ -43,7 +46,7 @@ export const useMissionStore = defineStore('mission', () => {
 
 
     function selectCurrentAA(aaId: string) {
-        currentAAId.value = aaId;
+        // socketClient.send('change_aa_position', )
     }
 
 

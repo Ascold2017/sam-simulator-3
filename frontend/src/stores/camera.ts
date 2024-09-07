@@ -51,13 +51,13 @@ export const useCameraStore = defineStore('camera', () => {
         controls.update();
     }
 
-    watch(currentAA, (v) => {
-        if (v && camera.value) {
-            camera.value?.position.set(v.position.x, v.position.y, v.position.z)
-            camera.value.lookAt(v.position.x + 1, v.position.y, v.position.z);
+    watch([currentAA, camera], (v) => {
+        if (currentAA.value && camera.value) {
+            const aa = currentAA.value
+            camera.value?.position.set(aa.position.x, aa.position.y, aa.position.z)
+            camera.value.lookAt(aa.position.x + 1, aa.position.y, aa.position.z);
         }
     })
-
 
     return {
         azimuth,

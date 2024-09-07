@@ -17,13 +17,20 @@ export interface ClientToServerEvents {
 
 export interface MissionData {
     map: MapData;
-    aas: AAObject[]
+    aas: AAObject[];
+    yourAAId: string
+}
+
+export interface PlayerJoinedData {
+    userId: number;
+    username: string;
+    position: Position
 }
 export interface ServerToClientEvents {
     mission_rooms: (missions: MissionRoom[]) => void;
     mission_room_created: (payload: { id: string; missionId: MissionID }) => void;
-    player_joined: (roomId: string) => void;
-    player_leaved: (socketId: string) => void;
+    player_joined: (data: PlayerJoinedData) => void;
+    player_leaved: (roomId: string) => void;
     room_deleted: (roomId: string) => void;
     mission_environment: (missionData: MissionData) => void;
     error: (error: string) => void;

@@ -14,18 +14,20 @@ interface PlayerData {
 
 export class GameInstanceController {
     private coreInstance: Core;
+    private roomId: string
     private io: Server<ClientToServerEvents, ServerToClientEvents>;
     private players: Map<string, PlayerData> = new Map();
     private missionData: MissionData;
 
-    constructor(missionId: number, io: Server) {
+    constructor(roomId: string, missionId: number, io: Server) {
         this.io = io;
+        this.roomId = roomId;
         this.coreInstance = new Core();
         this.startMission(missionId);
     }
 
     public addPlayer(socket: CustomSocket) {
-        const aa = socket.data.user.aa;
+        const user = socket.data.user;
 
         // Проверяем, есть ли свободные позиции
         const availablePosition = this.getAvailablePosition();
@@ -43,18 +45,27 @@ export class GameInstanceController {
 
         console.log(`Player ${socket.id} added to the game at position:`, availablePosition);
 
+        
+
         // Добавляем зенитку игрока в Core (используем aa данные и позицию)
         this.coreInstance.addAA({
             id: aaId,
             position: availablePosition,
-            type: aa.type,
-            ammoVelocity: aa.ammoVelocity,
-            ammoMaxRange: aa.ammoMaxRange,
-            viewAngle: aa.viewAngle,
+            type: user.aa.type,
+            ammoVelocity: user.aa.ammoVelocity,
+            ammoMaxRange: user.aa.ammoMaxRange,
+            viewAngle: user.aa.viewAngle,
         });
 
         // Отправляем окружение игроку
         this.sendEnvironment(socket.id);
+
+        console.log(`Player ${socket.id} joined room ${this.roomId}`);
+        this.io.to(this.roomId).emit('player_joined', {
+            userId: user.id,
+            username: user.username,
+            position: availablePosition
+        });
 
         // Подписываемся на событие смены позиции
         socket.on('change_aa_position', (newPosition) => this.changePosition(socket, newPosition));
@@ -142,6 +153,7 @@ export class GameInstanceController {
 
     // Отправка окружения игроку
     private sendEnvironment(playerId: string) {
+        const playerData = this.players.get(playerId);
         const heightmapTerrain = this.coreInstance.getHeightmapTerrain();
         const aas = this.coreInstance.getAAs();
 
@@ -150,7 +162,8 @@ export class GameInstanceController {
                 data: heightmapTerrain.data,
                 size: heightmapTerrain.elementSize
             },
-            aas
+            aas,
+            yourAAId: playerData.aaId
         });
     }
 
