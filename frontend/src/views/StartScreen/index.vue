@@ -9,7 +9,7 @@
       <!-- Селектор для миссий и кнопка создания комнаты -->
       <div class="start-screen__mission-selector">
         <select v-model="selectedMissionId" class="start-screen__select">
-          <option value="" disabled>Choose mission</option>
+          <option :value="null" disabled>Choose mission</option>
           <option v-for="mission in missions" :key="mission.id" :value="mission.id">
             {{ mission.name }}
           </option>
@@ -141,7 +141,7 @@
   }
   
   .start-screen__table {
-    @apply table-auto border-collapse w-full max-w-4xl text-center mb-8;
+    @apply table-auto border-collapse w-full max-w-4xl text-center mb-8 bg-white;
   }
   
   .start-screen__table th,
