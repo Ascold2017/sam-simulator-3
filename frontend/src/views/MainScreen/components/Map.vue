@@ -7,8 +7,8 @@
 
         <div class="map-container">
             <img src="https://placehold.co/600x600" alt="Карта" class="map-image">
-            <span v-for="aa in missionStore.aas" :key="aa.id"
-                :class="['map-aa', { 'map-aa_current': aa.id === missionStore.currentAA?.id }]" :style="getAAStyle(aa)"
+            <span v-for="aa in missionStore.aaPositions" :key="aa.id"
+                :class="['map-aa', { 'map-aa_current': false }]" :style="getAAStyle(aa)"
                 @click="missionStore.selectCurrentAA(aa.id)">
                 ▲
             </span>
@@ -34,7 +34,7 @@ const azimuth = computed(() => cameraStore.azimuth * (180 / Math.PI))
 
 // Функция для получения стилей для зениток
 const getAAStyle = (aa: any) => {
-    const mapSizeKm = 100; // Размер карты в километрах
+    const mapSizeKm = 1; // Размер карты в километрах
     const mapSizeMeters = mapSizeKm * 1000; // Размер карты в метрах
     const halfMapSizeMeters = mapSizeMeters / 2; // Половина карты в метрах
 
@@ -45,7 +45,6 @@ const getAAStyle = (aa: any) => {
     return {
         left: `${xPercent}%`,
         top: `${zPercent}%`,
-        color: aa.id === missionStore.currentAA?.id ? 'red' : 'blue',
     };
 };
 </script>
@@ -80,10 +79,14 @@ const getAAStyle = (aa: any) => {
 }
 
 .map-aa {
-    @apply absolute;
+    @apply absolute text-blue-500;
     font-size: 24px;
     transform: translate(-50%, -50%);
     cursor: pointer;
+}
+
+.map-aa_current {
+    @apply text-red-500;
 }
 
 .close-button {

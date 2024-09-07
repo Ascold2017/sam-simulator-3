@@ -3,7 +3,7 @@ import { BaseEntity } from "./base.entity";
 import { Mission } from "./mission.entity";
 
 @Entity()
-export class Map extends BaseEntity {
+export class MissionMap extends BaseEntity {
     @Column()
     name: string;
 

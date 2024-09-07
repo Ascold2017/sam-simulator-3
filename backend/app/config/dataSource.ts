@@ -6,7 +6,8 @@ import { InitMissionDataFromFile1634567890123 } from '../migrations/InitMissionD
 import { AA } from '../entities/aa.entity';
 import { User } from '../entities/user.entity';
 import { Target } from '../entities/target.entity';
-import { Map } from '../entities/map.entity';
+import { MissionMap } from '../entities/missionMap.entity';
+import { MissionAAPosition } from '../entities/missionAAPosition';
 
 dotenv.config()
 
@@ -14,7 +15,7 @@ export const AppDataSource = new DataSource({
     url: process.env.DB_URI,
     type: "postgres",
     logging: true,
-    entities: [BaseEntity, Mission, MissionTarget, Map, AA, Target, User],
+    entities: [BaseEntity, Mission, MissionTarget, MissionAAPosition, MissionMap, AA, Target, User],
     migrations: [InitMissionDataFromFile1634567890123],
     migrationsTableName: "migration",
     synchronize: true,

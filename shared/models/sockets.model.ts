@@ -11,20 +11,26 @@ export interface ClientToServerEvents {
     join_mission_room: (roomId: string) => void;
     leave_mission_room: (roomId: string) => void;
     delete_mission_room: (roomId: string) => void;
-    change_aa_position: (position: Position) => void;
+    change_aa_position: (positionId: number) => void;
     disconnect: () => void;
 }
 
+export interface AAPosition {
+    id: number;
+    position: Position;
+    isOccupied: boolean
+}
 export interface MissionData {
     map: MapData;
     aas: AAObject[];
-    yourAAId: string
+    yourAAId: string;
+    aaPositions: AAPosition[]
 }
 
 export interface PlayerJoinedData {
     userId: number;
     username: string;
-    position: Position
+    aaPositionId: number
 }
 export interface ServerToClientEvents {
     mission_rooms: (missions: MissionRoom[]) => void;
@@ -33,6 +39,7 @@ export interface ServerToClientEvents {
     player_leaved: (roomId: string) => void;
     room_deleted: (roomId: string) => void;
     mission_environment: (missionData: MissionData) => void;
+    mission_aas_update: (aas: MissionData['aas']) => void;
     error: (error: string) => void;
     
 }

@@ -1,15 +1,16 @@
 import { ClientToServerEvents, ServerToClientEvents } from "@shared/models/sockets.model";
 import { DI } from "../config/dataSource";
 import { missionDto } from "../dto/mission.dto";
-import { Core, MissionData, Position } from "../../core/app";
+import { AAPosition, Core, MissionData, Position } from "../../core/app";
 import { Server } from "socket.io";
 import { CustomSocket } from "../types";
 import { v4 as uuidv4 } from 'uuid';
+import { MissionAAPosition } from "../entities/missionAAPosition";
 
 interface PlayerData {
     socket: CustomSocket; // Сокет игрока
     aaId: string;
-    position: Position; // Позиция для зенитки
+    aaPositionId: number;
 }
 
 export class GameInstanceController {
@@ -41,7 +42,7 @@ export class GameInstanceController {
         const aaId = uuidv4();
 
         // Сохраняем игрока с его позицией в карте players
-        this.players.set(socket.id, { socket, position: availablePosition, aaId });
+        this.players.set(socket.id, { socket, aaPositionId: availablePosition.id, aaId });
 
         console.log(`Player ${socket.id} added to the game at position:`, availablePosition);
 
@@ -50,7 +51,7 @@ export class GameInstanceController {
         // Добавляем зенитку игрока в Core (используем aa данные и позицию)
         this.coreInstance.addAA({
             id: aaId,
-            position: availablePosition,
+            position: availablePosition.position,
             type: user.aa.type,
             ammoVelocity: user.aa.ammoVelocity,
             ammoMaxRange: user.aa.ammoMaxRange,
@@ -64,11 +65,11 @@ export class GameInstanceController {
         this.io.to(this.roomId).emit('player_joined', {
             userId: user.id,
             username: user.username,
-            position: availablePosition
+            aaPositionId: availablePosition.id
         });
 
         // Подписываемся на событие смены позиции
-        socket.on('change_aa_position', (newPosition) => this.changePosition(socket, newPosition));
+        socket.on('change_aa_position', (positionId) => this.changePosition(socket, positionId));
     }
 
     // Удаление игрока
@@ -93,7 +94,7 @@ export class GameInstanceController {
     }
 
     // Смена позиции игрока
-    private changePosition(socket: CustomSocket, newPosition: Position) {
+    private changePosition(socket: CustomSocket, positionId: number) {
         const playerData = this.players.get(socket.id);
 
         if (!playerData) {
@@ -102,19 +103,20 @@ export class GameInstanceController {
         }
 
         // Проверяем, занята ли новая позиция
-        if (this.isPositionOccupied(newPosition)) {
+        if (this.isPositionOccupied(positionId)) {
             socket.emit("error", "Position is already occupied");
             return;
         }
 
         // Освобождаем текущую позицию и обновляем игрока
-        console.log(`Player ${socket.id} is moving from position:`, playerData.position);
+        console.log(`Player ${socket.id} is moving from position:`, playerData.aaPositionId);
 
         // Удаляем старую зенитку из Core и добавляем новую с обновленной позицией
         this.coreInstance.removeAA(playerData.aaId);
+        const newPosition = this.missionData.aaPositions.find(p => p.id === positionId)
         this.coreInstance.addAA({
             id: playerData.aaId,
-            position: newPosition,
+            position: newPosition.position,
             type: socket.data.user.aa.type,
             ammoVelocity: socket.data.user.aa.ammoVelocity,
             ammoMaxRange: socket.data.user.aa.ammoMaxRange,
@@ -122,10 +124,11 @@ export class GameInstanceController {
         });
 
         // Обновляем позицию игрока в `players`
-        playerData.position = newPosition;
+        playerData.aaPositionId = positionId;
         this.players.set(socket.id, playerData);
 
         console.log(`Player ${socket.id} moved to new position:`, newPosition);
+        this.io.emit('mission_aas_update', this.coreInstance.getAAs())
     }
 
     // Запуск миссии
@@ -133,7 +136,7 @@ export class GameInstanceController {
         try {
             const missionData = await DI.missionRepository.findOne({
                 where: { id: missionId },
-                relations: ['targets', 'map', 'targets.target'],
+                relations: ['targets', 'map', 'targets.target', 'aaPositions'],
             });
 
             if (!missionData) {
@@ -163,28 +166,25 @@ export class GameInstanceController {
                 size: heightmapTerrain.elementSize
             },
             aas,
-            yourAAId: playerData.aaId
+            yourAAId: playerData.aaId,
+            aaPositions: this.missionData.aaPositions.map(aaPosition => ({
+                id: aaPosition.id,
+                position: aaPosition.position,
+                isOccupied: this.isPositionOccupied(aaPosition.id)
+            }))
         });
     }
 
     // Получение первой доступной позиции для AA
-    private getAvailablePosition(): Position | undefined {
-        const takenPositions = Array.from(this.players.values()).map((player) => player.position);
-        return this.missionData.aaPositions.find(
-            (position) => !takenPositions.some((takenPosition) => this.isSamePosition(position, takenPosition))
-        );
+    private getAvailablePosition(): AAPosition | undefined {
+        const takenAAPositionIds = Array.from(this.players.values()).map((player) => player.aaPositionId);
+        return this.missionData.aaPositions.find((aaPosition) => !takenAAPositionIds.includes(aaPosition.id));
     }
 
     // Проверка, занята ли позиция
-    private isPositionOccupied(position: Position): boolean {
+    private isPositionOccupied(positionId: number): boolean {
         return Array.from(this.players.values()).some(
-            (player) =>
-                this.isSamePosition(player.position, position)
+            (player) => player.aaPositionId === positionId
         );
-    }
-
-    // Сравнение двух позиций
-    private isSamePosition(pos1: Position, pos2: Position): boolean {
-        return pos1.x === pos2.x && pos1.y === pos2.y && pos1.z === pos2.z;
     }
 }

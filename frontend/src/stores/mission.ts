@@ -10,43 +10,34 @@ export interface ParsedFlightObject extends FlightObject {
 }
 export const useMissionStore = defineStore('mission', () => {
     const map = ref<MissionData['map']>({ size: 0, data: [] });
-    const flightObjects = ref<FlightObjectsUpdateResponse>([]);
-    const capturedTargetIds = ref<CapturedTargetResponse>([])
     const aas = ref<MissionData['aas']>([]);
-    const currentAAId = ref<string | null>(null)
+    const aaPositions = ref<MissionData['aaPositions']>([])
+    const aaId = ref<string | null>(null)
     const isInitialized = ref(false);
 
-    const currentAA = computed(() => aas.value.find(aa => aa.id === currentAAId.value));
+    const currentAA = computed(() => {
+        return aas.value.find(aa => aa.id === aaId.value)
+    });
 
     const parsedFlightObjects = computed<ParsedFlightObject[]>(() => {
-        return flightObjects.value.map(fo => ({
-            ...fo,
-            isCaptured: capturedTargetIds.value.some(cti => cti.aaId === currentAAId.value && cti.targetId === fo.id)
-        }))
+        return [];
     })
 
     socketClient.listenToEvent('mission_environment', (data) => {
         map.value = data.map;
         aas.value = data.aas;
-        currentAAId.value = data.yourAAId;
+        aaId.value = data.yourAAId;
+        aaPositions.value = data.aaPositions;
         isInitialized.value = true;
     })
 
-    // socketClient.listenToEvent('')
-
-    /*
-    socketClient.listenToEvent<FlightObjectsUpdateResponse>('flight_objects_update', (data) => {
-        flightObjects.value = data;
+    socketClient.listenToEvent('mission_aas_update', (aasData) => {
+        aas.value = aasData;
     })
 
-    socketClient.listenToEvent<CapturedTargetResponse>('captured_targets_update', (data) => {
-        capturedTargetIds.value = data;
-    })
-        */
 
-
-    function selectCurrentAA(aaId: string) {
-        // socketClient.send('change_aa_position', )
+    function selectCurrentAA(aaId: number) {
+        socketClient.send('change_aa_position', aaId)
     }
 
 
@@ -55,6 +46,7 @@ export const useMissionStore = defineStore('mission', () => {
         isInitialized,
         map,
         aas,
+        aaPositions,
         currentAA,
         parsedFlightObjects
     }

@@ -5,7 +5,8 @@ import { AA } from '../entities/aa.entity';
 import { Target } from '../entities/target.entity';
 import * as fs from 'fs';
 import * as path from 'path';
-import { Map } from '../entities/map.entity';
+import { MissionMap } from '../entities/missionMap.entity';
+import { MissionAAPosition } from '../entities/missionAAPosition';
 
 // Функция для получения данных из файлов
 function getDataFromFile<T>(fileName: string): T {
@@ -27,7 +28,9 @@ export class InitMissionDataFromFile1634567890123 implements MigrationInterface 
     const missionTargetRepository = queryRunner.manager.getRepository(MissionTarget);
     const aaRepository = queryRunner.manager.getRepository(AA);
     const targetRepository = queryRunner.manager.getRepository(Target);
-    const mapRepository = queryRunner.manager.getRepository(Map);
+    const mapRepository = queryRunner.manager.getRepository(MissionMap);
+    const missionAAPositionRepository = queryRunner.manager.getRepository(MissionAAPosition); // Репозиторий для новых позиций AA
+
 
     // Сохраняем цели (Target) в базе данных
     for (const target of targetData) {
@@ -78,9 +81,17 @@ export class InitMissionDataFromFile1634567890123 implements MigrationInterface 
       const missionEntity = missionRepository.create({
         name: mission.name,
         map: missionMap,
-        aaPositions: mission.aaPositions,
       });
       const savedMission = await missionRepository.save(missionEntity);
+
+      // Сохраняем позиции зениток (AA) для миссии в таблице MissionAAPosition
+      for (const aaPosition of mission.aaPositions) {
+        const missionAAPositionEntity = missionAAPositionRepository.create({
+          position: aaPosition,
+          mission: savedMission, // Связь с сохранённой миссией
+        });
+        await missionAAPositionRepository.save(missionAAPositionEntity);
+      }
 
       // Сохраняем цели миссии (MissionTarget)
       for (const target of mission.targets) {
@@ -104,9 +115,12 @@ export class InitMissionDataFromFile1634567890123 implements MigrationInterface 
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.manager.getRepository(MissionTarget).delete({});
+    await queryRunner.manager.getRepository(MissionAAPosition).delete({});
+    await queryRunner.manager.getRepository(Mission).delete({});
+    await queryRunner.manager.getRepository(MissionMap).delete({});
     await queryRunner.manager.getRepository(Target).delete({});
     await queryRunner.manager.getRepository(AA).delete({});
-    await queryRunner.manager.getRepository(Mission).delete({});
-    await queryRunner.manager.getRepository(Map).delete({});
+    
+   
   }
 }
