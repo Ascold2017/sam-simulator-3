@@ -1,4 +1,4 @@
-import { Position, MapData, AAObject } from "@core/app";
+import { Position, MapData, AAObject, FlightObjectDTO, CapturedTarget } from "@core/app";
 
 
 export interface MissionRoom {
@@ -12,6 +12,8 @@ export interface ClientToServerEvents {
     leave_mission_room: (roomId: string) => void;
     delete_mission_room: (roomId: string) => void;
     change_aa_position: (positionId: number) => void;
+    capture_target: (payload: { azimuth: number; elevation: number }) => void;
+    fire_target: (payload: { azimuth: number; elevation: number }) => void;
     disconnect: () => void;
 }
 
@@ -33,6 +35,11 @@ export interface PlayerJoinedData {
     username: string;
     aaPositionId: number
 }
+
+export interface MissionUpdate {
+    flightObjects: FlightObjectDTO[];
+    capturedTargets: CapturedTarget[]
+}
 export interface ServerToClientEvents {
     mission_rooms: (missions: MissionRoom[]) => void;
     mission_room_created: (payload: { id: string; missionId: MissionID }) => void;
@@ -42,6 +49,7 @@ export interface ServerToClientEvents {
     mission_environment: (missionData: MissionData) => void;
     mission_aas_update: (aas: MissionData['aas']) => void;
     mission_aas_positions_update: (aaPositions: MissionData['aaPositions']) => void;
+    mission_update: (missionUpdate: MissionUpdate) => void;
     error: (error: string) => void;
     
 }

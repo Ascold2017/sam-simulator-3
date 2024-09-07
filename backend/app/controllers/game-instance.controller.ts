@@ -25,9 +25,9 @@ export class GameInstanceController {
         this.roomId = roomId;
         this.coreInstance = new Core();
         this.startMission(missionId);
-        setTimeout(() => {
-            this.stopMission()
-        }, this.missionData.duration * 1000)
+        this.coreInstance.updateListener = () => {
+            this.sendUpdates()
+        }
     }
 
     public addPlayer(socket: CustomSocket) {
@@ -49,7 +49,7 @@ export class GameInstanceController {
 
         console.log(`Player ${socket.id} added to the game at position:`, availablePosition);
 
-        
+
 
         // Добавляем зенитку игрока в Core (используем aa данные и позицию)
         this.coreInstance.addAA({
@@ -72,8 +72,13 @@ export class GameInstanceController {
             aaPositionId: availablePosition.id
         });
 
-        // Подписываемся на событие смены позиции
         socket.on('change_aa_position', (positionId) => this.changePosition(socket, positionId));
+        socket.on('capture_target', ({ azimuth, elevation }) => {
+            this.coreInstance.captureTargetOnDirection(aaId, azimuth, elevation)
+        })
+        socket.on('fire_target', ({ azimuth, elevation }) => {
+            this.coreInstance.fire(aaId, azimuth, elevation)
+        })
     }
 
     // Удаление игрока
@@ -132,8 +137,8 @@ export class GameInstanceController {
         this.players.set(socket.id, playerData);
 
         console.log(`Player ${socket.id} moved to new position:`, newPosition);
-        this.io.emit('mission_aas_update', this.coreInstance.getAAs())
-        this.io.emit('mission_aas_positions_update', this.getAAPositions())
+        this.io.to(this.roomId).emit('mission_aas_update', this.coreInstance.getAAs())
+        this.io.to(this.roomId).emit('mission_aas_positions_update', this.getAAPositions())
     }
 
     // Запуск миссии
@@ -153,6 +158,10 @@ export class GameInstanceController {
 
             this.coreInstance.startMission(parsedMissionData);
             console.log(`Mission ${missionId} started successfully`);
+
+            setTimeout(() => {
+                this.stopMission()
+            }, this.missionData.duration * 1000)
 
         } catch (error) {
             console.error(`Error starting mission: ${error.message}`);
@@ -194,10 +203,20 @@ export class GameInstanceController {
             const player = Array.from(this.players.values())
                 .find((playerData) => aaPosition.id === playerData.aaPositionId);
             return {
-            id: aaPosition.id,
-            position: aaPosition.position,
-            aaId: player?.aaId || null///
-        }
-    })
+                id: aaPosition.id,
+                position: aaPosition.position,
+                aaId: player?.aaId || null///
+            }
+        })
+    }
+
+    private sendUpdates() {
+        const flightObjects = this.coreInstance.getFlightObjects();
+        const capturedTargets = this.coreInstance.getCapturedTargets()
+
+        this.io.to(this.roomId).emit('mission_update', {
+            flightObjects,
+            capturedTargets
+        })
     }
 }
