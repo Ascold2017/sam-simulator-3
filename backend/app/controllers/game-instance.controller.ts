@@ -158,10 +158,6 @@ export class GameInstanceController {
             this.coreInstance.startMission(parsedMissionData);
             console.log(`Mission ${missionId} started successfully`);
 
-            setTimeout(() => {
-                this.stopMission()
-            }, this.missionData.duration * 1000)
-
         } catch (error) {
             console.error(`Error starting mission: ${error.message}`);
         }

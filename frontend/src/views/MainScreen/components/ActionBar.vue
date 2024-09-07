@@ -1,19 +1,19 @@
 <template>
     <div class="action-bar">
-        <button  v-if="isMobile && orientation !== 'portrait'" class="action-button action-button_capture" @click="aaStore.captureTarget">CAPTURE</button>
+        <button  v-if="isMobile && orientation !== 'portrait'" class="action-button action-button_capture" @click="gameStore.captureTarget">CAPTURE</button>
 
         <Map />
-        <button v-if="isMobile && orientation !== 'landscape'" class="action-button action-button_fire" @click="aaStore.fireTarget">FIRE</button>
+        <button v-if="isMobile && orientation !== 'landscape'" class="action-button action-button_fire" @click="gameStore.fireTarget">FIRE</button>
     </div>
 </template>
 
 <script setup lang="ts">
 import Map from './Map.vue';
-import { useAAStore } from '../../../stores/aa';
 import { useDevice } from '../../../stores/device';
 import { storeToRefs } from 'pinia';
+import { useGameStore } from '../../../stores/game';
 
-const aaStore = useAAStore()
+const gameStore = useGameStore()
 const device = useDevice()
 const { orientation, isMobile } = storeToRefs(device)
 </script>

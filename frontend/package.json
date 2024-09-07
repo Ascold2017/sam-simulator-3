@@ -10,8 +10,8 @@
     "mkcert": "mkcert create-cert"
   },
   "dependencies": {
-    "@tresjs/cientos": "^4.0.0",
-    "@tresjs/core": "^4.2.7",
+    "@tresjs/cientos": "^4.0.2",
+    "@tresjs/core": "^4.2.10",
     "axios": "^1.7.7",
     "konva": "^9.3.14",
     "lodash": "^4.17.21",

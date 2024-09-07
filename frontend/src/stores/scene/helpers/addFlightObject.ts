@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { FlightObject } from '../../mission';
+import { FlightObject } from '../../game';
 
 export function createFlightObject(scene: THREE.Scene, flightObject: FlightObject) {
     let geometry: THREE.BufferGeometry;

@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { AAObject } from '../../mission';
+import { AAObject } from '../../game';
 
 export function createAAObject(scene: THREE.Scene, aaObject: AAObject) {
     let material: THREE.MeshStandardMaterial;

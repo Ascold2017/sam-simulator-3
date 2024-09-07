@@ -2,14 +2,14 @@
 import { RouterView, useRouter } from 'vue-router'
 import { useRooms } from './stores/rooms';
 import { onMounted } from 'vue';
-import { useMissionStore } from './stores/mission';
+import { useGameStore } from './stores/game';
 
 const roomStore = useRooms();
-useMissionStore();
+useGameStore();
 const router = useRouter()
 
 onMounted(() => {
-  if (!roomStore.currentRoomId) {
+  if (!roomStore.currentRoom) {
     router.push({ name: 'start' })
   }
 })

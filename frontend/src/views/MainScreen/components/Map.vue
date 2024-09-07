@@ -7,9 +7,9 @@
 
         <div class="map-container">
             <img src="https://placehold.co/600x600" alt="Карта" class="map-image">
-            <span v-for="aa in missionStore.aaPositions" :key="aa.id"
-                :class="['map-aa', { 'map-aa_current': aa.aaId === missionStore.currentAA.id }]" :style="getAAStyle(aa)"
-                @click="missionStore.selectCurrentAA(aa.id)">
+            <span v-for="aa in gameStore.aaPositions" :key="aa.id"
+                :class="['map-aa', { 'map-aa_current': aa.aaId === gameStore.currentAA.id }]" :style="getAAStyle(aa)"
+                @click="gameStore.selectCurrentAA(aa.id)">
                 ▲
             </span>
         </div>
@@ -21,16 +21,14 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useCameraStore } from '../../../stores/camera';
 import { ref } from 'vue';
-import { useMissionStore } from '../../../stores/mission';
+import { useGameStore } from '../../../stores/game';
 
-const missionStore = useMissionStore()
-const cameraStore = useCameraStore()
+const gameStore = useGameStore()
 
 const isShowMap = ref(false);
 
-const azimuth = computed(() => cameraStore.azimuth * (180 / Math.PI))
+const azimuth = computed(() => gameStore.direction.azimuth * (180 / Math.PI))
 
 // Функция для получения стилей для зениток
 const getAAStyle = (aa: any) => {

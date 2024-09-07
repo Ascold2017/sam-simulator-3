@@ -2,11 +2,12 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 import { VitePWA } from 'vite-plugin-pwa';
+import { templateCompilerOptions } from '@tresjs/core'
 import fs from 'fs';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), VitePWA({
+  plugins: [vue({ ...templateCompilerOptions }), VitePWA({
     registerType: 'autoUpdate',
     manifest: {
       name: 'AA Simulator 3.0',

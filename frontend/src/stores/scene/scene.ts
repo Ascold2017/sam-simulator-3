@@ -2,7 +2,7 @@ import { defineStore, storeToRefs } from 'pinia';
 import * as THREE from 'three';
 
 import { computed, ref, watch } from 'vue';
-import { useMissionStore } from '../mission';
+import { useMissionStore } from '../game';
 import { addLighting } from './helpers/addLighting';
 import { addHeightmapTerrain } from './helpers/addHeightmapTerraing';
 import { createFlightObject } from './helpers/addFlightObject';

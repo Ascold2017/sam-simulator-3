@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { ParsedFlightObject } from '../../mission';
+import { ParsedFlightObject } from '../../game';
 
 export function updateFlightObject(entityMesh: THREE.Mesh, update: ParsedFlightObject, camera: THREE.Camera) {
     entityMesh.position.set(
