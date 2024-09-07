@@ -20,7 +20,7 @@
             @update-direction="direction = $event" />
 
         <!-- Летающие обьекты -->
-        <FlightObject v-for="flightObject in parsedFlightObjects" :flight-object="flightObject" />
+        <FlightObject v-for="flightObject in parsedFlightObjects" :flight-object="flightObject" :prevState="prevFlightObjects.find(ps => ps.id === flightObject.id)" :key="flightObject.id"/>
         <!-- Зенитки-->
         <AAObject v-for="aaObject in aas" :aaObject="aaObject"/>
 
@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
-import { useGameStore } from '../../../../stores/game';
+import { ParsedFlightObject, useGameStore } from '../../../../stores/game';
 import Terrain from './Terrain.vue';
 import { storeToRefs } from 'pinia';
 import FlightObject from './FlightObject.vue';
@@ -39,8 +39,15 @@ import AAObject from './AAObject.vue';
 import CustomFirstPersonControl from './CustomFirstPersonControl.vue';
 import { useDevice } from '../../../../stores/device';
 import DeviceOrientationControl from './DeviceOrientationControl.vue';
+import { ref } from 'vue';
+import { watch } from 'vue';
 
 const gameStore = useGameStore()
 const deviceStore = useDevice()
-const { currentAA, parsedFlightObjects, aas, map, direction } = storeToRefs(gameStore)
+const { currentAA, parsedFlightObjects, aas, map, direction } = storeToRefs(gameStore);
+const prevFlightObjects = ref<ParsedFlightObject[]>([])
+
+watch(parsedFlightObjects, (_, prevState) => {
+    prevFlightObjects.value = prevState;
+})
 </script>
