@@ -9,6 +9,9 @@ export class Mission extends BaseEntity {
     @Column()
     name: string;
 
+    @Column()
+    duration: number
+
     @ManyToOne(() => MissionMap, map => map.missions)
     map: MissionMap;
 

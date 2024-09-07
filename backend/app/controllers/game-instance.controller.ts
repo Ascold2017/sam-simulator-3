@@ -25,6 +25,9 @@ export class GameInstanceController {
         this.roomId = roomId;
         this.coreInstance = new Core();
         this.startMission(missionId);
+        setTimeout(() => {
+            this.stopMission()
+        }, this.missionData.duration * 1000)
     }
 
     public addPlayer(socket: CustomSocket) {

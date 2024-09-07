@@ -1,6 +1,7 @@
 [
   {
     "name": "Test mission 1",
+    "duration": 60,
     "mapId": 1,
     "targets": [
       {
@@ -101,6 +102,7 @@
   },
   {
     "name": "Test mission 2",
+    "duration": 150,
     "mapId": 1,
     "targets": [
       {

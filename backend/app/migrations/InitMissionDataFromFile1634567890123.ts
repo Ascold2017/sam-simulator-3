@@ -81,6 +81,7 @@ export class InitMissionDataFromFile1634567890123 implements MigrationInterface 
       const missionEntity = missionRepository.create({
         name: mission.name,
         map: missionMap,
+        duration: mission.duration
       });
       const savedMission = await missionRepository.save(missionEntity);
 
