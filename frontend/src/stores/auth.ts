@@ -1,14 +1,20 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { LoginResponse, RegisterResponse, UserResponse, type User } from '../../../shared/models/auth.model'
 import { httpClient } from '../adapters/httpClient';
+import { socketClient } from '../adapters/socketClient';
 
 export const useAuthStore = defineStore('auth', () => {
     const token = ref<string | null>(localStorage.getItem('token'));
     const user = ref<User | null>(null);
     const isAuthenticated = ref(!!token.value);
     const router = useRouter();
+
+    socketClient.reconnect(token.value!)
+    watch(token, () => {
+        socketClient.reconnect(token.value!)
+    })
 
     // Регистрация пользователя
     async function register(username: string, password: string) {

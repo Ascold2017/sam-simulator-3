@@ -52,11 +52,16 @@ export class AuthService {
     }
 
     // Проверка токена (это можно использовать в middleware для проверки доступа)
-    verifyToken(token: string) {
+     async verifyToken(token?: string) {
+        if (!token) return new Error('Auth error: No token provided');
         try {
-            return jwt.verify(token, process.env.TOKEN_SECRET) as { id: number; username: string }; // Вернется объект с данными пользователя
+            const data = jwt.verify(token, process.env.TOKEN_SECRET) as { id: number; username: string };
+            const user = await DI.userRepository.findOneOrFail({ where: { id: data.id }, relations: ['aa'] })
+
+            return user;
         } catch (e) {
-            throw new Error('Invalid token');
+            console.error(e)
+            return Promise.reject(new Error("Authentication error: Invalid token"))
         }
     }
 }

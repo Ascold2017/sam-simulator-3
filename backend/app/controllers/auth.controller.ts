@@ -1,5 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { AuthService } from "../services/auth.service";
+import { DI } from '../config/dataSource';
+import { Socket } from 'socket.io';
+import { ExtendedError } from 'socket.io/dist/namespace';
 
 const authService = new AuthService();
 
@@ -28,26 +31,50 @@ export class AuthController {
     }
 
     public async getUser(req: Request, res: Response) {
-        const { id } = req.body.userState;
-        try {
-            const user = await authService.getUser(id);
+        const user = req.body.userState;
+        if (user) {
             res.status(200).json({ user });
-        } catch (error) {
-            res.status(400).json({ error: error.message });
+        } else {
+            res.status(400).json({ error: 'Something went wrong' });
         }
 
     }
 
-    public async authMiddleware(req: Request, res: Response, next: NextFunction) {
-        if (req.headers['authorization']) {
-            try {
-                req.body.userState = authService.verifyToken(req.headers['authorization']);
-                next()
-            } catch {
-                next(false)
+    public authMiddleware() {
+        return async (req: Request, res: Response, next: NextFunction) => {
+            const token = req.headers['authorization'];
+
+            if (token) {
+                try {
+                    req.body.userState = await authService.verifyToken(token);
+                    next();
+                } catch (error) {
+                    console.error(error);
+                    return res.status(401).json({ error: 'Unauthorized' });
+                }
+            } else {
+                return res.status(401).json({ error: 'No token provided' });
             }
-            return;
         }
-        next(false);
+
+    }
+
+    public authSocketMiddleware() {
+        return async (socket: Socket, next: (err?: ExtendedError) => void) => {
+            console.log(socket.handshake)
+            const token = socket.handshake.auth.token;
+
+            if (token) {
+                try {
+                    socket.data.user = await authService.verifyToken(token)
+                    next();
+                } catch (error) {
+                    console.error(error);
+                    next(new Error('Unauthorized'))
+                }
+            } else {
+                return next(new Error('No token provided'))
+            }
+        }
     }
 }

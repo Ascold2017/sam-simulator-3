@@ -8,8 +8,8 @@ const missionController = new MissionController()
 
 router.post('/register', authController.register);
 router.post('/login', authController.login);
-router.get('/user', authController.authMiddleware, authController.getUser);
+router.get('/user', authController.authMiddleware(), authController.getUser);
 
-router.get('/missions', authController.authMiddleware, missionController.getMissions)
+router.get('/missions', authController.authMiddleware(), missionController.getMissions)
 
 export default router;

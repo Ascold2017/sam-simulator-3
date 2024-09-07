@@ -8,6 +8,7 @@ import { ClientToServerEvents, ServerToClientEvents } from "@shared/models/socke
 import router from "./router/router";
 import { GameRoomsController } from "./controllers/game-rooms.controller";
 import { AppDataSource } from "./config/dataSource";
+import { AuthController } from "./controllers/auth.controller";
 
 
 const app = express();
@@ -32,6 +33,8 @@ app.use(router);
             credentials: true // Разрешить отправку учетных данных
         }
     });
+    const authController = new AuthController()
+    io.use(authController.authSocketMiddleware()) 
 
     new GameRoomsController(io);
    
