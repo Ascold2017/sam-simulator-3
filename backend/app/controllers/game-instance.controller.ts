@@ -63,6 +63,7 @@ export class GameInstanceController {
 
         console.log(`Player ${socket.id} joined room ${this.roomId}`);
         this.io.to(this.roomId).emit('player_joined', {
+            roomId: this.roomId,
             userId: user.id,
             username: user.username,
             aaPositionId: availablePosition.id

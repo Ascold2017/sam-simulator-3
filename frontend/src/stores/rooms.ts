@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import type { MissionID, MissionRoom } from '../../../shared/models/sockets.model'
+import type { MissionID, MissionRoom, PlayerJoinedData } from '../../../shared/models/sockets.model'
 import { socketClient } from "../adapters/socketClient";
 import { useRouter } from "vue-router";
 import { useMissions } from "./missions";
@@ -10,7 +10,7 @@ export const useRooms = defineStore('rooms', () => {
     const missionsStore = useMissions()
 
     const rooms = ref<MissionRoom[]>([])
-    const currentRoomId = ref<string | null>(null)
+    const currentRoom = ref<PlayerJoinedData | null>(null)
 
     const parsedMissionRooms = computed(() => {
         return rooms.value.map(room => ({
@@ -30,10 +30,17 @@ export const useRooms = defineStore('rooms', () => {
         })
     })
 
-    socketClient.listenToEvent('player_joined', (roomId) => {
-        currentRoomId.value = roomId;
+    socketClient.listenToEvent('player_joined', (data) => {
+        currentRoom.value = data;
         router.push({
             name: 'main'
+        })
+    })
+
+    socketClient.listenToEvent('player_leaved', () => {
+        currentRoom.value = null;
+        router.push({
+            name: 'start'
         })
     })
 
@@ -50,8 +57,8 @@ export const useRooms = defineStore('rooms', () => {
     }
 
     function leaveRoom() {
-        if (currentRoomId.value) {
-            socketClient.send('leave_mission_room', currentRoomId.value)
+        if (currentRoom.value) {
+            socketClient.send('leave_mission_room', currentRoom.value.roomId)
         }
 
     }
@@ -63,7 +70,7 @@ export const useRooms = defineStore('rooms', () => {
     return {
         rooms,
         parsedMissionRooms,
-        currentRoomId,
+        currentRoom,
         createRoom,
         joinRoom,
         deleteRoom,

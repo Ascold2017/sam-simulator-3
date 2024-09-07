@@ -28,6 +28,7 @@ export interface MissionData {
 }
 
 export interface PlayerJoinedData {
+    roomId: string
     userId: number;
     username: string;
     aaPositionId: number
