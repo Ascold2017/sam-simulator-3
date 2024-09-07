@@ -5,7 +5,6 @@ import { AAPosition, Core, MissionData, Position } from "../../core/app";
 import { Server } from "socket.io";
 import { CustomSocket } from "../types";
 import { v4 as uuidv4 } from 'uuid';
-import { MissionAAPosition } from "../entities/missionAAPosition";
 
 interface PlayerData {
     socket: CustomSocket; // Сокет игрока

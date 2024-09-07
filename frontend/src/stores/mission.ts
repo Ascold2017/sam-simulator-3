@@ -1,19 +1,19 @@
 import { defineStore } from "pinia";
 import { socketClient } from "../adapters/socketClient";
-import { FlightObjectsUpdateResponse, CapturedTargetResponse } from "../../../shared/models/mission.model";
 import { computed, ref } from "vue";
 import { MissionUpdate, type MissionData } from "../../../shared/models/sockets.model";
 
-export type FlightObject = FlightObjectsUpdateResponse[number]
+export type FlightObject = MissionUpdate['flightObjects'][number]
+export type AAObject = MissionData['aas'][number]
 export interface ParsedFlightObject extends FlightObject {
     isCaptured: boolean;
 }
 export const useMissionStore = defineStore('mission', () => {
     const map = ref<MissionData['map']>({ size: 0, data: [] });
-    const aas = ref<MissionData['aas']>([]);
+    const aas = ref<AAObject[]>([]);
     const aaPositions = ref<MissionData['aaPositions']>([])
     const aaId = ref<string | null>(null);
-    const flightObjects = ref<MissionUpdate['flightObjects']>([]);
+    const flightObjects = ref<FlightObject[]>([]);
     const capturedTargets = ref<MissionUpdate['capturedTargets']>([])
     const isInitialized = ref(false);
 

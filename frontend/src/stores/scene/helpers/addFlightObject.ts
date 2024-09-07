@@ -1,7 +1,7 @@
 import * as THREE from 'three'
-import { FlightObjectsUpdateResponse } from '../../../../../shared/models/mission.model';
+import { FlightObject } from '../../mission';
 
-export function createFlightObject(scene: THREE.Scene, flightObject: FlightObjectsUpdateResponse[number]) {
+export function createFlightObject(scene: THREE.Scene, flightObject: FlightObject) {
     let geometry: THREE.BufferGeometry;
     let material: THREE.MeshStandardMaterial;
 

@@ -1,7 +1,7 @@
 import * as THREE from 'three'
-import { MissionEnvironmentPayload } from '../../../../../shared/models/mission.model';
+import { AAObject } from '../../mission';
 
-export function createAAObject(scene: THREE.Scene, aaObject: MissionEnvironmentPayload['aas'][number]) {
+export function createAAObject(scene: THREE.Scene, aaObject: AAObject) {
     let material: THREE.MeshStandardMaterial;
 
     switch (aaObject.type) {
