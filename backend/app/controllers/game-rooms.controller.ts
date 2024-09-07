@@ -1,8 +1,8 @@
-import { ClientToServerEvents, MissionID, MissionRoom, ServerToClientEvents } from "@shared/models/sockets.model";
-import { DI } from "../config/dataSource";
-import { Server, Socket } from "socket.io";
+import { ClientToServerEvents, MissionID, ServerToClientEvents } from "@shared/models/sockets.model";
+import { Server } from "socket.io";
 import { GameInstanceController } from "./game-instance.controller";
 import { v4 as uuidv4 } from 'uuid'
+import { CustomSocket } from "../types";
 
 interface MissionRoomInstance {
     id: string;
@@ -19,7 +19,7 @@ export class GameRoomsController {
     }
 
     private setupListeners() {
-        this.io.on('connection', (socket) => {
+        this.io.on('connection', (socket: CustomSocket) => {
             // Список комнат
             this.getMissionRooms(socket)
 
@@ -49,7 +49,7 @@ export class GameRoomsController {
         });
     }
 
-    private async getMissionRooms(socket: Socket<ClientToServerEvents, ServerToClientEvents>) {
+    private async getMissionRooms(socket: CustomSocket) {
         try {
             const result = this.missionRooms.map(mr => ({
                 id: mr.id,
@@ -81,7 +81,7 @@ export class GameRoomsController {
     }
 
     // Присоединение к комнате
-    private joinRoom(socket: Socket, roomId: string): void {
+    private joinRoom(socket: CustomSocket, roomId: string): void {
         const room = this.missionRooms.find(room => room.id === roomId);
         if (!room) {
             socket.emit('error', `Room ${roomId} does not exist`);
@@ -116,7 +116,7 @@ export class GameRoomsController {
         this.io.socketsLeave(roomId);  // Отключаем всех игроков от комнаты
     }
 
-    private leaveRoom(socket: Socket, roomId: string) {
+    private leaveRoom(socket: CustomSocket, roomId: string) {
         const room = this.missionRooms.find(room => room.id === roomId);
         if (!room) {
             socket.emit('error', `Room ${roomId} does not exist`);

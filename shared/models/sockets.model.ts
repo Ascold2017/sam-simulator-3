@@ -1,4 +1,5 @@
-import { AAObjectDTO, MapData } from "core/app";
+import { Position, MapData, AAObject } from "@core/app";
+
 
 export interface MissionRoom {
     id: string;
@@ -10,12 +11,13 @@ export interface ClientToServerEvents {
     join_mission_room: (roomId: string) => void;
     leave_mission_room: (roomId: string) => void;
     delete_mission_room: (roomId: string) => void;
+    change_aa_position: (position: Position) => void;
     disconnect: () => void;
 }
 
 export interface MissionData {
     map: MapData;
-    aas: AAObjectDTO[]
+    aas: AAObject[]
 }
 export interface ServerToClientEvents {
     mission_rooms: (missions: MissionRoom[]) => void;
@@ -24,5 +26,6 @@ export interface ServerToClientEvents {
     player_leaved: (socketId: string) => void;
     room_deleted: (roomId: string) => void;
     mission_environment: (missionData: MissionData) => void;
+    error: (error: string) => void;
     
 }

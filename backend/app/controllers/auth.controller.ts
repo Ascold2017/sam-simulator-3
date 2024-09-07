@@ -61,7 +61,6 @@ export class AuthController {
 
     public authSocketMiddleware() {
         return async (socket: Socket, next: (err?: ExtendedError) => void) => {
-            console.log(socket.handshake)
             const token = socket.handshake.auth.token;
 
             if (token) {

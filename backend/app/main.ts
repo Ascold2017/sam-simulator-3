@@ -4,11 +4,11 @@ import express from "express";
 import { Server } from 'socket.io';
 import https from "https";
 import cors from "cors";
-import { ClientToServerEvents, ServerToClientEvents } from "@shared/models/sockets.model";
 import router from "./router/router";
 import { GameRoomsController } from "./controllers/game-rooms.controller";
 import { AppDataSource } from "./config/dataSource";
 import { AuthController } from "./controllers/auth.controller";
+import { ClientToServerEvents, ServerToClientEvents } from "@shared/models/sockets.model";
 
 
 const app = express();
@@ -34,10 +34,10 @@ app.use(router);
         }
     });
     const authController = new AuthController()
-    io.use(authController.authSocketMiddleware()) 
+    io.use(authController.authSocketMiddleware())
 
     new GameRoomsController(io);
-   
+
     server.listen(port, () => {
         console.log(`Server is running on port ${port}`);
     });
