@@ -20,7 +20,11 @@
             @update-direction="direction = $event" />
 
         <!-- Летающие обьекты -->
-        <FlightObject v-for="flightObject in parsedFlightObjects" :flight-object="flightObject" :prevState="prevFlightObjects.find(ps => ps.id === flightObject.id)" :key="flightObject.id"/>
+        <FlightObject v-for="flightObject in parsedFlightObjects"
+            :flight-object="flightObject"
+            :prevState="prevFlightObjects.find(ps => ps.id === flightObject.id)"
+            :key="flightObject.id"
+        />
         <!-- Зенитки-->
         <AAObject v-for="aaObject in aas" :aaObject="aaObject"/>
 
