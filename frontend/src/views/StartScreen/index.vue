@@ -3,7 +3,7 @@
       <!-- Верхняя панель -->
       <div class="start-screen__top-bar">
         <h2 class="start-screen__top-bar-title">AA Simulator</h2>
-        <button class="start-screen__top-bar-button" @click="authStore.logout">Logout</button>
+        <router-link class="start-screen__top-bar-button" :to="{ name: 'profile' }">Profile</router-link>
       </div>
   
       <!-- Селектор для миссий и кнопка создания комнаты -->

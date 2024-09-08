@@ -20,6 +20,11 @@ const router = createRouter({
       component: () => import('../views/MainScreen/index.vue')
     },
     {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('../views/ProfileScreen/index.vue')
+    },
+    {
       path: '/error',
       name: 'error',
       component: () => import('../views/ErrorScreen/index.vue')
