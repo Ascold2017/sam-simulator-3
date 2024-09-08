@@ -15,7 +15,7 @@
         <TresPerspectiveCamera v-if="currentAA" :fov="75" :far="10000"
             :position="[currentAA.position.x, currentAA.position.y, currentAA.position.z]"
             :look-at="[currentAA.position.x + 1, currentAA.position.y, currentAA.position.z]"
-            :zoom="deviceStore.orientation === 'portrait' ? 3 : 1"
+            :zoom="zoom"
         />
 
         <!-- Контролы-->
@@ -52,6 +52,7 @@ import SmokeTrails from './SmokeTrails/SmokeTrails.vue'
 import AAObject from './AAObject.vue';
 import CustomFirstPersonControl from './CustomFirstPersonControl.vue';
 import DeviceOrientationControl from './DeviceOrientationControl.vue';
+import { computed } from 'vue';
 
 const gameStore = useGameStore()
 const deviceStore = useDevice()
@@ -59,5 +60,7 @@ const { currentAA, parsedFlightObjects, aas, map, direction } = storeToRefs(game
 
 
 const sunElevation = 3;
-const sunElevationRad = sunElevation * (Math.PI / 180)
+const sunElevationRad = sunElevation * (Math.PI / 180);
+
+const zoom = computed(() => deviceStore.orientation === 'portrait' ? 3 : 1)
 </script>
