@@ -1,18 +1,8 @@
 <script setup lang="ts">
-import { RouterView, useRouter } from 'vue-router'
-import { useRooms } from './stores/rooms';
-import { onMounted } from 'vue';
+import { RouterView } from 'vue-router'
 import { useGameStore } from './stores/game';
 
-const roomStore = useRooms();
 useGameStore();
-const router = useRouter()
-
-onMounted(() => {
-  if (!roomStore.currentRoom) {
-    router.push({ name: 'start' })
-  }
-})
 </script>
 
 <template>

@@ -10,6 +10,15 @@ import Scene from './components/Scene/index.vue';
 import TopBar from './components/TopBar.vue';
 import AimGUI from './components/AimGUI.vue'
 import ActionBar from './components/ActionBar.vue';
+import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { useRooms } from '../../stores/rooms';
 
-
+const roomStore = useRooms();
+const router = useRouter()
+onMounted(() => {
+  if (!roomStore.currentRoom) {
+    router.push({ name: 'start' })
+  }
+})
 </script>
