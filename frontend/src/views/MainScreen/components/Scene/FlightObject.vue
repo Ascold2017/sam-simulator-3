@@ -15,14 +15,14 @@
 <script setup lang="ts">
 import { CanvasTexture } from 'three';
 import { ParsedFlightObject } from '../../../../stores/game';
-import { useRenderLoop, useTres } from '@tresjs/core';
+import { TresObject, useRenderLoop, useTres } from '@tresjs/core';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
     flightObject: ParsedFlightObject,
 }>();
 
-const infoPlane = ref(null);
+const infoPlane = ref<TresObject | null>(null);
 const { camera } = useTres(); // Камера
 const { onLoop } = useRenderLoop(); // Рендер-цикл
 
