@@ -27,7 +27,7 @@ const elevation = computed(() => gameStore.direction.elevation * (180 / Math.PI)
 }
 
 .aim-target .material-icons {
-    @apply text-white;
+    @apply text-red-500;
     font-size: 100px;
 }
 
@@ -40,12 +40,12 @@ const elevation = computed(() => gameStore.direction.elevation * (180 / Math.PI)
 }
 
 .aim-target__azimuth {
-    @apply text-white absolute left-1/2 transform -translate-x-1/2;
+    @apply text-red-500 absolute left-1/2 transform -translate-x-1/2;
     bottom: -10px;
 }
 
 .aim-target__elevation {
-    @apply text-white absolute top-1/2 transform -translate-y-1/2;
+    @apply text-red-500 absolute top-1/2 transform -translate-y-1/2;
     right: -10px;
 
 }
