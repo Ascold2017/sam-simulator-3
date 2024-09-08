@@ -1,7 +1,7 @@
 <template>
-    <TresMesh :rotation="[-Math.PI / 2, 0, 0]" v-if="terrainGeometry">
+    <TresMesh :rotation="[-Math.PI / 2, 0, 0]" v-if="terrainGeometry" receiveShadow>
         <primitive :object="terrainGeometry" />
-        <TresMeshStandardMaterial :color="0x0000ff" :side="1" />
+        <TresMeshPhysicalMaterial color="#0A4500" :side="1" />
     </TresMesh>
 </template>
 
