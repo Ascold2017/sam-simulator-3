@@ -1,4 +1,4 @@
-import { Position, MapData, AAObject, FlightObjectDTO, CapturedTarget } from "@core/app";
+import { Position, MapData, AAObject, FlightObjectDTO, CapturedTarget } from "../../backend/core/app";
 
 
 export interface MissionRoom {

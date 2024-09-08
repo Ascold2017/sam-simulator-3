@@ -47,7 +47,7 @@ export class AuthService {
         return jwt.sign(
             { id: user.id, username: user.username },
             process.env.TOKEN_SECRET, // Используй свой секретный ключ
-            { expiresIn: '1h' } // Время жизни токена
+            { expiresIn: '8h' } // Время жизни токена
         );
     }
 

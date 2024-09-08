@@ -16,13 +16,13 @@ const terrainGeometry = ref<PlaneGeometry | null>(null)
 
 onMounted(() => {
     createHeightmapTerrain()
-})
+});
 
 watch(() => props.terrainData, () => {
     createHeightmapTerrain();
-})
+});
+
 function createHeightmapTerrain() {
-    console.log(props.terrainData)
     const { size, data } = props.terrainData;
 
     // Создаем плоскость с сеткой по количеству точек в данных высот
