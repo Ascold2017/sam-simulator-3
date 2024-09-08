@@ -41,7 +41,7 @@ const onScreenOrientationChangeEvent = () => {
     screenOrientation.value = window.orientation || 0;
 
     // Определение ориентации экрана и отправка события
-    const orientation = (window.innerHeight < window.innerWidth) ? 'portrait' : 'landscape';
+    const orientation = screenOrientation.value === 0 ? 'portrait' : 'landscape';
     emit('updateOrientation', orientation);
 };
 
@@ -111,6 +111,7 @@ const updateOrientation = () => {
 const connect = () => {
     window.addEventListener('orientationchange', onScreenOrientationChangeEvent, false);
     window.addEventListener('deviceorientation', onDeviceOrientationChangeEvent, false);
+    onScreenOrientationChangeEvent();
 };
 
 // Отключение обработчиков событий

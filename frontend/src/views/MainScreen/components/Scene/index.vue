@@ -1,6 +1,6 @@
 <template>
     <TresCanvas window-size antialias alpha shadows preset="realistic">
-        <Sky :elevation="sunElevation" :turbidity="10" :mie-coefficient="0.005" :mie-directional-g="0" :rayleigh="2" />
+        <Sky :azimuth="0" :elevation="sunElevation" :turbidity="10" :mie-coefficient="0.005" :mie-directional-g="0" :rayleigh="2" />
         <!-- Освещение -->
         <TresAmbientLight :color="0x404040" :intensity="0.8" />
 
@@ -14,7 +14,9 @@
         <!-- Камера -->
         <TresPerspectiveCamera v-if="currentAA" :fov="75" :far="10000"
             :position="[currentAA.position.x, currentAA.position.y, currentAA.position.z]"
-            :look-at="[currentAA.position.x + 1, currentAA.position.y, currentAA.position.z]" />
+            :look-at="[currentAA.position.x + 1, currentAA.position.y, currentAA.position.z]"
+            :zoom="deviceStore.orientation === 'portrait' ? 3 : 1"
+        />
 
         <!-- Контролы-->
         <DeviceOrientationControl v-if="deviceStore.isMobile" :min-elevation="0" :max-elevation="Math.PI / 4"
@@ -56,6 +58,6 @@ const deviceStore = useDevice()
 const { currentAA, parsedFlightObjects, aas, map, direction } = storeToRefs(gameStore);
 
 
-const sunElevation = 45;
+const sunElevation = 3;
 const sunElevationRad = sunElevation * (Math.PI / 180)
 </script>
