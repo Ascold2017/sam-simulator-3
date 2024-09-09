@@ -11,7 +11,7 @@ const heightmapImageURL = ref<string | null>(null)
 
 
 onMounted(async () => {
-   const generator =  new HeightmapGenerator(1024, 1024)
-   heightmapImageURL.value = await generator.generateHeightmapTerrain('/models/mars/scene.gltf')
+    const generator = new HeightmapGenerator(1024, 1024)
+    heightmapImageURL.value = await generator.generateHeightmapTerrain('/models/mars/scene.gltf')
 })
 </script>

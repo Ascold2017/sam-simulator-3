@@ -108,4 +108,6 @@ export class HeightmapGenerator {
 
         return heightmapDataUrl;
     }
+
+
 }
