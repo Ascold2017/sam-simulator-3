@@ -5,6 +5,9 @@ import { Server } from "socket.io";
 import { CustomSocket } from "../types";
 import { v4 as uuidv4 } from 'uuid';
 import { Mission } from "@/entities/mission.entity";
+import { readFile } from "fs/promises";
+import sharp from "sharp";
+import path from "path";
 
 interface PlayerData {
     socket: CustomSocket; // Сокет игрока
@@ -149,10 +152,10 @@ export class GameInstanceController {
                 throw new Error(`Mission with ID ${missionId} not found`);
             }
 
-    
+
             this.missionData = missionData;
 
-            const parsedMissionData = this.parseMissionData()
+            const parsedMissionData = await this.parseMissionData()
 
             this.coreInstance.startMission(parsedMissionData);
             console.log(`Mission ${missionId} started successfully`);
@@ -214,16 +217,38 @@ export class GameInstanceController {
         })
     }
 
-    private parseMissionData(): MissionData {
+    private async parseMissionData(): Promise<MissionData> {
+        const imageFilename = path.resolve(__dirname, './../../../frontend/public/models/' + this.missionData.map.filename + '/textures/heightmap.png');
+        const mapSize = this.missionData.map.size;
+        const maxHeight = 650;
+
+        const image = sharp(imageFilename);
+        const { width, height } = await image.metadata();
+
+        // Извлечение данных о пикселях изображения
+        const rawImageData = await image.raw().toBuffer();
+
+        const heightData: number[][] = [];
+
+
+        for (let y = 0; y < height; y++) {
+            const row: number[] = [];
+            for (let x = 0; x < width; x++) {
+                const index = (y * width + x) * 4;
+                const r = rawImageData[index]; // Используем только красный канал
+                const normalizedHeight = Math.round((r / 255) * maxHeight);
+                row.push(normalizedHeight);
+            }
+            heightData.push(row);
+        }
+
+        // Рассчитываем элементный размер
+        const elementSize = Math.floor(mapSize / width);
+        
         return {
             map: {
-                data: [
-                    [0, 0, 0, 0],
-                    [0, 0, 0, 0],
-                    [0, 0, 0, 0],
-                    [0, 0, 0, 0],
-                ],
-                size: 1
+                data: heightData, // Данные высот
+                size: elementSize
             },
             aaPositions: this.missionData.aaPositions,
             targets: this.missionData.targets.map(mTarget => ({
@@ -234,6 +259,6 @@ export class GameInstanceController {
                 waypoints: mTarget.waypoints,
             }))
         }
-        
+
     }
 }

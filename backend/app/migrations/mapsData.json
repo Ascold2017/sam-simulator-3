@@ -1,7 +1,8 @@
 [
     {
         "name": "Mars",
-        "size": 1000,
+        "size": 8000,
+        "maxHeight": 938,
         "filename": "mars"
     }
 ]

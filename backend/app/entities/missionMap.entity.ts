@@ -13,6 +13,9 @@ export class MissionMap extends BaseEntity {
     @Column()
     size: number
 
+    @Column()
+    maxHeight: number;
+
     @OneToMany(() => Mission, target => target.map)
     missions: Mission[];
 
