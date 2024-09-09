@@ -30,6 +30,11 @@ const router = createRouter({
       component: () => import('../views/TestScreen/index.vue')
     },
     {
+      path: '/heightmap',
+      name: 'heightmap',
+      component: () => import('../views/TestScreen/GenerationHeightmap.vue')
+    },
+    {
       path: '/error',
       name: 'error',
       component: () => import('../views/ErrorScreen/index.vue')
