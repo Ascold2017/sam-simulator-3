@@ -48,10 +48,8 @@ export class InitMissionDataFromFile1634567890123 implements MigrationInterface 
     for (const map of mapsData) {
       const mapEntity = mapRepository.create({
         name: map.name,
-        map: {
-          size: map.size,
-          data: map.data,
-        },
+        filename: map.filename,
+        size: map.size
       });
       const savedMap = await mapRepository.save(mapEntity);
       savedMaps.push(savedMap);

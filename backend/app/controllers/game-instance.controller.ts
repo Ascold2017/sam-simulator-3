@@ -1,10 +1,10 @@
 import { ClientToServerEvents, ServerToClientEvents } from "@shared/models/sockets.model";
 import { DI } from "../config/dataSource";
-import { missionDto } from "../dto/mission.dto";
 import { AAPosition, Core, MissionData, Position } from "../../core/app";
 import { Server } from "socket.io";
 import { CustomSocket } from "../types";
 import { v4 as uuidv4 } from 'uuid';
+import { Mission } from "@/entities/mission.entity";
 
 interface PlayerData {
     socket: CustomSocket; // Сокет игрока
@@ -17,16 +17,13 @@ export class GameInstanceController {
     private roomId: string
     private io: Server<ClientToServerEvents, ServerToClientEvents>;
     private players: Map<string, PlayerData> = new Map();
-    private missionData: MissionData;
+    private missionData: Mission;
 
     constructor(roomId: string, missionId: number, io: Server) {
         this.io = io;
         this.roomId = roomId;
         this.coreInstance = new Core();
         this.startMission(missionId);
-        this.coreInstance.updateListener = () => {
-            this.sendUpdates()
-        }
     }
 
     public addPlayer(socket: CustomSocket) {
@@ -152,11 +149,17 @@ export class GameInstanceController {
                 throw new Error(`Mission with ID ${missionId} not found`);
             }
 
-            const parsedMissionData = missionDto(missionData);
-            this.missionData = parsedMissionData;
+    
+            this.missionData = missionData;
+
+            const parsedMissionData = this.parseMissionData()
 
             this.coreInstance.startMission(parsedMissionData);
             console.log(`Mission ${missionId} started successfully`);
+
+            this.coreInstance.updateListener = () => {
+                this.sendUpdates()
+            }
 
         } catch (error) {
             console.error(`Error starting mission: ${error.message}`);
@@ -170,10 +173,7 @@ export class GameInstanceController {
         const aas = this.coreInstance.getAAs();
 
         this.io.to(playerId).emit('mission_environment', {
-            map: {
-                data: heightmapTerrain.data,
-                size: heightmapTerrain.elementSize
-            },
+            mapName: this.missionData.map.filename,
             aas,
             yourAAId: playerData.aaId,
             aaPositions: this.getAAPositions()
@@ -208,10 +208,32 @@ export class GameInstanceController {
     private sendUpdates() {
         const flightObjects = this.coreInstance.getFlightObjects();
         const capturedTargets = this.coreInstance.getCapturedTargets()
-
         this.io.to(this.roomId).emit('mission_update', {
             flightObjects,
             capturedTargets
         })
+    }
+
+    private parseMissionData(): MissionData {
+        return {
+            map: {
+                data: [
+                    [0, 0, 0, 0],
+                    [0, 0, 0, 0],
+                    [0, 0, 0, 0],
+                    [0, 0, 0, 0],
+                ],
+                size: 1
+            },
+            aaPositions: this.missionData.aaPositions,
+            targets: this.missionData.targets.map(mTarget => ({
+                id: mTarget.target.name,
+                rcs: mTarget.target.rcs,
+                temperature: mTarget.target.temperature,
+                size: mTarget.target.size,
+                waypoints: mTarget.waypoints,
+            }))
+        }
+        
     }
 }

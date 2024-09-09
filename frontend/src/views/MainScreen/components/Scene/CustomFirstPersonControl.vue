@@ -69,6 +69,7 @@ onMounted(() => {
     render(({ renderer, scene, camera }) => {
         updateCameraRotation();
         renderer.render(scene, camera)
+        
     })
 });
 

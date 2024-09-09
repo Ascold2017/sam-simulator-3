@@ -1,6 +1,6 @@
 <template>
     <TresMesh :position="[flightObject.position.x, flightObject.position.y, flightObject.position.z]">
-        <TresSphereGeometry :radius="2" />
+        <TresSphereGeometry :radius="10" />
         <TresMeshStandardMaterial :color="0xff0000" />
 
         <!-- Плоскость с текстурой -->

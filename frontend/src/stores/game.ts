@@ -9,7 +9,7 @@ export interface ParsedFlightObject extends FlightObject {
     isCaptured: boolean;
 }
 export const useGameStore = defineStore('game', () => {
-    const map = ref<MissionData['map']>({ size: 0, data: [] });
+    const map = ref<MissionData['mapName']>('');
     const aas = ref<AAObject[]>([]);
     const aaPositions = ref<MissionData['aaPositions']>([])
     const aaId = ref<string | null>(null);
@@ -30,7 +30,7 @@ export const useGameStore = defineStore('game', () => {
     })
 
     socketClient.listenToEvent('mission_environment', (data) => {
-        map.value = data.map;
+        map.value = data.mapName;
         aas.value = data.aas;
         aaId.value = data.yourAAId;
         aaPositions.value = data.aaPositions;

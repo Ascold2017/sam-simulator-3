@@ -1,4 +1,4 @@
-import { Position, MapData, AAObject, FlightObjectDTO, CapturedTarget } from "../../backend/core/app";
+import { Position, AAObject, FlightObjectDTO, CapturedTarget } from "../../backend/core/app";
 
 
 export interface MissionRoom {
@@ -23,7 +23,7 @@ export interface AAPosition {
     aaId: string;
 }
 export interface MissionData {
-    map: MapData;
+    mapName: string;
     aas: AAObject[];
     yourAAId: string;
     aaPositions: AAPosition[];

@@ -7,11 +7,11 @@ export class MissionMap extends BaseEntity {
     @Column()
     name: string;
 
-    @Column("jsonb")
-    map: {
-        size: number;
-        data: number[][];
-    };
+    @Column()
+    filename: string;
+    
+    @Column()
+    size: number
 
     @OneToMany(() => Mission, target => target.map)
     missions: Mission[];

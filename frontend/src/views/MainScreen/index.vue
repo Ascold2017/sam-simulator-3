@@ -1,6 +1,9 @@
 <template>
     <TopBar />
-    <Scene />
+    <Suspense>
+      <Scene />
+    </Suspense>
+   
     <AimGUI />
     <ActionBar />
 </template>
