@@ -36,7 +36,7 @@
           <tbody>
             <tr v-for="room in parsedMissionRooms" :key="room.id">
               <td>{{ room.name }}</td>
-              <td>--.--</td>
+              <td><DownCounter :end-date="room.endedAt"/></td>
               <td>
                 <button class="start-screen__button" @click="joinRoom(room.id)">
                   Join
@@ -58,13 +58,12 @@
   
   <script setup lang="ts">
   import { ref, onMounted } from 'vue';
-  import { useAuthStore } from '../../stores/auth'
   import { useRooms } from '../../stores/rooms';
   import { useMissions } from '../../stores/missions';
   import { storeToRefs } from 'pinia';
+  import DownCounter from '../../components/DownCounter.vue';
   
   // Инициализация сторов
-  const authStore = useAuthStore()
   const missionsStore = useMissions();
   const roomsStore = useRooms();
   

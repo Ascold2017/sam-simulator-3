@@ -3,6 +3,7 @@ import { Position, AAObject, FlightObjectDTO, CapturedTarget } from "../../backe
 
 export interface MissionRoom {
     id: string;
+    endedAt: number;
     missionId: number;
 }
 export type MissionID = number;
@@ -42,7 +43,7 @@ export interface MissionUpdate {
 }
 export interface ServerToClientEvents {
     mission_rooms: (missions: MissionRoom[]) => void;
-    mission_room_created: (payload: { id: string; missionId: MissionID }) => void;
+    mission_room_created: (payload: MissionRoom) => void;
     player_joined: (data: PlayerJoinedData) => void;
     player_leaved: (roomId: string) => void;
     room_deleted: (roomId: string) => void;

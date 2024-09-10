@@ -1,11 +1,9 @@
 import { ClientToServerEvents, ServerToClientEvents } from "@shared/models/sockets.model";
-import { DI } from "../config/dataSource";
-import { AAPosition, Core, MissionData, Position } from "../../core/app";
+import { AAPosition, Core, MissionData } from "../../core/app";
 import { Server } from "socket.io";
 import { CustomSocket } from "../types";
 import { v4 as uuidv4 } from 'uuid';
 import { Mission } from "@/entities/mission.entity";
-import { readFile } from "fs/promises";
 import sharp from "sharp";
 import path from "path";
 
@@ -22,11 +20,12 @@ export class GameInstanceController {
     private players: Map<string, PlayerData> = new Map();
     private missionData: Mission;
 
-    constructor(roomId: string, missionId: number, io: Server) {
+    constructor(roomId: string, missionData: Mission, io: Server) {
         this.io = io;
         this.roomId = roomId;
         this.coreInstance = new Core();
-        this.startMission(missionId);
+        this.missionData = missionData;
+        this.startMission();
     }
 
     public addPlayer(socket: CustomSocket) {
@@ -141,31 +140,14 @@ export class GameInstanceController {
     }
 
     // Запуск миссии
-    private async startMission(missionId: number) {
-        try {
-            const missionData = await DI.missionRepository.findOne({
-                where: { id: missionId },
-                relations: ['targets', 'map', 'targets.target', 'aaPositions'],
-            });
+    private async startMission() {
+        const parsedMissionData = await this.parseMissionData()
 
-            if (!missionData) {
-                throw new Error(`Mission with ID ${missionId} not found`);
-            }
+        this.coreInstance.startMission(parsedMissionData);
+        console.log(`Mission ${this.missionData.name} started successfully`);
 
-
-            this.missionData = missionData;
-
-            const parsedMissionData = await this.parseMissionData()
-
-            this.coreInstance.startMission(parsedMissionData);
-            console.log(`Mission ${missionId} started successfully`);
-
-            this.coreInstance.updateListener = () => {
-                this.sendUpdates()
-            }
-
-        } catch (error) {
-            console.error(`Error starting mission: ${error.message}`);
+        this.coreInstance.updateListener = () => {
+            this.sendUpdates()
         }
     }
 
@@ -244,7 +226,7 @@ export class GameInstanceController {
 
         // Рассчитываем элементный размер
         const elementSize = Math.floor(mapSize / width);
-        
+
         return {
             map: {
                 data: heightData, // Данные высот

@@ -11,11 +11,22 @@ export const useRooms = defineStore('rooms', () => {
 
     const rooms = ref<MissionRoom[]>([])
     const currentRoom = ref<PlayerJoinedData | null>(null)
+    const parsedCurrentRoom = computed(() => {
+        if (!currentRoom.value) return null;
+        const room = rooms.value.find(r => r.id === currentRoom.value?.roomId);
+        return {
+            id: currentRoom.value.roomId,
+            aaPositionId: currentRoom.value.aaPositionId,
+            missionId: room?.missionId,
+            endedAt: room?.endedAt
+        } 
+    })
 
     const parsedMissionRooms = computed(() => {
         return rooms.value.map(room => ({
             id: room.id,
-            name: missionsStore.missions.find(m => m.id === room.missionId)?.name
+            name: missionsStore.missions.find(m => m.id === room.missionId)?.name,
+            endedAt: room.endedAt
         }))
     })
 
@@ -23,10 +34,11 @@ export const useRooms = defineStore('rooms', () => {
         rooms.value = data;
     })
 
-    socketClient.listenToEvent('mission_room_created', ({ id, missionId }) => {
+    socketClient.listenToEvent('mission_room_created', ({ id, missionId, endedAt }) => {
         rooms.value.push({
             id,
-            missionId
+            missionId,
+            endedAt
         })
     })
 
@@ -46,6 +58,12 @@ export const useRooms = defineStore('rooms', () => {
 
     socketClient.listenToEvent('room_deleted', (roomId) => {
         rooms.value = rooms.value.filter(room => room.id !== roomId);
+        if (roomId === currentRoom.value?.roomId) {
+            currentRoom.value = null;
+            router.push({
+                name: 'start'
+            })
+        }
     })
 
     function createRoom(missionId: MissionID) {
@@ -71,6 +89,7 @@ export const useRooms = defineStore('rooms', () => {
         rooms,
         parsedMissionRooms,
         currentRoom,
+        parsedCurrentRoom,
         createRoom,
         joinRoom,
         deleteRoom,

@@ -3,10 +3,12 @@ import { Server } from "socket.io";
 import { GameInstanceController } from "./game-instance.controller";
 import { v4 as uuidv4 } from 'uuid'
 import { CustomSocket } from "../types";
+import { DI } from "../config/dataSource";
 
 interface MissionRoomInstance {
     id: string;
     missionId: MissionID;
+    endedAt: number;
     gameInstanceController: GameInstanceController;
 }
 export class GameRoomsController {
@@ -16,6 +18,7 @@ export class GameRoomsController {
     constructor(io: Server) {
         this.io = io;
         this.setupListeners();
+        this.setupDaemon()
     }
 
     private setupListeners() {
@@ -49,10 +52,21 @@ export class GameRoomsController {
         });
     }
 
+    private setupDaemon() {
+        setInterval(() => {
+            this.missionRooms.forEach(room => {
+                if (room.endedAt <= +new Date()) {
+                    this.deleteRoom(room.id)
+                }
+             })
+        }, 1000)
+    }
+
     private async getMissionRooms(socket: CustomSocket) {
         try {
             const result = this.missionRooms.map(mr => ({
                 id: mr.id,
+                endedAt: mr.endedAt,
                 missionId: mr.missionId,
             }));
 
@@ -64,20 +78,30 @@ export class GameRoomsController {
     }
 
     // Создать комнату и игру
-    private createRoom(missionId: number): void {
-        const roomId =  uuidv4();
-        const missionRoom = {
-            id:roomId,
-            missionId,
-            gameInstanceController: new GameInstanceController(roomId, missionId, this.io)
-        }
-        this.missionRooms.push(missionRoom);
-        console.log(`Mission room ${missionId} created with a new game instance`);
+    private async createRoom(missionId: number) {
 
-        this.io.emit('mission_room_created', {
-            id: missionRoom.id,
-            missionId
-        });
+        try {
+            const missionData = await this.getMission(missionId);
+            const roomId =  uuidv4();
+            const endedAt = +new Date() + missionData.duration * 1000
+            const missionRoom = {
+                id:roomId,
+                missionId,
+                endedAt,
+                gameInstanceController: new GameInstanceController(roomId, missionData, this.io)
+            }
+            this.missionRooms.push(missionRoom);
+            console.log(`Mission room ${missionId} created with a new game instance`);
+    
+            this.io.emit('mission_room_created', {
+                id: missionRoom.id,
+                missionId,
+                endedAt
+            });
+        } catch (e) {
+            this.io.emit('error', e?.message)
+        }
+        
     }
 
     // Присоединение к комнате
@@ -124,5 +148,18 @@ export class GameRoomsController {
 
         room.gameInstanceController.removePlayer(socket.id);
         this.io.emit('player_leaved', socket.id);
+    }
+
+    private async getMission(missionId: number) {
+        try {
+            const missionData = await DI.missionRepository.findOneOrFail({
+                where: { id: missionId },
+                relations: ['targets', 'map', 'targets.target', 'aaPositions'],
+            });
+
+           return missionData
+        } catch {
+            throw new Error(`Mission with ID ${missionId} not found`);
+        }
     }
 }
