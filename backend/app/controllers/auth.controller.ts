@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import { AuthService } from "../services/auth.service";
-import { DI } from '../config/dataSource';
 import { Socket } from 'socket.io';
 import { ExtendedError } from 'socket.io/dist/namespace';
 

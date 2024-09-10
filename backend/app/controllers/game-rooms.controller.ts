@@ -3,7 +3,7 @@ import { Server } from "socket.io";
 import { GameInstanceController } from "./game-instance.controller";
 import { v4 as uuidv4 } from 'uuid'
 import { CustomSocket } from "../types";
-import { DI } from "../config/dataSource";
+import { MissionService } from "../services/mission.service";
 
 interface MissionRoomInstance {
     id: string;
@@ -13,6 +13,7 @@ interface MissionRoomInstance {
 }
 export class GameRoomsController {
     private io: Server<ClientToServerEvents, ServerToClientEvents>;
+    private missionService = new MissionService()
     private missionRooms: MissionRoomInstance[] = []
 
     constructor(io: Server) {
@@ -81,7 +82,7 @@ export class GameRoomsController {
     private async createRoom(missionId: number) {
 
         try {
-            const missionData = await this.getMission(missionId);
+            const missionData = await this.missionService.getMissionById(missionId);
             const roomId =  uuidv4();
             const endedAt = +new Date() + missionData.duration * 1000
             const missionRoom = {
@@ -150,16 +151,4 @@ export class GameRoomsController {
         this.io.emit('player_leaved', socket.id);
     }
 
-    private async getMission(missionId: number) {
-        try {
-            const missionData = await DI.missionRepository.findOneOrFail({
-                where: { id: missionId },
-                relations: ['targets', 'map', 'targets.target', 'aaPositions'],
-            });
-
-           return missionData
-        } catch {
-            throw new Error(`Mission with ID ${missionId} not found`);
-        }
-    }
 }
