@@ -19,7 +19,7 @@ class SocketClient {
 
   private initializeSocket(authToken?: string) {
     this.socket = io(this.url, {
-      path: "/socket.io",
+      path: "/api/socket.io",
       transports: ["websocket"], // Используем только WebSocket
       auth: {
         token: authToken, // Передаем токен при установлении соединения

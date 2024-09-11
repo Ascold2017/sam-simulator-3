@@ -2,7 +2,7 @@ import "reflect-metadata";
 import fs from 'fs'
 import express from "express";
 import { Server } from 'socket.io';
-import https from "https";
+import http from "http";
 import cors from "cors";
 import router from "./router/router";
 import { GameRoomsController } from "./controllers/game-rooms.controller";
@@ -12,7 +12,7 @@ import { ClientToServerEvents, ServerToClientEvents } from './types/sockets.mode
 
 
 const app = express();
-const server = https.createServer(app);
+const server = http.createServer(app);
 const port = process.env.PORT || 8000;
 
 app.use(express.json()); // Поддержка JSON-формата
@@ -23,6 +23,7 @@ app.use('/api', router);
     await AppDataSource.initialize();
     await AppDataSource.runMigrations();
     const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
+        path: '/api/socket.io', 
         cors: {
             origin: "*", // Разрешить все домены
             methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Разрешенные методы
@@ -35,7 +36,7 @@ app.use('/api', router);
 
     new GameRoomsController(io);
 
-    server.listen(port as number,  '0.0.0.0', 0, () => {
+    server.listen(port as number, () => {
         console.log(`Server is running on port ${port}`);
     });
 })();
