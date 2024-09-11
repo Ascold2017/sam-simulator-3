@@ -11,6 +11,16 @@ export class MissionService {
         return missions
     }
 
+    async getAllMissionsExtended() {
+        const missions = await DI.missionRepository.find({
+            select: ['id', 'name'],
+            relations: ['map'],
+            where: {}
+        });
+
+        return missions
+    }
+
     async getMissionById(id: number) {
         const missionData = await DI.missionRepository.findOneOrFail({
             where: { id },

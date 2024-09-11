@@ -12,7 +12,8 @@ router.post('/register', (req, res) => authController.register(req, res));
 router.post('/login', (req, res) => authController.login(req, res));
 router.get('/user', authController.authMiddleware(), (req, res) => authController.getUser(req, res));
 
-router.get('/missions', authController.authMiddleware(), (req, res) => missionController.getMissions(req, res))
+router.get('/missions', authController.authMiddleware(), missionController.getMissions())
+router.get('/adm/missions', missionController.getMissionsExtended())
 router.get('/aas', authController.authMiddleware(), (req, res) =>aaController.getAAs(req, res))
 
 export default router;
