@@ -1,0 +1,35 @@
+# Используем базовый образ для Node.js
+FROM node:18-alpine as build-client
+
+# Устанавливаем рабочую директорию
+WORKDIR /app-client
+
+# Копируем package.json и устанавливаем зависимости
+COPY ./client/package*.json ./
+RUN npm install
+
+# Копируем остальные файлы
+COPY ./client/ .
+
+# Собираем приложение
+RUN npm run build
+
+FROM  node:18-alpine as static
+
+WORKDIR /app-static
+
+COPY ./static/files ./
+
+# Stage 1: Сборка nginx с фронтендами
+FROM nginx:alpine
+
+# Копируем собранные клиентские приложения
+COPY --from=build-client /app-client/dist /usr/share/nginx/html/client
+COPY --from=static /app-static /usr/share/nginx/html/static
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Удаляем default.conf, чтобы избежать конфликтов
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Запускаем nginx
+CMD ["nginx", "-g", "daemon off;"]

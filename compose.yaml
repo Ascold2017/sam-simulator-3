@@ -1,0 +1,27 @@
+services:
+  database:
+    restart: on-failure
+    build: ./database
+    hostname: database
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: aa-simulator
+
+  backend:
+    restart: on-failure
+    build: ./backend
+    hostname: backend
+    depends_on:
+      - database
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    container_name: nginx
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+      - database

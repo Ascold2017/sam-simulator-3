@@ -1,8 +1,7 @@
-import { ClientToServerEvents, MissionID, ServerToClientEvents } from "@shared/models/sockets.model";
+import { ClientToServerEvents, MissionID, ServerToClientEvents, CustomSocket } from "../types/sockets.model";
 import { Server } from "socket.io";
 import { GameInstanceController } from "./game-instance.controller";
 import { v4 as uuidv4 } from 'uuid'
-import { CustomSocket } from "../types";
 import { MissionService } from "../services/mission.service";
 
 interface MissionRoomInstance {

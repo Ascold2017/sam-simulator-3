@@ -1,4 +1,4 @@
-import type { AAListResponse } from "../../../shared/models/aa.model";
+import type { AAListResponse } from "../types/aa.model";
 import { Request, Response } from "express";
 import { AaService } from "../services/aa.service";
 

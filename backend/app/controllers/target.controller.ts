@@ -1,4 +1,4 @@
-import type { TargetListResponse } from "../../../shared/admModels/targets.model";
+import type { TargetListResponse } from "../types/target.model";
 import { Request, Response } from "express";
 import { TargetService } from "../services/target.service";
 

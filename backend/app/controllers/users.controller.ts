@@ -1,4 +1,4 @@
-import type { UserListResponse } from "../../../shared/admModels/user.model";
+import type { UserListResponse } from "../types/user.model";
 import { Request, Response } from "express";
 import { UserService } from "../services/user.service";
 

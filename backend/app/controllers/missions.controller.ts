@@ -1,5 +1,5 @@
-import type { MissionListResponse } from '../../../shared/models/mission.model'
-import type { AdmMissionListResponse } from '../../../shared/admModels/mission.model'
+import type { MissionListResponse } from '../types/mission.model'
+import type { AdmMissionListResponse } from '../types/mission.model'
 import { Request, Response } from "express";
 import { MissionService } from "../services/mission.service";
 

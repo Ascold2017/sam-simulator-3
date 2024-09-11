@@ -1,9 +1,8 @@
-import { ClientToServerEvents, ServerToClientEvents } from "@shared/models/sockets.model";
 import { AAPosition, Core, MissionData } from "../../core/app";
 import { Server } from "socket.io";
-import { CustomSocket } from "../types";
+import { CustomSocket, ClientToServerEvents, ServerToClientEvents } from "../types/sockets.model";
 import { v4 as uuidv4 } from 'uuid';
-import { Mission } from "@/entities/mission.entity";
+import { Mission } from "../entities/mission.entity";
 import sharp from "sharp";
 import path from "path";
 

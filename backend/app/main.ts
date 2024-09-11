@@ -8,19 +8,16 @@ import router from "./router/router";
 import { GameRoomsController } from "./controllers/game-rooms.controller";
 import { AppDataSource } from "./config/dataSource";
 import { AuthController } from "./controllers/auth.controller";
-import { ClientToServerEvents, ServerToClientEvents } from "@shared/models/sockets.model";
+import { ClientToServerEvents, ServerToClientEvents } from './types/sockets.model';
 
 
 const app = express();
-const server = https.createServer({
-    key: fs.readFileSync(__dirname + '/../../shared/cert.key'),
-    cert: fs.readFileSync(__dirname + '/../../shared/cert.crt')
-}, app);
-const port = process.env.PORT || 3000;
+const server = https.createServer(app);
+const port = process.env.PORT || 8000;
 
 app.use(express.json()); // Поддержка JSON-формата
 app.use(cors());
-app.use(router);
+app.use('/api', router);
 
 (async () => {
     await AppDataSource.initialize();
@@ -38,7 +35,7 @@ app.use(router);
 
     new GameRoomsController(io);
 
-    server.listen(port, () => {
+    server.listen(port as number,  '0.0.0.0', 0, () => {
         console.log(`Server is running on port ${port}`);
     });
 })();

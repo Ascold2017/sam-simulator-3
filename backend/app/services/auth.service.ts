@@ -1,6 +1,6 @@
 import { DI } from '../config/dataSource';
 import { User } from '../entities/user.entity';
-import bcrypt from 'bcrypt';
+import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 
 export class AuthService {
@@ -16,7 +16,7 @@ export class AuthService {
         if (existingUser) {
             throw new Error('User already exists');
         }
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await argon2.hash(password, { hashLength: 10 });
         const aa = await DI.aaRepository.findOne({ where: { id: 1 }})
         const user = DI.userRepository.create({ username, password: hashedPassword, aa });
 
@@ -32,8 +32,8 @@ export class AuthService {
         if (!user) {
             throw new Error('User not found');
         }
-
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+        const hashedPassword = await argon2.hash(password, { hashLength: 10 });
+        const isPasswordValid = await argon2.verify(hashedPassword, user.password);
         if (!isPasswordValid) {
             throw new Error('Invalid credentials');
         }
