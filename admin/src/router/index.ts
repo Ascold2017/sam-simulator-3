@@ -11,6 +11,22 @@ export const router = createRouter({
             path: '/missions',
             name: 'missions',
             component: () => import('../views/Missions/index.vue')
+        },
+        {
+            path: '/aas',
+            name: 'aas',
+            component: () => import('../views/AAs/index.vue')
+        },
+        {
+            path: '/targets',
+            name: 'targets',
+            component: () => import('../views/Targets/index.vue')
+        },
+        {
+            path: '/users',
+            name: 'users',
+            component: () => import('../views/Users/index.vue')
         }
+
     ]
 })

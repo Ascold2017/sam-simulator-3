@@ -1,14 +1,16 @@
-import type { AAListResponse } from '../../../shared/models/aa.model'
+import type { AAListResponse } from "../../../shared/models/aa.model";
 import { Request, Response } from "express";
 import { AaService } from "../services/aa.service";
 
 export class AAController {
-    private aaService = new AaService();
-    
-    public async getAAs(req: Request, res: Response) {
-         // Получаем миссии из базы данных
-         const aas = await this.aaService.getAllAas()
+  private aaService = new AaService();
 
-        res.status(200).json(aas satisfies AAListResponse)
-    }
+  public getAAs() {
+    return async (req: Request, res: Response) => {
+      // Получаем миссии из базы данных
+      const aas = await this.aaService.getAllAas();
+
+      res.status(200).json(aas satisfies AAListResponse);
+    };
+  }
 }
