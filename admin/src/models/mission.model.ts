@@ -42,7 +42,7 @@ export interface AdmMissionExtended {
         waypoints: {
             speed: number;
             position: Position
-        }
+        }[]
     }[]
 }
 export type AdmMissionListResponse = AdmMission[]

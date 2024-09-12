@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { useMaps } from "./maps";
 import { httpClient } from "../adapters/httpClient";
-import { AAPosition, AdmMissionExtendedResponse } from "../models/mission.model";
+import { AAPosition, AdmMissionExtended, AdmMissionExtendedResponse } from "../models/mission.model";
 
 export const useMissionEditor = defineStore('mission-editor', () => {
 
@@ -10,7 +10,8 @@ export const useMissionEditor = defineStore('mission-editor', () => {
 
     const missionName = ref<string>('')
     const mapId = ref<number | null>(null)
-    const aaPositions = ref<AAPosition[]>([])
+    const aaPositions = ref<AAPosition[]>([]);
+    const targets = ref<AdmMissionExtended['targets']>([]);
 
     const currentMap = computed(() => {
         if (!mapId.value) return null;
@@ -28,6 +29,7 @@ export const useMissionEditor = defineStore('mission-editor', () => {
             missionName.value = response.name
             mapId.value = response.map.id
             aaPositions.value = response.aaPositions;
+            targets.value = response.targets;
         } catch (error) {
             console.error(error)
         }
@@ -43,6 +45,7 @@ export const useMissionEditor = defineStore('mission-editor', () => {
         missionName,
         currentMap,
         aaPositions,
+        targets,
         saveMission,
         getMission,
         $reset
