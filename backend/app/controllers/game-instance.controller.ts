@@ -223,70 +223,68 @@ export class GameInstanceController {
     });
   }
 
-  private async parseMissionData(): Promise<MissionData> {
+  private async getHeightmapData(filename: string) {
     try {
-      const modelsBaseUrl = "http://nginx:3000/static/models/";
-      const imageUrl = `${modelsBaseUrl}${this.missionData.map.filename}/textures/heightmap.png`;
+      const imageUrl = `${process.env.STATIC_SERVER_BASE_URL}${filename}/textures/heightmap.png`;
       const imageResponse = await fetch(imageUrl);
       const imageBuffer = await imageResponse.arrayBuffer();
       const image = sharp(imageBuffer);
       const { width, height } = await image.metadata();
       const rawImageData = await image.raw().toBuffer();
 
-      const mapSize = this.missionData.map.size;
-      const maxHeight = 650;
-
-      // Извлечение данных о пикселях изображения
-
-      const heightData: number[][] = [];
-
-      for (let y = 0; y < height; y++) {
-        const row: number[] = [];
-        for (let x = 0; x < width; x++) {
-          const index = (y * width + x) * 4;
-          const r = rawImageData[index]; // Используем только красный канал
-          const normalizedHeight = Math.round((r / 255) * maxHeight);
-          row.push(normalizedHeight);
-        }
-        heightData.push(row);
-      }
-
-      // Рассчитываем элементный размер
-      const elementSize = Math.floor(mapSize / width);
-
       return {
-        map: {
-          data: heightData, // Данные высот
-          size: elementSize,
-        },
-        aaPositions: this.missionData.aaPositions,
-        targets: this.missionData.targets.map((mTarget) => ({
-          id: mTarget.target.name,
-          rcs: mTarget.target.rcs,
-          temperature: mTarget.target.temperature,
-          size: mTarget.target.size,
-          waypoints: mTarget.waypoints,
-        })),
+        rawImageData,
+        width,
+        height,
       };
     } catch (e) {
-      console.log(e?.message);
       return {
-        map: {
-          data: [
-            [0, 0],
-            [0, 0],
-          ], // Данные высот
-          size: 1,
-        },
-        aaPositions: this.missionData.aaPositions,
-        targets: this.missionData.targets.map((mTarget) => ({
-          id: mTarget.target.name,
-          rcs: mTarget.target.rcs,
-          temperature: mTarget.target.temperature,
-          size: mTarget.target.size,
-          waypoints: mTarget.waypoints,
-        })),
+        rawImageData: [0, 0, 0, 0, 0, 0, 0, 0],
+        width: 1,
+        height: 1,
       };
     }
+  }
+
+  private async parseMissionData(): Promise<MissionData> {
+    const { rawImageData, width, height } = await this.getHeightmapData(
+      this.missionData.map.filename
+    );
+
+    const mapSize = this.missionData.map.size;
+    const maxHeight = 650;
+
+    // Извлечение данных о пикселях изображения
+
+    const heightData: number[][] = [];
+
+    for (let y = 0; y < height; y++) {
+      const row: number[] = [];
+      for (let x = 0; x < width; x++) {
+        const index = (y * width + x) * 4;
+        const r = rawImageData[index]; // Используем только красный канал
+        const normalizedHeight = Math.round((r / 255) * maxHeight);
+        row.push(normalizedHeight);
+      }
+      heightData.push(row);
+    }
+
+    // Рассчитываем элементный размер
+    const elementSize = Math.floor(mapSize / width);
+
+    return {
+      map: {
+        data: heightData, // Данные высот
+        size: elementSize,
+      },
+      aaPositions: this.missionData.aaPositions,
+      targets: this.missionData.targets.map((mTarget) => ({
+        id: mTarget.target.name,
+        rcs: mTarget.target.rcs,
+        temperature: mTarget.target.temperature,
+        size: mTarget.target.size,
+        waypoints: mTarget.waypoints,
+      })),
+    };
   }
 }
