@@ -69,5 +69,5 @@ const sunElevationRad = sunElevation * (Math.PI / 180);
 
 const zoom = computed(() => deviceStore.orientation === 'portrait' ? 3 : 1)
 
-const mapPath = computed(() => `/static/models/${map.value}/scene.gltf`)
+const mapPath = computed(() => `${import.meta.env.VITE_APP_STATIC_URL}/models/${map.value}/scene.gltf`)
 </script>

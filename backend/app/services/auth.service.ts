@@ -16,7 +16,7 @@ export class AuthService {
         if (existingUser) {
             throw new Error('User already exists');
         }
-        const hashedPassword = await argon2.hash(password, { hashLength: 10 });
+        const hashedPassword = await argon2.hash(password);
         const aa = await DI.aaRepository.findOne({ where: { id: 1 }})
         const user = DI.userRepository.create({ username, password: hashedPassword, aa });
 
@@ -32,8 +32,9 @@ export class AuthService {
         if (!user) {
             throw new Error('User not found');
         }
-        const hashedPassword = await argon2.hash(password, { hashLength: 10 });
-        const isPasswordValid = await argon2.verify(hashedPassword, user.password);
+        console.log(password, user.password)
+        const isPasswordValid = await argon2.verify(user.password, password);
+        console.log(isPasswordValid)
         if (!isPasswordValid) {
             throw new Error('Invalid credentials');
         }
