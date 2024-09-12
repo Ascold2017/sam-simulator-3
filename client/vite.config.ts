@@ -1,13 +1,16 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import { fileURLToPath, URL } from 'node:url'
-import vueDevTools from 'vite-plugin-vue-devtools'
-import { VitePWA } from 'vite-plugin-pwa';
-import { templateCompilerOptions } from '@tresjs/core'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import { fileURLToPath, URL } from "node:url";
+import vueDevTools from "vite-plugin-vue-devtools";
+import { templateCompilerOptions } from "@tresjs/core";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue({ ...templateCompilerOptions }),  vueDevTools(), VitePWA({
+  plugins: [
+    vue({ ...templateCompilerOptions }),
+    vueDevTools(),
+    /*
+    VitePWA({
     registerType: 'autoUpdate',
     manifest: {
       name: 'AA Simulator 3.0',
@@ -27,10 +30,12 @@ export default defineConfig({
         }
       ]
     }
-  })],
+  })
+    */
+  ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    }
-  }
-})
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
+});

@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { httpClient } from "../adapters/httpClient";
-import { UserListResponse, User } from "../../../shared/admModels/user.model";
+import { UserListResponse, User } from "../models/user.model";
 
 export const useUsers = defineStore("users", () => {
   const users = ref<User[]>([]);

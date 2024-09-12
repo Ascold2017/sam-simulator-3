@@ -1,6 +1,6 @@
 services:
   database:
-    restart: on-failure
+    restart: unless-stopped
     build: ./database
     hostname: database
     environment:

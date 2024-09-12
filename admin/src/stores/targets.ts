@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { httpClient } from "../adapters/httpClient";
-import { TargetListResponse, Target } from "../../../shared/admModels/targets.model";
+import { TargetListResponse, Target } from "../models/targets.model";
 
 export const useTargets = defineStore("targets", () => {
   const targets = ref<Target[]>([]);
