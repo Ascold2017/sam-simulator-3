@@ -26,9 +26,7 @@
             @update-direction="direction = $event" />
 
 
-        <Box :args="[10, 10]" :position="[-10, 0, 10]" castShadow receiveShadow>
-            <TresMeshStandardMaterial color="red" />
-        </Box>
+        
 
         <!-- Летающие обьекты -->
         <FlightObject v-for="flightObject in parsedFlightObjects" :flight-object="flightObject"

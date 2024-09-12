@@ -18,7 +18,8 @@ services:
   static-server:
     build: ./static
     hostname: static-server
-
+    ports:
+      - "8080:8080"
   nginx:
     build:
       context: .

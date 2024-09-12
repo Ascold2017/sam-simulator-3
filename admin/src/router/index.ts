@@ -13,6 +13,16 @@ export const router = createRouter({
             component: () => import('../views/Missions/index.vue')
         },
         {
+            path: '/missions/new',
+            name: 'missionCreate',
+            component: () => import('../views/MissionEditor/index.vue')
+        },
+        {
+            path: '/missions/:id',
+            name: 'missionEdit',
+            component: () => import('../views/MissionEditor/index.vue')
+        },
+        {
             path: '/aas',
             name: 'aas',
             component: () => import('../views/AAs/index.vue')

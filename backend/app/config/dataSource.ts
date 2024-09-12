@@ -26,5 +26,6 @@ export const DI = {
     missionRepository: AppDataSource.getRepository(Mission),
     userRepository: AppDataSource.getRepository(User),
     aaRepository: AppDataSource.getRepository(AA),
-    targetRepository: AppDataSource.getRepository(Target)
+    targetRepository: AppDataSource.getRepository(Target),
+    mapRepository: AppDataSource.getRepository(MissionMap)
 }
