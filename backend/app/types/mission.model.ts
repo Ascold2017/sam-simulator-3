@@ -1,3 +1,5 @@
+import { Position, Waypoint } from "@core/app";
+
 export interface Mission {
     id: number;
     name: string;
@@ -17,3 +19,38 @@ export interface AdmMission {
     }
 }
 export type AdmMissionListResponse = AdmMission[]
+
+
+export interface CreateMissionPayload {
+    name: string,
+    mapId: number,
+    aaPositionsToCreate: {
+        position: Position
+    }[];
+    targetsToCreate: {
+        targetId: number,
+        waypoints: Waypoint[]
+    }[]
+}
+
+export interface UpdateMissionPayload {
+    name: string,
+    mapId: number,
+    aaPositionsToCreate: {
+        position: Position
+    }[]
+    aaPositionsToUpdate: {
+        id: number,
+        position: Position
+    }[],
+    aaPositionsToDelete: number[],
+    targetsToCreate: {
+        targetId: number,
+        waypoints: Waypoint[]
+    }[]
+    targetsToUpdate: {
+        id: number,
+        waypoints: Waypoint[]
+    }[],
+    targetsToDelete: number[],
+}

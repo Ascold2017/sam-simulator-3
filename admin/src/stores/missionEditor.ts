@@ -4,7 +4,9 @@ import { useMaps } from "./maps";
 import { httpClient } from "../adapters/httpClient";
 import {
   AdmMissionExtendedResponse,
+  CreateMissionPayload,
   Position,
+  UpdateMissionPayload,
   Waypoint,
 } from "../models/mission.model";
 import { v4 as uuidv4 } from "uuid";
@@ -59,41 +61,41 @@ export const useMissionEditor = defineStore("mission-editor", () => {
     const aaPositionsToCreate = aaPositions.value.filter(aaPosition => aaPosition.isNew).map(aaPosition => ({
         position: aaPosition.position
     }));
-    const aaPositionsToEdit = aaPositions.value.filter(aaPosition => aaPosition.originalId && aaPosition.isEdited).map(aaPosition => ({
-        id: aaPosition.originalId,
+    const aaPositionsToUpdate = aaPositions.value.filter(aaPosition => aaPosition.originalId && aaPosition.isEdited).map(aaPosition => ({
+        id: aaPosition.originalId!,
         position: aaPosition.position
     }));
-    const aaPositionsToDelete = aaPositions.value.filter(aaPosition => aaPosition.originalId && aaPosition.isDeleted).map(aaPosition => aaPosition.originalId);
+    const aaPositionsToDelete = aaPositions.value.filter(aaPosition => aaPosition.originalId && aaPosition.isDeleted).map(aaPosition => aaPosition.originalId!);
 
     const targetsToCreate = targets.value.filter(target => target.isNew).map(target => ({
         targetId: target.targetId,
         waypoints: target.waypoints
     }));
-    const targetsToEdit = targets.value.filter(target => target.originalId && target.isEdited).map(target => ({
-        id: target.originalId,
+    const targetsToUpdate = targets.value.filter(target => target.originalId && target.isEdited).map(target => ({
+        id: target.originalId!,
         targetId: target.targetId,
         waypoints: target.waypoints
     }));
-    const targetsToDelete = targets.value.filter(target => target.originalId && target.isDeleted).map(target => target.originalId);
+    const targetsToDelete = targets.value.filter(target => target.originalId && target.isDeleted).map(target => target.originalId!);
 
     if (missionId.value) {
-        const payload = {
+        const payload: UpdateMissionPayload = {
             name: missionName.value,
-            mapId: mapId.value,
+            mapId: mapId.value!,
             aaPositionsToDelete,
-            aaPositionsToEdit,
+            aaPositionsToUpdate,
             aaPositionsToCreate,
             targetsToDelete,
-            targetsToEdit,
+            targetsToUpdate,
             targetsToCreate
         }
 
         console.log('EDIT MISSION', payload);
 
     } else {
-        const payload = {
+        const payload: CreateMissionPayload = {
             name: missionName.value,
-            mapId: mapId.value,
+            mapId: mapId.value!,
             aaPositionsToCreate,
             targetsToCreate
         }

@@ -51,3 +51,38 @@ export interface AdmMissionExtended {
 }
 export type AdmMissionListResponse = AdmMission[]
 export type AdmMissionExtendedResponse = AdmMissionExtended
+
+
+export interface CreateMissionPayload {
+    name: string,
+    mapId: number,
+    aaPositionsToCreate: {
+        position: Position
+    }[];
+    targetsToCreate: {
+        targetId: number,
+        waypoints: Waypoint[]
+    }[]
+}
+
+export interface UpdateMissionPayload {
+    name: string,
+    mapId: number,
+    aaPositionsToCreate: {
+        position: Position
+    }[]
+    aaPositionsToUpdate: {
+        id: number,
+        position: Position
+    }[],
+    aaPositionsToDelete: number[],
+    targetsToCreate: {
+        targetId: number,
+        waypoints: Waypoint[]
+    }[]
+    targetsToUpdate: {
+        id: number,
+        waypoints: Waypoint[]
+    }[],
+    targetsToDelete: number[],
+}
