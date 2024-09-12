@@ -11,9 +11,10 @@
             <TresPerspectiveCamera :far="20000" :position="[0, 100, 0]" />
             <OrbitControls />
 
-            <Box :args="[10, 10]" :position="[-10, 0, 10]" castShadow receiveShadow>
+            <Cone :args="[10, 20]" v-for="aaPosition in aaPositions" :key="aaPosition.id"
+                :position="[aaPosition.position.x, aaPosition.position.y, aaPosition.position.z]">
                 <TresMeshStandardMaterial color="red" />
-            </Box>
+            </Cone>
 
             <Suspense v-if="terrainPath">
                 <GLTFModel :path="terrainPath" />
@@ -24,13 +25,13 @@
 <script setup lang="ts">
 import LoadIndicator from './LoadIndicator.vue';
 import { TresCanvas } from '@tresjs/core';
-import { Box, OrbitControls, GLTFModel } from '@tresjs/cientos'
+import { Box, Cone, OrbitControls, GLTFModel } from '@tresjs/cientos'
 import { useMissionEditor } from '../../../stores/missionEditor';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 const missionEditor = useMissionEditor();
 
-const { currentMap } = storeToRefs(missionEditor);
+const { currentMap, aaPositions } = storeToRefs(missionEditor);
 
 const terrainPath = computed(() => currentMap.value ? `${import.meta.env.VITE_APP_STATIC_URL}/models/${currentMap.value.filename}/scene.gltf` : '')
 </script>

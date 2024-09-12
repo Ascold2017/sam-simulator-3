@@ -22,4 +22,12 @@ export class MissionController {
             res.status(200).json(missions satisfies AdmMissionListResponse)
         }
     }
+
+    public getMissionExtended() {
+        return async (req: Request, res: Response) => {
+            const mission = await this.missionService.getMissionById(+req.params.id)
+
+            res.status(200).json(mission)
+        }
+    }
 }

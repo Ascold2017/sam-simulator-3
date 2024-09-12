@@ -8,16 +8,22 @@
 <script setup lang="ts">
 import Toolbar from './components/Toolbar.vue';
 import Scene from './components/Scene.vue';
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 
 import { useRoute } from 'vue-router';
+import { useMissionEditor } from '../../stores/missionEditor';
 
 const route = useRoute();
-
+const missionEditor = useMissionEditor()
 
 onMounted(() => {
     console.log(route.params.id)
+    route.params.id && missionEditor.getMission(route.params.id as string);
 });
+
+onUnmounted(() => {
+    missionEditor.$reset();
+})
 </script>
 
 <style scoped>

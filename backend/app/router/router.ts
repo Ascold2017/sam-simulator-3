@@ -24,6 +24,7 @@ router.get('/aas', authController.authMiddleware(), aaController.getAAs())
 
 
 router.get('/adm/missions', missionController.getMissionsExtended())
+router.get('/adm/missions/:id', missionController.getMissionExtended())
 router.get('/adm/aas', aaController.getAAs())
 router.get('/adm/targets', targetController.getTargets())
 router.get('/adm/users', userController.getUsers())
