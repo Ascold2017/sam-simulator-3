@@ -15,6 +15,11 @@ services:
     depends_on:
       - database
 
+  static-server:
+    build: ./static
+    ports:
+      - "8080:8080"
+
   nginx:
     build:
       context: .

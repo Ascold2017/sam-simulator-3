@@ -14,18 +14,11 @@ COPY ./client/ .
 # Собираем приложение
 RUN npm run build
 
-FROM  node:18-alpine as static
-
-WORKDIR /app-static
-
-COPY ./static/files ./
-
 # Stage 1: Сборка nginx с фронтендами
 FROM nginx:alpine
 
 # Копируем собранные клиентские приложения
 COPY --from=build-client /app-client/dist /usr/share/nginx/html/client
-COPY --from=static /app-static /usr/share/nginx/html/static
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Удаляем default.conf, чтобы избежать конфликтов
