@@ -24,6 +24,17 @@ export interface AAPosition {
     position: Position
 }
 
+export interface Waypoint {
+    position: Position;
+    speed: number;
+}
+
+export interface MissionTarget {
+    id: number;
+    target: Target;
+    waypoints: Waypoint[]
+}
+
 export interface AdmMissionExtended {
     id: number;
     name: string;
@@ -36,14 +47,7 @@ export interface AdmMissionExtended {
         createdAt: number;
     },
     aaPositions: AAPosition[];
-    targets: {
-        id: number;
-        target: Target;
-        waypoints: {
-            speed: number;
-            position: Position
-        }[]
-    }[]
+    targets: MissionTarget[]
 }
 export type AdmMissionListResponse = AdmMission[]
 export type AdmMissionExtendedResponse = AdmMissionExtended

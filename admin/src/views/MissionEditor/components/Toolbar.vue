@@ -3,7 +3,7 @@
         <BaseInput id="mission-name" v-model="missionName" label="Mission Name" placeholder="Enter mission name" />
 
         <BaseSelect id="map-select" v-model.number="mapId" :options="mapsOptions" label="Map" />
-        <button @click="missionEditor.saveMission" class="mission-editor-toolbar__save-btn">Save</button>
+        <button @click="missionEditor.saveMission" class="mission-editor-toolbar__save-btn" :disabled="!isChanged">Save</button>
     </div>
 
 </template>
@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import BaseInput from '../../../components/BaseInput.vue';
 import BaseSelect from '../../../components/BaseSelect.vue';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useMaps } from '../../../stores/maps';
 import { storeToRefs } from 'pinia';
 import { useMissionEditor } from '../../../stores/missionEditor';
@@ -19,7 +19,7 @@ import { useMissionEditor } from '../../../stores/missionEditor';
 const mapsStore = useMaps();
 const missionEditor = useMissionEditor()
 const { maps } = storeToRefs(mapsStore)
-const { mapId, missionName } = storeToRefs(missionEditor)
+const { mapId, missionName, isChanged } = storeToRefs(missionEditor)
 
 const mapsOptions = computed(() =>
   maps.value.map(map => ({ label: map.name, value: map.id }))
