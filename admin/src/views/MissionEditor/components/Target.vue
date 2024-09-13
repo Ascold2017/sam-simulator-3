@@ -3,12 +3,14 @@
         <Line2 v-if="waypoints.length > 0"
             :points="waypoints.map((waypoint) => [waypoint.position.x, waypoint.position.y, waypoint.position.z])"
             :line-width="2" color="white" />
-        <Sphere v-for="(waypoint, index) in waypoints"
+        <Sphere v-for="(waypoint, index) in waypoints" :args="[30, 10, 10]"
             :position="[waypoint.position.x, waypoint.position.y, waypoint.position.z]"
-            :color="getSphereColor(index, target.waypoints.length)" :size="1000"
+            :color="getSphereColor(index, target.waypoints.length)"
             :user-data="{ isWaypoint: true, waypoint: waypoint, waypointIndex: index, target: target }"
-            @click="emit('click', $event.object)" />
+            @click="emit('click', $event.object)" @double-click="emit('editWaypoint', waypoint, index)" />
     </TresGroup>
+
+
 </template>
 
 <script setup lang="ts">
@@ -20,7 +22,7 @@ import { computed } from 'vue';
 
 const props = defineProps<{ target: EditableTarget }>()
 
-const emit = defineEmits<{ click: [object: Object3D] }>()
+const emit = defineEmits<{ click: [object: Object3D], editWaypoint: [waypoint: any, index: number] }>()
 
 const waypoints = computed(() => props.target.waypoints)
 
