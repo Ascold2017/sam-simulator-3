@@ -1,9 +1,9 @@
 <template>
-    <Cone :args="[10, 20]"
+    <Cone :args="[20, 40]"
         :position="[aaPosition.position.x, aaPosition.position.y, aaPosition.position.z]"
         :user-data="{ isAAPosition: true, aaPosition: aaPosition }"
         @click="emit('click', $event.object)">
-        <TresMeshStandardMaterial color="red" />
+        <TresMeshBasicMaterial color="red" />
     </Cone>
 </template>
 

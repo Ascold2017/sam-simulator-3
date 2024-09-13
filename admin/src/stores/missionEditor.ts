@@ -89,14 +89,10 @@ export const useMissionEditor = defineStore("mission-editor", () => {
             targetsToCreate
         }
 
-        console.log('EDIT MISSION', payload);
-
         const response = await httpClient.put<{ missionId: number }>(
           "/adm/missions/" + missionId.value,
           payload
         );
-
-        console.log(response)
 
     } else {
         const payload: CreateMissionPayload = {
@@ -106,14 +102,10 @@ export const useMissionEditor = defineStore("mission-editor", () => {
             targetsToCreate
         }
 
-        console.log('CREATE MISSION', payload);
-
         const response = await httpClient.post<{ missionId: number }>(
           "/adm/missions",
           payload
         );
-
-        console.log(response)
     }
   }
 
