@@ -30,11 +30,11 @@
   
   <style scoped>
   .base-input__label {
-    @apply text-gray-500 mb-1;
+    @apply text-white mb-1;
   }
   
   .base-input__input {
-    @apply bg-white bg-opacity-10 text-gray-500 border-gray-700 px-4 py-2 rounded;
+    @apply bg-gray-700 text-white border-gray-700 px-4 py-2 rounded;
   }
   </style>
   

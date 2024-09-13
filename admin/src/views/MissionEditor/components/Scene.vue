@@ -14,9 +14,9 @@
             <TransformControls v-if="selectedObject" :object="selectedObject" mode="translate"
                 @object-change="handleObjectChange" @click="cancelEditing" />
 
-            <AAPosition v-for="aaPosition in aaPositions" :key="aaPosition.id" :aaPosition="aaPosition"
+            <AAPosition v-for="aaPosition in aaPositionsToShow" :key="aaPosition.id" :aaPosition="aaPosition"
                 @click="editPosition" />
-            <Target v-for="target in targets" :key="target.id" :target="target" @click="editPosition"
+            <Target v-for="target in targetsToShow" :key="target.id" :target="target" @click="editPosition"
                 @editWaypoint="openEditPopup" />
 
             <Suspense v-if="terrainPath">
@@ -55,7 +55,7 @@ import BaseInput from '../../../components/BaseInput.vue';
 import Popup from '../../../components/Popup.vue';
 const missionEditor = useMissionEditor();
 
-const { currentMap, aaPositions, targets } = storeToRefs(missionEditor);
+const { currentMap, aaPositionsToShow, targetsToShow } = storeToRefs(missionEditor);
 
 const isDisabledOrbitControls = ref(false)
 const selectedObject = ref<Object3D | null>(null);

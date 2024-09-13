@@ -1,7 +1,6 @@
 import { computed, ref } from "vue";
 import { MissionTarget, Position, Waypoint } from "../../models/mission.model";
 import { v4 as uuidv4 } from "uuid";
-import { Target } from "../../models/targets.model";
 
 export interface EditableTarget {
   id: string;
@@ -19,6 +18,10 @@ export interface EditableTarget {
 
 export const useTargets = () => {
   const targets = ref<EditableTarget[]>([]);
+
+  const targetsToShow = computed(() =>
+    targets.value.filter((target) => !target.isDeleted)
+  );
 
   const targetsToCreate = computed(() =>
     targets.value
@@ -136,6 +139,7 @@ export const useTargets = () => {
 
   return {
     targets,
+    targetsToShow,
     targetsToCreate,
     targetsToUpdate,
     targetsToDelete,

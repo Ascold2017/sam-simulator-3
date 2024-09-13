@@ -14,6 +14,9 @@ export interface EditableAAPosition {
 export const useAAPositions = () => {
   const aaPositions = ref<EditableAAPosition[]>([]);
 
+  const aaPositionsToShow = computed(() =>
+    aaPositions.value.filter((aaPosition) => !aaPosition.isDeleted))
+
   const aaPositionsToCreate = computed(() =>
     aaPositions.value
       .filter((aaPosition) => aaPosition.isNew)
@@ -86,6 +89,7 @@ export const useAAPositions = () => {
 
   return {
     aaPositions,
+    aaPositionsToShow,
     aaPositionsToCreate,
     aaPositionsToUpdate,
     aaPositionsToDelete,

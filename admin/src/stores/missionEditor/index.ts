@@ -20,6 +20,7 @@ export const useMissionEditor = defineStore("mission-editor", () => {
 
   const {
     aaPositions,
+    aaPositionsToShow,
     aaPositionsToCreate,
     aaPositionsToUpdate,
     aaPositionsToDelete,
@@ -31,6 +32,7 @@ export const useMissionEditor = defineStore("mission-editor", () => {
 
   const {
     targets,
+    targetsToShow,
     targetsToCreate,
     targetsToUpdate,
     targetsToDelete,
@@ -80,6 +82,8 @@ export const useMissionEditor = defineStore("mission-editor", () => {
         "/adm/missions/" + missionId.value,
         payload
       );
+
+      return response.missionId;
     } else {
       const payload: CreateMissionPayload = {
         name: missionName.value,
@@ -92,6 +96,8 @@ export const useMissionEditor = defineStore("mission-editor", () => {
         "/adm/missions",
         payload
       );
+
+      return response.missionId;
     }
   }
 
@@ -133,7 +139,9 @@ export const useMissionEditor = defineStore("mission-editor", () => {
     missionName,
     currentMap,
     aaPositions,
+    aaPositionsToShow,
     targets,
+    targetsToShow,
     saveMission,
     getMission,
     $reset,

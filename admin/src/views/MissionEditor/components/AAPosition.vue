@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { Cone } from '@tresjs/cientos'
 import { Object3D } from 'three';
-import { EditableAAPosition } from '../../../stores/missionEditor';
+import { EditableAAPosition } from '../../../stores/missionEditor/aaPositions';
 
 const props = defineProps<{ aaPosition: EditableAAPosition }>()
 

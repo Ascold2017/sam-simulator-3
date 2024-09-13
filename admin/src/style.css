@@ -11,3 +11,20 @@
     @apply border px-4 py-2 text-left;
   }
   
+.data-table.data-table--compact th,
+.data-table.data-table--compact td {
+    @apply px-2 py-1;
+    font-size: 0.8rem;
+  }
+
+  .button {
+    @apply bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:opacity-50;
+  }
+
+  .button.button--danger {
+    @apply bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600;
+  }
+
+  .title {
+    @apply text-2xl font-bold mb-4;
+  }
