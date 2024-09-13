@@ -7,7 +7,7 @@
             :position="[waypoint.position.x, waypoint.position.y, waypoint.position.z]"
             :color="getSphereColor(index, target.waypoints.length)"
             :user-data="{ isWaypoint: true, waypoint: waypoint, waypointIndex: index, target: target }"
-            @click="emit('click', $event.object)" @double-click="emit('editWaypoint', waypoint, index)" />
+            @click="emit('click', $event.object)" />
     </TresGroup>
 
 
@@ -16,13 +16,13 @@
 <script setup lang="ts">
 import { Object3D } from 'three';
 import { Line2, Sphere } from '@tresjs/cientos'
-import { EditableTarget } from '../../../stores/missionEditor';
+import { EditableTarget } from '../../../stores/missionEditor/targets';
 import { computed } from 'vue';
 
 
 const props = defineProps<{ target: EditableTarget }>()
 
-const emit = defineEmits<{ click: [object: Object3D], editWaypoint: [waypoint: any, index: number] }>()
+const emit = defineEmits<{ click: [object: Object3D] }>()
 
 const waypoints = computed(() => props.target.waypoints)
 

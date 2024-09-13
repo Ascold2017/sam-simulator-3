@@ -60,6 +60,8 @@ onMounted(() => {
 .mission-editor-sidebar {
     @apply p-4 bg-gray-800 flex flex-col;
     width: 700px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .mission-editor-sidebar__save-btn {
