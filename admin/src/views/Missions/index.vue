@@ -22,7 +22,7 @@
           <td>
             <router-link :to="{ name: 'missionEdit', params: { id: mission.id } }"
               class="missions__edit-btn">Edit</router-link>
-            <button @click="deleteMission(mission.id)" class="missions__delete-btn">Delete</button>
+            <button @click="missionsStore.deleteMission(mission.id)" class="missions__delete-btn">Delete</button>
           </td>
         </tr>
       </tbody>
@@ -41,17 +41,7 @@ const { missions } = storeToRefs(missionsStore)
 onMounted(() => {
   missionsStore.getMissions()
 })
-const createMission = () => {
-  console.log('Create new mission');
-};
 
-const editMission = (id: number) => {
-  console.log('Edit mission with ID:', id);
-};
-
-const deleteMission = (id: number) => {
-  console.log('Delete mission with ID:', id);
-};
 </script>
 
 <style scoped>

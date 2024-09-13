@@ -151,4 +151,11 @@ export class MissionService {
             return mission.id;
         });
     }
+
+    async deleteMission(id: number) {
+        return await DI.dataSource.transaction(async (manager: EntityManager) => {
+            const mission = await manager.findOneOrFail(Mission, { where: { id } });
+            await manager.remove(mission);  // Это автоматически удалит связанные targets и aaPositions
+        });
+    }
 }

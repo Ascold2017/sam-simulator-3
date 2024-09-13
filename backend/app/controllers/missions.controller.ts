@@ -50,4 +50,12 @@ export class MissionController {
 
         }
     }
+
+    public deleteMission() {
+        return async (req: Request, res: Response) => {
+            const missionId = await this.missionService.deleteMission(+req.params.id)
+
+            res.status(200).json({ missionId })
+        }
+    }
 }

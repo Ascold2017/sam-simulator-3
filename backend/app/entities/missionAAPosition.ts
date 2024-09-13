@@ -11,6 +11,6 @@ export class MissionAAPosition extends BaseEntity {
         z: number;
     };
 
-    @ManyToOne(() => Mission, missionData => missionData.aaPositions)
+    @ManyToOne(() => Mission, missionData => missionData.aaPositions,  {  onDelete: 'CASCADE' })
     mission: Mission;
 }

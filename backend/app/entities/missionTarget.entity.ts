@@ -18,6 +18,6 @@ export class MissionTarget extends BaseEntity {
         speed: number;
     }[];
 
-    @ManyToOne(() => Mission, missionData => missionData.targets)
+    @ManyToOne(() => Mission, missionData => missionData.targets, { onDelete: 'CASCADE' })
     mission: Mission;
 }

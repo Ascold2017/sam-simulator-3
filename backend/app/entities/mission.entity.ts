@@ -15,9 +15,9 @@ export class Mission extends BaseEntity {
     @ManyToOne(() => MissionMap, map => map.missions)
     map: MissionMap;
 
-    @OneToMany(() => MissionTarget, target => target.mission)
+    @OneToMany(() => MissionTarget, target => target.mission, { cascade: true, onDelete: 'CASCADE' })
     targets: MissionTarget[];
 
-    @OneToMany(() => MissionAAPosition, position => position.mission)
+    @OneToMany(() => MissionAAPosition, position => position.mission, { cascade: true, onDelete: 'CASCADE' })
     aaPositions: MissionAAPosition[];
 }

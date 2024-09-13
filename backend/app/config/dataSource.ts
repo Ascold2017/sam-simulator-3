@@ -11,8 +11,9 @@ import { MissionAAPosition } from '../entities/missionAAPosition';
 
 dotenv.config()
 
+const isDev = true
 export const AppDataSource = new DataSource({
-    url: process.env.TS_NODE_DEV ? process.env.DB_URI_LOCAL : process.env.DB_URI,
+    url:isDev ? process.env.DB_URI_LOCAL : process.env.DB_URI,
     type: "postgres",
     logging: true,
     entities: [BaseEntity, Mission, MissionTarget, MissionAAPosition, MissionMap, AA, Target, User],

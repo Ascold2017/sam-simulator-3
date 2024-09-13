@@ -15,8 +15,18 @@ export const useMissions = defineStore('missions', () => {
         }
     }
 
+    async function deleteMission(id: number) {
+        try {
+            await httpClient.delete(`/adm/missions/${id}`)
+            missions.value = missions.value.filter(mission => mission.id !== id)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return {
         missions,
-        getMissions
+        getMissions,
+        deleteMission
     }
 })

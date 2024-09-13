@@ -27,6 +27,7 @@ router.get('/adm/missions', missionController.getMissionsExtended())
 router.get('/adm/missions/:id', missionController.getMissionExtended())
 router.post('/adm/missions', missionController.postMission())
 router.put('/adm/missions/:id', missionController.putMission())
+router.delete('/adm/missions/:id', missionController.deleteMission())
 
 router.get('/adm/aas', aaController.getAAs())
 router.get('/adm/targets', targetController.getTargets())
