@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import Toolbar from './components/Toolbar.vue';
+import Toolbar from './components/Toolbar/Toolbar.vue';
 import Scene from './components/Scene.vue';
 import { onMounted, onUnmounted } from 'vue';
 
