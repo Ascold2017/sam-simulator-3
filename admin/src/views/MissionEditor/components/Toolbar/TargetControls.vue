@@ -42,7 +42,7 @@ import Dropdown from '../../../../components/Dropdown.vue';
 import { computed, onMounted, ref } from 'vue';
 import { useMaps } from '../../../../stores/maps';
 import { storeToRefs } from 'pinia';
-import { useMissionEditor } from '../../../../stores/missionEditor';
+import { useMissionEditor } from '../../../../stores/missionEditor/index';
 
 const mapsStore = useMaps();
 const missionEditor = useMissionEditor()
