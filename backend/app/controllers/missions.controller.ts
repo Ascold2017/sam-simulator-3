@@ -1,4 +1,4 @@
-import type { MissionListResponse } from '../types/mission.model'
+import type { CreateMissionPayload, MissionListResponse } from '../types/mission.model'
 import type { AdmMissionListResponse } from '../types/mission.model'
 import { Request, Response } from "express";
 import { MissionService } from "../services/mission.service";
@@ -28,6 +28,16 @@ export class MissionController {
             const mission = await this.missionService.getMissionById(+req.params.id)
 
             res.status(200).json(mission)
+        }
+    }
+
+    public postMission() {
+        return async (req: Request, res: Response) => {
+
+            const missionId = await this.missionService.createMission(req.body as CreateMissionPayload)
+
+            res.status(200).json({ missionId })
+
         }
     }
 }

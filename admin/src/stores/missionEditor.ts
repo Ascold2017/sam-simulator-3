@@ -56,7 +56,7 @@ export const useMissionEditor = defineStore("mission-editor", () => {
     return mapsStore.maps.find((m) => m.id === mapId.value);
   });
 
-  function saveMission() {
+  async function saveMission() {
 
     const aaPositionsToCreate = aaPositions.value.filter(aaPosition => aaPosition.isNew).map(aaPosition => ({
         position: aaPosition.position
@@ -77,7 +77,7 @@ export const useMissionEditor = defineStore("mission-editor", () => {
         waypoints: target.waypoints
     }));
     const targetsToDelete = targets.value.filter(target => target.originalId && target.isDeleted).map(target => target.originalId!);
-
+    console.log(missionId.value)
     if (missionId.value) {
         const payload: UpdateMissionPayload = {
             name: missionName.value,
@@ -101,6 +101,13 @@ export const useMissionEditor = defineStore("mission-editor", () => {
         }
 
         console.log('CREATE MISSION', payload);
+
+        const response = await httpClient.post<AdmMissionExtendedResponse>(
+          "/adm/missions",
+          payload
+        );
+
+        console.log(response)
     }
   }
 

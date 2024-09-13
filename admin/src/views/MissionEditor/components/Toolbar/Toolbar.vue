@@ -8,7 +8,7 @@
             AA position</button>
         <TargetControls />
 
-        <button @click="missionEditor.saveMission" :disabled="!isChanged"
+        <button @click="missionEditor.saveMission"
             class="mission-editor-toolbar__save-btn">Save</button>
     </div>
 
