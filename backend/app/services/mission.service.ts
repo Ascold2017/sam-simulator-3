@@ -84,7 +84,6 @@ export class MissionService {
             // Находим миссию по id
             const mission = await manager.findOneOrFail(Mission, {
                 where: { id },
-                relations: ['aaPositions', 'targets'],
             });
 
             // Обновляем название миссии и карту
@@ -110,9 +109,12 @@ export class MissionService {
 
             // Обновление существующих AA позиций
             for (const aaPositionData of data.aaPositionsToUpdate) {
-                await manager.update(MissionAAPosition, aaPositionData.id, {
-                    position: aaPositionData.position,
+                const aaPosition = await manager.findOneOrFail(MissionAAPosition, {
+                    where: { id: aaPositionData.id },
                 });
+                console.log(aaPosition, aaPositionData)
+                aaPosition.position = aaPositionData.position;
+                await manager.save(aaPosition); // Сохраняем изменения
             }
 
             // Обновляем цели
