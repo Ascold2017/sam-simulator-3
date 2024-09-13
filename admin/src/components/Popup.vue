@@ -35,11 +35,11 @@
   }
   
   .popup-content {
-    @apply bg-white p-6 rounded-lg w-96 relative shadow-lg;
+    @apply bg-gray-800 p-6 rounded-lg w-96 relative shadow-lg;
   }
   
   .popup-header {
-    @apply flex justify-between items-center mb-4;
+    @apply flex justify-between items-center text-white mb-4;
   }
   
   .popup-body {
@@ -51,7 +51,7 @@
   }
   
   .popup-close-btn {
-    @apply text-xl bg-transparent hover:text-red-500 cursor-pointer;
+    @apply text-xl bg-transparent text-white hover:text-red-500 cursor-pointer;
   }
   </style>
   

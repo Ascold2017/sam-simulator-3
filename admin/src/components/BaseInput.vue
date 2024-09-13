@@ -8,16 +8,13 @@
   <script setup lang="ts">
   import { defineProps, defineEmits, computed } from 'vue';
   
-  const props = defineProps({
-    modelValue: String,
-    label: String,
-    id: String,
-    placeholder: String,
-    type: {
-      type: String,
-      default: 'text'
-    }
-  });
+  const props = defineProps<{ 
+    modelValue: string | number | null;
+    label: string;
+    id: string;
+    placeholder?: string;
+    type?: 'text' | 'number'
+  }>();
   
   const emit = defineEmits(['update:modelValue']);
 
@@ -33,11 +30,11 @@
   
   <style scoped>
   .base-input__label {
-    @apply text-white mb-1;
+    @apply text-gray-500 mb-1;
   }
   
   .base-input__input {
-    @apply bg-gray-700 text-white px-4 py-2 rounded;
+    @apply bg-white bg-opacity-10 text-gray-500 border-gray-700 px-4 py-2 rounded;
   }
   </style>
   
