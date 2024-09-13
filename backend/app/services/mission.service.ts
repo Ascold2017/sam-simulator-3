@@ -1,4 +1,4 @@
-import { CreateMissionPayload } from "app/types/mission.model";
+import { CreateMissionPayload, UpdateMissionPayload } from "app/types/mission.model";
 import { DI } from "../config/dataSource";
 import { EntityManager } from "typeorm";
 import { Mission } from "../entities/mission.entity";
@@ -77,5 +77,78 @@ export class MissionService {
             return mission.id;
         });
 
+    }
+
+    async updateMission(id: number, data: UpdateMissionPayload) {
+        return await DI.dataSource.transaction(async (manager: EntityManager) => {
+            // Находим миссию по id
+            const mission = await manager.findOneOrFail(Mission, {
+                where: { id },
+                relations: ['aaPositions', 'targets'],
+            });
+
+            // Обновляем название миссии и карту
+            mission.name = data.name;
+            const map = await manager.findOneOrFail(DI.mapRepository.target, {
+                where: { id: data.mapId }
+            });
+            mission.map = map;
+
+            // Обновляем AA позиции
+            // Удаление
+            if (data.aaPositionsToDelete.length) {
+                await manager.delete(MissionAAPosition, { id: data.aaPositionsToDelete });
+            }
+
+            // Добавление
+            for (const aaPositionData of data.aaPositionsToCreate) {
+                const aaPosition = new MissionAAPosition();
+                aaPosition.mission = mission;
+                aaPosition.position = aaPositionData.position;
+                await manager.save(aaPosition);
+            }
+
+            // Обновление существующих AA позиций
+            for (const aaPositionData of data.aaPositionsToUpdate) {
+                await manager.update(MissionAAPosition, aaPositionData.id, {
+                    position: aaPositionData.position,
+                });
+            }
+
+            // Обновляем цели
+            // Удаление целей
+            if (data.targetsToDelete.length) {
+                await manager.delete(MissionTarget, { id: data.targetsToDelete });
+            }
+
+            // Добавление новых целей
+            for (const targetData of data.targetsToCreate) {
+                const target = await manager.findOneOrFail(DI.targetRepository.target, {
+                    where: { id: targetData.targetId }
+                });
+
+                const missionTarget = new MissionTarget();
+                missionTarget.mission = mission;
+                missionTarget.target = target;
+                missionTarget.waypoints = targetData.waypoints;
+                await manager.save(missionTarget);
+            }
+
+            // Обновление существующих целей и их маршрутов
+            for (const targetUpdateData of data.targetsToUpdate) {
+                const missionTarget = await manager.findOneOrFail(MissionTarget, {
+                    where: { id: targetUpdateData.id },
+                });
+
+                missionTarget.waypoints = targetUpdateData.waypoints;
+                
+                manager.save(missionTarget);
+            }
+
+            // Сохраняем обновленную миссию
+            await manager.save(mission);
+
+            return mission.id;
+        });
     }
 }

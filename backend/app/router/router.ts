@@ -22,10 +22,12 @@ router.get('/user', authController.authMiddleware(), (req, res) => authControlle
 router.get('/missions', authController.authMiddleware(), missionController.getMissions())
 router.get('/aas', authController.authMiddleware(), aaController.getAAs())
 
-
+// ADM
 router.get('/adm/missions', missionController.getMissionsExtended())
 router.get('/adm/missions/:id', missionController.getMissionExtended())
 router.post('/adm/missions', missionController.postMission())
+router.put('/adm/missions/:id', missionController.putMission())
+
 router.get('/adm/aas', aaController.getAAs())
 router.get('/adm/targets', targetController.getTargets())
 router.get('/adm/users', userController.getUsers())

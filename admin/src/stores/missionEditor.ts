@@ -77,7 +77,6 @@ export const useMissionEditor = defineStore("mission-editor", () => {
         waypoints: target.waypoints
     }));
     const targetsToDelete = targets.value.filter(target => target.originalId && target.isDeleted).map(target => target.originalId!);
-    console.log(missionId.value)
     if (missionId.value) {
         const payload: UpdateMissionPayload = {
             name: missionName.value,
@@ -92,6 +91,13 @@ export const useMissionEditor = defineStore("mission-editor", () => {
 
         console.log('EDIT MISSION', payload);
 
+        const response = await httpClient.put<{ missionId: number }>(
+          "/adm/missions/" + missionId.value,
+          payload
+        );
+
+        console.log(response)
+
     } else {
         const payload: CreateMissionPayload = {
             name: missionName.value,
@@ -102,7 +108,7 @@ export const useMissionEditor = defineStore("mission-editor", () => {
 
         console.log('CREATE MISSION', payload);
 
-        const response = await httpClient.post<AdmMissionExtendedResponse>(
+        const response = await httpClient.post<{ missionId: number }>(
           "/adm/missions",
           payload
         );
