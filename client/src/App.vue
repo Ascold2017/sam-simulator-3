@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import { useGameStore } from './stores/game';
+import { useRooms } from './stores/rooms';
 
+useRooms()
 useGameStore();
 </script>
 

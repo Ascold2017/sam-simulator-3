@@ -31,8 +31,6 @@
         <!-- Летающие обьекты -->
         <FlightObject v-for="flightObject in parsedFlightObjects" :flight-object="flightObject"
             :key="flightObject.id" />
-        <SmokeTrails />
-
         <!-- Зенитки-->
         <AAObject v-for="aaObject in aas" :aaObject="aaObject" />
 
@@ -50,7 +48,6 @@ import { Sky, GLTFModel } from '@tresjs/cientos'
 import { useGameStore } from '../../../../stores/game';
 import { useDevice } from '../../../../stores/device';
 import FlightObject from './FlightObject.vue';
-import SmokeTrails from './SmokeTrails/SmokeTrails.vue'
 import AAObject from './AAObject.vue';
 import CustomFirstPersonControl from './CustomFirstPersonControl.vue';
 import DeviceOrientationControl from './DeviceOrientationControl.vue';
@@ -62,7 +59,7 @@ const deviceStore = useDevice()
 const { currentAA, parsedFlightObjects, aas, map, direction } = storeToRefs(gameStore);
 
 
-const sunElevation = 3;
+const sunElevation = 1;
 const sunElevationRad = sunElevation * (Math.PI / 180);
 
 const zoom = computed(() => deviceStore.orientation === 'portrait' ? 3 : 1)

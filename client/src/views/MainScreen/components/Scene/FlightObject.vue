@@ -1,7 +1,9 @@
 <template>
-    <TresMesh :position="[flightObject.position.x, flightObject.position.y, flightObject.position.z]">
-        <TresSphereGeometry :radius="10" />
-        <TresMeshStandardMaterial :color="0xff0000" />
+    <TresGroup :position="[flightObject.position.x, flightObject.position.y, flightObject.position.z]">
+        <Suspense v-if="flightObjectModel">
+            <GLTFModel :path="flightObjectModel" :rotation="[rotation.x, rotation.y, rotation.z]" draco />
+
+        </Suspense>
 
         <!-- Плоскость с текстурой -->
         <TresMesh v-if="camera && flightObject.isCaptured" ref="infoPlane"
@@ -9,13 +11,14 @@
             <TresPlaneGeometry :args="[1, 1]" />
             <TresMeshBasicMaterial :map="createOutlineTexture()" transparent :side="0" />
         </TresMesh>
-    </TresMesh>
+    </TresGroup>
 </template>
 
 <script setup lang="ts">
-import { CanvasTexture } from 'three';
+import { CanvasTexture, Vector3 } from 'three';
 import { ParsedFlightObject } from '../../../../stores/game';
-import { TresObject, useRenderLoop, useTres } from '@tresjs/core';
+import { TresObject, useRenderLoop, useTres, } from '@tresjs/core';
+import { GLTFModel } from '@tresjs/cientos';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
@@ -33,6 +36,25 @@ const infoPlaneScale = computed(() => {
     return distance / fixedSize;
 });
 
+const flightObjectModel = computed(() => {
+    if (props.flightObject.type === 'active-missile') {
+        return `${import.meta.env.VITE_APP_STATIC_URL}/flight-objects/aim-120/scene.gltf`
+    }
+    if (props.flightObject.type === 'target') {
+        return `${import.meta.env.VITE_APP_STATIC_URL}/flight-objects/a-10/scene.gltf`
+    }
+})
+
+const rotation = computed(() => {
+    const velocity = new Vector3(
+        props.flightObject.velocity.x,
+        props.flightObject.velocity.y,
+        props.flightObject.velocity.z
+    );
+    const direction = velocity.normalize();
+    return direction;
+});
+
 // Функция создания текстуры для плоскости
 function createOutlineTexture() {
     const size = 256;
@@ -40,6 +62,8 @@ function createOutlineTexture() {
     canvas.width = size;
     canvas.height = size;
     const context = canvas.getContext('2d');
+
+
 
     if (context) {
         context.clearRect(0, 0, size, size);
