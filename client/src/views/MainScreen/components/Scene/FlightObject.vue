@@ -1,9 +1,10 @@
 <template>
-    <TresGroup :position="[flightObject.position.x, flightObject.position.y, flightObject.position.z]">
-        <Suspense v-if="flightObjectModel">
-            <GLTFModel :path="flightObjectModel" :rotation="[rotation.x, rotation.y, rotation.z]" draco />
+    <TresGroup :position="[flightObject.position.x, flightObject.position.y, flightObject.position.z]"
+        :rotation="[rotation.x, rotation.y, rotation.z]">
 
-        </Suspense>
+        <Cone v-if="flightObject.type === 'active-missile'" :args="[2, 5, 10]" color="red" />
+
+        <Sphere v-if="flightObject.type === 'target'" :args="[5, 8, 8]" color="blue" />
 
         <!-- Плоскость с текстурой -->
         <TresMesh v-if="camera && flightObject.isCaptured" ref="infoPlane"
@@ -15,10 +16,10 @@
 </template>
 
 <script setup lang="ts">
-import { CanvasTexture, Vector3 } from 'three';
+import { CanvasTexture, Euler, Matrix4, Vector3 } from 'three';
 import { ParsedFlightObject } from '../../../../stores/game';
 import { TresObject, useRenderLoop, useTres, } from '@tresjs/core';
-import { GLTFModel } from '@tresjs/cientos';
+import { Cone, Sphere } from '@tresjs/cientos'
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
@@ -36,14 +37,6 @@ const infoPlaneScale = computed(() => {
     return distance / fixedSize;
 });
 
-const flightObjectModel = computed(() => {
-    if (props.flightObject.type === 'active-missile') {
-        return `${import.meta.env.VITE_APP_STATIC_URL}/flight-objects/aim-120/scene.gltf`
-    }
-    if (props.flightObject.type === 'target') {
-        return `${import.meta.env.VITE_APP_STATIC_URL}/flight-objects/a-10/scene.gltf`
-    }
-})
 
 const rotation = computed(() => {
     const velocity = new Vector3(
@@ -52,7 +45,17 @@ const rotation = computed(() => {
         props.flightObject.velocity.z
     );
     const direction = velocity.normalize();
-    return direction;
+    const up = new Vector3(0, 1, 0);
+    // Векторная матрица для поворота модели
+    const matrix = new Matrix4();
+    matrix.lookAt(new Vector3(0, 0, 0), direction, up);
+
+    const rotationEuler = new Euler();
+    rotationEuler.setFromRotationMatrix(matrix);
+
+    // Корректируем поворот по оси X, чтобы конус летел вершиной вперед
+    rotationEuler.x += Math.PI / 2;
+    return rotationEuler;
 });
 
 // Функция создания текстуры для плоскости
