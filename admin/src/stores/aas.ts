@@ -2,7 +2,15 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import { httpClient } from "../adapters/httpClient";
 import { AAListResponse, AA } from "../models/aa.model";
-
+const defaultAA: EditableAA = {
+  id: null,
+  name: "",
+  type: "active-missile",
+  ammoMaxRange: 0,
+  ammoVelocity: 0,
+  viewAngle: 0,
+  reloadTime: 0,
+};
 export interface EditableAA extends AA {
   id: number | null;
 }
@@ -10,13 +18,7 @@ export const useAAs = defineStore("aas", () => {
   const aas = ref<AA[]>([]);
 
   const currentAA = ref<EditableAA>({
-    id: null,
-    name: '',
-    type: 'active-missile',
-    ammoMaxRange: 0,
-    ammoVelocity: 0,
-    viewAngle: 0,
-    reloadTime: 0
+    ...defaultAA,
   });
 
   async function getAAs() {
@@ -28,12 +30,11 @@ export const useAAs = defineStore("aas", () => {
     }
   }
 
-  async function getAA(id: number) {
-    try {
-      const response = await httpClient.get<AA>(`/adm/aas/${id}`);
-      currentAA.value = response;
-    } catch (error) {
-      console.log(error);
+  function setAA(aaId: number | null) {
+    if (aaId) {
+      currentAA.value = aas.value.find((aa) => aa.id === aaId);
+    } else {
+      currentAA.value = { ...defaultAA };
     }
   }
 
@@ -45,14 +46,11 @@ export const useAAs = defineStore("aas", () => {
           currentAA.value
         );
         currentAA.value = response;
-        return response.id
+        return response.id;
       } else {
-        const response = await httpClient.post<AA>(
-          "/adm/aas",
-          currentAA.value
-        );
+        const response = await httpClient.post<AA>("/adm/aas", currentAA.value);
         currentAA.value = response;
-        return response.id
+        return response.id;
       }
     } catch (error) {
       console.log(error);
@@ -69,26 +67,17 @@ export const useAAs = defineStore("aas", () => {
   }
 
   function $reset() {
-    currentAA.value = {
-      id: null,
-      name: '',
-      type: 'active-missile',
-      ammoMaxRange: 0,
-      ammoVelocity: 0,
-      viewAngle: 0,
-      reloadTime: 0
-    };
-
-    aas.value = []
+    currentAA.value = { ...defaultAA };
+    aas.value = [];
   }
 
   return {
     aas,
     getAAs,
-    getAA,
+    setAA,
     saveAA,
     deleteAA,
     currentAA,
-    $reset
+    $reset,
   };
 });

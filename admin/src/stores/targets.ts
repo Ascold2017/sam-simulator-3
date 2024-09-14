@@ -6,15 +6,19 @@ import { TargetListResponse, Target } from "../models/targets.model";
 export interface EditableTarget extends Target {
   id: number | null;
 }
+
+const defaultTarget = {
+  id: null,
+  name: '',
+  rcs: 0,
+  temperature: 0,
+  size: 0
+}
 export const useTargets = defineStore("targets", () => {
   const targets = ref<Target[]>([]);
 
   const currentTarget = ref<EditableTarget>({
-    id: null,
-    name: '',
-    rcs: 0,
-    temperature: 0,
-    size: 0
+   ...defaultTarget
   });
 
   async function getTargets() {
@@ -26,14 +30,13 @@ export const useTargets = defineStore("targets", () => {
     }
   }
 
-  async function getTarget(id: number) {
-    try {
-      const response = await httpClient.get<Target>(`/adm/targets/${id}`);
-      currentTarget.value = response;
-    } catch (error) {
-      console.log(error);
-    }
-  }
+ function setTarget(id: number | null) {
+   if (id) {
+     currentTarget.value = targets.value.find((target) => target.id === id);
+   } else {
+     currentTarget.value = { ...defaultTarget };
+   }
+ }
 
   async function saveTarget() {
     try {
@@ -68,13 +71,7 @@ export const useTargets = defineStore("targets", () => {
   }
 
   function $reset() {
-    currentTarget.value = {
-      id: null,
-      name: '',
-      rcs: 0,
-      temperature: 0,
-      size: 0
-    };
+    setTarget(null)
 
     targets.value = []
   }
@@ -83,7 +80,7 @@ export const useTargets = defineStore("targets", () => {
     targets,
     currentTarget,
     getTargets,
-    getTarget,
+    setTarget,
     saveTarget,
     deleteTarget,
     $reset

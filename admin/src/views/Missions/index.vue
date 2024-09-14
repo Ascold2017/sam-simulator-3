@@ -21,7 +21,7 @@
           <td>{{ mission.map.name }}</td>
           <td>
             <router-link :to="{ name: 'missionEdit', params: { id: mission.id } }"
-              class="missions__edit-btn">Edit</router-link>
+              class="missions__edit-btn mr-2">Edit</router-link>
             <button @click="missionsStore.deleteMission(mission.id)" class="missions__delete-btn">Delete</button>
           </td>
         </tr>

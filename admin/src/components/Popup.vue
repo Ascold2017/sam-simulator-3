@@ -9,12 +9,6 @@
         <div class="popup-body">
           <slot name="content">Popup Content</slot>
         </div>
-  
-        <footer class="popup-footer">
-          <slot name="footer">
-            <button @click="closePopup" class="popup-close-btn">Close</button>
-          </slot>
-        </footer>
       </div>
     </div>
   </template>

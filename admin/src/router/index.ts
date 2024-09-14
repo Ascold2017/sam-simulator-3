@@ -29,44 +29,14 @@ export const router = createRouter({
     },
     {
       path: "/targets",
-      children: [
-        {
-          path: "",
-          name: "targets",
-          component: () => import("../views/Targets/index.vue"),
-        },
-        {
-          path: "new",
-          name: "targetCreate",
-          component: () => import("../views/TargetEdit/index.vue"),
-        },
-        {
-          path: ":id",
-          name: "targetEdit",
-          component: () => import("../views/TargetEdit/index.vue"),
-        },
-      ],
+      name: "targets",
+      component: () => import("../views/Targets/index.vue"),
     },
 
     {
       path: "/aas",
-      children: [
-        {
-          path: "",
-          name: "aas",
-          component: () => import("../views/AAs/index.vue"),
-        },
-        {
-          path: "new",
-          name: "aaCreate",
-          component: () => import("../views/AAEdit/index.vue"),
-        },
-        {
-          path: ":id",
-          name: "aaEdit",
-          component: () => import("../views/AAEdit/index.vue"),
-        },
-      ],
+      name: "aas",
+      component: () => import("../views/AAs/index.vue"),
     },
 
     {
