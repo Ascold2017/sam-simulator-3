@@ -2,7 +2,6 @@ import { BaseEntity, DataSource } from 'typeorm'
 import dotenv from 'dotenv'
 import { Mission } from '../entities/mission.entity';
 import { MissionTarget } from '../entities/missionTarget.entity';
-import { InitMissionDataFromFile1634567890123 } from '../migrations/InitMissionDataFromFile1634567890123';
 import { AA } from '../entities/aa.entity';
 import { User } from '../entities/user.entity';
 import { Target } from '../entities/target.entity';
@@ -17,8 +16,6 @@ export const AppDataSource = new DataSource({
     type: "postgres",
     logging: true,
     entities: [BaseEntity, Mission, MissionTarget, MissionAAPosition, MissionMap, AA, Target, User],
-    migrations: [InitMissionDataFromFile1634567890123],
-    migrationsTableName: "migration",
     synchronize: isDev,
     ssl: false,
 });

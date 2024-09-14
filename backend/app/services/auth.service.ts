@@ -32,9 +32,7 @@ export class AuthService {
         if (!user) {
             throw new Error('User not found');
         }
-        console.log(password, user.password)
         const isPasswordValid = await argon2.verify(user.password, password);
-        console.log(isPasswordValid)
         if (!isPasswordValid) {
             throw new Error('Invalid credentials');
         }
