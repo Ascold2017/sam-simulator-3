@@ -9,29 +9,51 @@ export const router = createRouter({
         },
         {
             path: '/missions',
-            name: 'missions',
-            component: () => import('../views/Missions/index.vue')
+            children: [
+                {
+                    path: '',
+                    name: 'missions',
+                    component: () => import('../views/Missions/index.vue')
+                },
+                {
+                    path: 'new',
+                    name: 'missionCreate',
+                    component: () => import('../views/MissionEditor/index.vue')
+                },
+                {
+                    path: ':id',
+                    name: 'missionEdit',
+                    component: () => import('../views/MissionEditor/index.vue')
+                },
+            ]
         },
         {
-            path: '/missions/new',
-            name: 'missionCreate',
-            component: () => import('../views/MissionEditor/index.vue')
+            path: '/targets',
+            children: [
+                {
+                    path: '',
+                    name: 'targets',
+                    component: () => import('../views/Targets/index.vue')
+                },
+                {
+                    path: 'new',
+                    name: 'targetCreate',
+                    component: () => import('../views/TargetEdit/index.vue')
+                },
+                {
+                    path: ':id',
+                    name: 'targetEdit',
+                    component: () => import('../views/TargetEdit/index.vue')
+                },
+            ]
         },
-        {
-            path: '/missions/:id',
-            name: 'missionEdit',
-            component: () => import('../views/MissionEditor/index.vue')
-        },
+        
         {
             path: '/aas',
             name: 'aas',
             component: () => import('../views/AAs/index.vue')
         },
-        {
-            path: '/targets',
-            name: 'targets',
-            component: () => import('../views/Targets/index.vue')
-        },
+        
         {
             path: '/users',
             name: 'users',

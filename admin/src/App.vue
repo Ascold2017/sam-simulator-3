@@ -17,6 +17,6 @@ import NavBar from './components/NavBar.vue';
 }
 
 .app__content {
-  @apply flex-1 bg-gray-100;
+  @apply flex-1 bg-gray-800 text-white;
 }
 </style>

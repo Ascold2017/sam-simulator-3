@@ -2,7 +2,7 @@
     <div class="targets">
         <div class="targets__header">
             <h1 class="targets__title">Targets</h1>
-            <button class="targets__create-btn" @click="createAA">Create target</button>
+            <router-link class="targets__create-btn" :to="{ name: 'targetCreate' }">Create target</router-link>
         </div>
 
         <table class="data-table">
@@ -14,12 +14,13 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="aa in targets" :key="aa.id">
-                    <td>{{ aa.id }}</td>
-                    <td>{{ aa.name }}</td>
+                <tr v-for="target in targets" :key="target.id">
+                    <td>{{ target.id }}</td>
+                    <td>{{ target.name }}</td>
                     <td>
-                        <button @click="editAA(aa.id)" class="targets__edit-btn">Edit</button>
-                        <button @click="deleteAA(aa.id)" class="targets__delete-btn">Delete</button>
+                        <router-link :to="{ name: 'targetEdit', params: { id: target.id } }"
+                            class="targets__edit-btn">Edit</router-link>
+                        <button @click="targetStore.deleteTarget(target.id)" class="targets__delete-btn">Delete</button>
                     </td>
                 </tr>
             </tbody>
@@ -28,27 +29,20 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useTargets } from '../../stores/targets';
 
-const targetstore = useTargets();
-const { targets } = storeToRefs(targetstore)
+const targetStore = useTargets();
+const { targets } = storeToRefs(targetStore)
 
 onMounted(() => {
-    targetstore.getTargets()
+    targetStore.getTargets()
 })
-const createAA = () => {
-    console.log('Create new mission');
-};
 
-const editAA = (id: number) => {
-    console.log('Edit mission with ID:', id);
-};
-
-const deleteAA = (id: number) => {
-    console.log('Delete mission with ID:', id);
-};
+onUnmounted(() => {
+    targetStore.$reset()
+})
 </script>
 
 <style scoped>
