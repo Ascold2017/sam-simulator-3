@@ -19,7 +19,7 @@ export const AppDataSource = new DataSource({
     entities: [BaseEntity, Mission, MissionTarget, MissionAAPosition, MissionMap, AA, Target, User],
     migrations: [InitMissionDataFromFile1634567890123],
     migrationsTableName: "migration",
-    synchronize: true,
+    synchronize: isDev,
     ssl: false,
 });
 
