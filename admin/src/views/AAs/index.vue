@@ -2,7 +2,7 @@
     <div class="aas">
         <div class="aas__header">
             <h1 class="aas__title">AAs</h1>
-            <button class="aas__create-btn" @click="createAA">Create AA</button>
+            <router-link class="aas__create-btn" :to="{ name: 'aaCreate' }">Create AA</router-link>
         </div>
 
         <table class="data-table">
@@ -18,8 +18,8 @@
                     <td>{{ aa.id }}</td>
                     <td>{{ aa.name }}</td>
                     <td>
-                        <button @click="editAA(aa.id)" class="aas__edit-btn">Edit</button>
-                        <button @click="deleteAA(aa.id)" class="aas__delete-btn">Delete</button>
+                        <router-link :to="{ name: 'aaEdit', params: { id: aa.id } }" class="aas__edit-btn">Edit</router-link>
+                        <button @click="aaStore.deleteAA(aa.id)" class="aas__delete-btn">Delete</button>
                     </td>
                 </tr>
             </tbody>
@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useAAs } from '../../stores/aas';
 
@@ -38,17 +38,6 @@ const { aas } = storeToRefs(aaStore)
 onMounted(() => {
     aaStore.getAAs()
 })
-const createAA = () => {
-    console.log('Create new mission');
-};
-
-const editAA = (id: number) => {
-    console.log('Edit mission with ID:', id);
-};
-
-const deleteAA = (id: number) => {
-    console.log('Delete mission with ID:', id);
-};
 </script>
 
 <style scoped>

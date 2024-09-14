@@ -1,64 +1,78 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from "vue-router";
 export const router = createRouter({
-    history: createWebHistory(),
-    routes: [
+  history: createWebHistory(),
+  routes: [
+    {
+      path: "/",
+      name: "home",
+      component: () => import("../views/Home/index.vue"),
+    },
+    {
+      path: "/missions",
+      children: [
         {
-            path: '/',
-            name: 'home',
-            component: () => import('../views/Home/index.vue')
+          path: "",
+          name: "missions",
+          component: () => import("../views/Missions/index.vue"),
         },
         {
-            path: '/missions',
-            children: [
-                {
-                    path: '',
-                    name: 'missions',
-                    component: () => import('../views/Missions/index.vue')
-                },
-                {
-                    path: 'new',
-                    name: 'missionCreate',
-                    component: () => import('../views/MissionEditor/index.vue')
-                },
-                {
-                    path: ':id',
-                    name: 'missionEdit',
-                    component: () => import('../views/MissionEditor/index.vue')
-                },
-            ]
+          path: "new",
+          name: "missionCreate",
+          component: () => import("../views/MissionEditor/index.vue"),
         },
         {
-            path: '/targets',
-            children: [
-                {
-                    path: '',
-                    name: 'targets',
-                    component: () => import('../views/Targets/index.vue')
-                },
-                {
-                    path: 'new',
-                    name: 'targetCreate',
-                    component: () => import('../views/TargetEdit/index.vue')
-                },
-                {
-                    path: ':id',
-                    name: 'targetEdit',
-                    component: () => import('../views/TargetEdit/index.vue')
-                },
-            ]
+          path: ":id",
+          name: "missionEdit",
+          component: () => import("../views/MissionEditor/index.vue"),
         },
-        
+      ],
+    },
+    {
+      path: "/targets",
+      children: [
         {
-            path: '/aas',
-            name: 'aas',
-            component: () => import('../views/AAs/index.vue')
+          path: "",
+          name: "targets",
+          component: () => import("../views/Targets/index.vue"),
         },
-        
         {
-            path: '/users',
-            name: 'users',
-            component: () => import('../views/Users/index.vue')
-        }
+          path: "new",
+          name: "targetCreate",
+          component: () => import("../views/TargetEdit/index.vue"),
+        },
+        {
+          path: ":id",
+          name: "targetEdit",
+          component: () => import("../views/TargetEdit/index.vue"),
+        },
+      ],
+    },
 
-    ]
-})
+    {
+      path: "/aas",
+      children: [
+        {
+          path: "",
+          name: "aas",
+          component: () => import("../views/AAs/index.vue"),
+        },
+        {
+          path: "new",
+          name: "aaCreate",
+          component: () => import("../views/AAEdit/index.vue"),
+        },
+        {
+          path: ":id",
+          name: "aaEdit",
+          component: () => import("../views/AAEdit/index.vue"),
+        },
+      ],
+    },
+
+    {
+      path: "/users",
+      name: "users",
+      component: () => import("../views/Users/index.vue"),
+    },
+  ],
+});

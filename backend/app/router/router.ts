@@ -30,6 +30,10 @@ router.put('/adm/missions/:id', missionController.putMission())
 router.delete('/adm/missions/:id', missionController.deleteMission())
 
 router.get('/adm/aas', aaController.getAAs())
+router.get('/adm/aas/:id', aaController.getAA())
+router.post('/adm/aas', aaController.postAA())
+router.put('/adm/aas/:id', aaController.putAA())
+router.delete('/adm/aas/:id', aaController.deleteAA())
 
 router.get('/adm/targets', targetController.getTargets())
 router.get('/adm/targets/:id', targetController.getTarget())

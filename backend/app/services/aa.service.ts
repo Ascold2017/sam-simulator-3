@@ -8,4 +8,21 @@ export class AaService {
         });
         return aas;
     }
+
+    async getAa(id: number) {
+        const aa = await DI.aaRepository.findOneBy({
+            id
+        });
+        return aa;
+    }
+
+    async saveAa(aa: any) {
+        const newAa = await DI.aaRepository.save(aa);
+        return newAa;
+    }
+
+    async deleteAa(id: number) {
+        await DI.aaRepository.delete(id);
+    }
+    
 }
