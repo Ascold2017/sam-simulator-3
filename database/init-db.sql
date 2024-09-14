@@ -39,7 +39,7 @@ CREATE TABLE public.aa (
 );
 
 
-ALTER TABLE public.aa OWNER TO postgres;
+ALTER TABLE public.aa OWNER TO test;
 
 --
 -- TOC entry 227 (class 1259 OID 40396)
@@ -55,7 +55,7 @@ CREATE SEQUENCE public.aa_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.aa_id_seq OWNER TO postgres;
+ALTER SEQUENCE public.aa_id_seq OWNER TO test;
 
 --
 -- TOC entry 4927 (class 0 OID 0)
@@ -64,45 +64,6 @@ ALTER SEQUENCE public.aa_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE public.aa_id_seq OWNED BY public.aa.id;
-
-
---
--- TOC entry 230 (class 1259 OID 40432)
--- Name: migration; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.migration (
-    id integer NOT NULL,
-    "timestamp" bigint NOT NULL,
-    name character varying NOT NULL
-);
-
-
-ALTER TABLE public.migration OWNER TO postgres;
-
---
--- TOC entry 229 (class 1259 OID 40431)
--- Name: migration_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.migration_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER SEQUENCE public.migration_id_seq OWNER TO postgres;
-
---
--- TOC entry 4928 (class 0 OID 0)
--- Dependencies: 229
--- Name: migration_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.migration_id_seq OWNED BY public.migration.id;
 
 
 --
@@ -119,7 +80,7 @@ CREATE TABLE public.mission (
 );
 
 
-ALTER TABLE public.mission OWNER TO postgres;
+ALTER TABLE public.mission OWNER TO test;
 
 --
 -- TOC entry 222 (class 1259 OID 40364)
@@ -134,7 +95,7 @@ CREATE TABLE public.mission_aa_position (
 );
 
 
-ALTER TABLE public.mission_aa_position OWNER TO postgres;
+ALTER TABLE public.mission_aa_position OWNER TO test;
 
 --
 -- TOC entry 221 (class 1259 OID 40363)
@@ -150,7 +111,7 @@ CREATE SEQUENCE public.mission_aa_position_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.mission_aa_position_id_seq OWNER TO postgres;
+ALTER SEQUENCE public.mission_aa_position_id_seq OWNER TO test;
 
 --
 -- TOC entry 4929 (class 0 OID 0)
@@ -175,7 +136,7 @@ CREATE SEQUENCE public.mission_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.mission_id_seq OWNER TO postgres;
+ALTER SEQUENCE public.mission_id_seq OWNER TO test;
 
 --
 -- TOC entry 4930 (class 0 OID 0)
@@ -201,7 +162,7 @@ CREATE TABLE public.mission_map (
 );
 
 
-ALTER TABLE public.mission_map OWNER TO postgres;
+ALTER TABLE public.mission_map OWNER TO test;
 
 --
 -- TOC entry 219 (class 1259 OID 40353)
@@ -217,7 +178,7 @@ CREATE SEQUENCE public.mission_map_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.mission_map_id_seq OWNER TO postgres;
+ALTER SEQUENCE public.mission_map_id_seq OWNER TO test;
 
 --
 -- TOC entry 4931 (class 0 OID 0)
@@ -242,7 +203,7 @@ CREATE TABLE public.mission_target (
 );
 
 
-ALTER TABLE public.mission_target OWNER TO postgres;
+ALTER TABLE public.mission_target OWNER TO test;
 
 --
 -- TOC entry 217 (class 1259 OID 40343)
@@ -258,7 +219,7 @@ CREATE SEQUENCE public.mission_target_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.mission_target_id_seq OWNER TO postgres;
+ALTER SEQUENCE public.mission_target_id_seq OWNER TO test;
 
 --
 -- TOC entry 4932 (class 0 OID 0)
@@ -284,7 +245,7 @@ CREATE TABLE public.target (
 );
 
 
-ALTER TABLE public.target OWNER TO postgres;
+ALTER TABLE public.target OWNER TO test;
 
 --
 -- TOC entry 215 (class 1259 OID 40333)
@@ -300,7 +261,7 @@ CREATE SEQUENCE public.target_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.target_id_seq OWNER TO postgres;
+ALTER SEQUENCE public.target_id_seq OWNER TO test;
 
 --
 -- TOC entry 4933 (class 0 OID 0)
@@ -327,7 +288,7 @@ CREATE TABLE public."user" (
 );
 
 
-ALTER TABLE public."user" OWNER TO postgres;
+ALTER TABLE public."user" OWNER TO test;
 
 --
 -- TOC entry 225 (class 1259 OID 40383)
@@ -343,7 +304,7 @@ CREATE SEQUENCE public.user_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.user_id_seq OWNER TO postgres;
+ALTER SEQUENCE public.user_id_seq OWNER TO test;
 
 --
 -- TOC entry 4934 (class 0 OID 0)
@@ -362,12 +323,6 @@ ALTER SEQUENCE public.user_id_seq OWNED BY public."user".id;
 ALTER TABLE ONLY public.aa ALTER COLUMN id SET DEFAULT nextval('public.aa_id_seq'::regclass);
 
 
---
--- TOC entry 4739 (class 2604 OID 40435)
--- Name: migration id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.migration ALTER COLUMN id SET DEFAULT nextval('public.migration_id_seq'::regclass);
 
 
 --
@@ -427,17 +382,6 @@ ALTER TABLE ONLY public."user" ALTER COLUMN id SET DEFAULT nextval('public.user_
 COPY public.aa (id, "createdAt", name, type, "ammoMaxRange", "ammoVelocity", "viewAngle", "reloadTime") FROM stdin;
 2	1726224284628	GAA-3	gun	3000	800	0.523599	0.001
 1	1726224284628	SAM-8	active-missile	8000	900	0.523599	3
-\.
-
-
---
--- TOC entry 4921 (class 0 OID 40432)
--- Dependencies: 230
--- Data for Name: migration; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.migration (id, "timestamp", name) FROM stdin;
-1	1634567890123	InitMissionDataFromFile1634567890123
 \.
 
 
@@ -525,15 +469,6 @@ SELECT pg_catalog.setval('public.aa_id_seq', 3, true);
 
 
 --
--- TOC entry 4936 (class 0 OID 0)
--- Dependencies: 229
--- Name: migration_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('public.migration_id_seq', 1, true);
-
-
---
 -- TOC entry 4937 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: mission_aa_position_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
@@ -594,15 +529,6 @@ SELECT pg_catalog.setval('public.user_id_seq', 2, true);
 
 ALTER TABLE ONLY public.mission_aa_position
     ADD CONSTRAINT "PK_17e21e5959f96f938f55422c458" PRIMARY KEY (id);
-
-
---
--- TOC entry 4757 (class 2606 OID 40439)
--- Name: migration PK_3043fc6b8af7c99b8b98830094f; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.migration
-    ADD CONSTRAINT "PK_3043fc6b8af7c99b8b98830094f" PRIMARY KEY (id);
 
 
 --
