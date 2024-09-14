@@ -14,13 +14,13 @@
                 <tr>
                     <th>#</th>
                     <th>Waypoints</th>
-                    <th></th>
+                    <th class="w-24"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(target, index) in missionEditor.targetsToShow" :key="target.id">
                     <td>#{{ index }}</td>
-                    <td>
+                    <td style="padding: 0;">
 
                         <table class="data-table data-table--compact text-white">
                             <thead>
@@ -34,25 +34,26 @@
                             </thead>
                             <tbody>
                                 <tr v-for="(waypoint, index) in target.waypoints" :key="index">
-                                    <td>#{{ index }}</td>
+                                    <td :class="{ 'bg-blue-900': index === 0, 'bg-red-600': index === target.waypoints.length - 1, 'bg-yellow-300': index > 0 && index < target.waypoints.length - 1 }">#{{ index }}</td>
                                     <td>{{ waypoint.position.x.toFixed(0) }}</td>
                                     <td>{{ waypoint.position.y.toFixed(0) }}</td>
                                     <td>{{ waypoint.position.z.toFixed(0) }}</td>
                                     <td>
-                                        <BaseInput id="waypoint-speed" :model-value="waypoint.speed"
+                                        <BaseInput id="waypoint-speed" class="w-24" :model-value="waypoint.speed"
                                             @update:modelValue="missionEditor.updateWaypoint(target.id, index, { ...waypoint, speed: $event })"
-                                            label="Speed, m/s" />
+                                        />
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </td>
                     <td>
+                        <div class="flex flex-col">
                         <button @click="missionEditor.removeTarget(target.id)"
                             class="button button--danger mb-2">Remove</button>
                         <button @click="missionEditor.addWaypoint(target.id)" class="button">Add
                             Waypoint</button>
-
+                            </div>
                     </td>
                 </tr>
             </tbody>

@@ -1,5 +1,6 @@
 <template>
     <aside class="mission-editor-sidebar">
+        
         <section class="flex mb-6">
             <BaseInput id="mission-name" v-model="missionName" label="Mission Name" placeholder="Enter mission name" />
 
@@ -58,7 +59,7 @@ onMounted(() => {
 
 <style scoped>
 .mission-editor-sidebar {
-    @apply p-4 bg-gray-800 flex flex-col;
+    @apply p-4 bg-gray-800 flex flex-col border-t-2 border-gray-700;
     width: 700px;
     overflow-y: auto;
     overflow-x: hidden;
