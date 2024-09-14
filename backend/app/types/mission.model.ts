@@ -24,6 +24,7 @@ export type AdmMissionListResponse = AdmMission[]
 export interface CreateMissionPayload {
     name: string,
     mapId: number,
+    duration: number;
     aaPositionsToCreate: {
         position: Position
     }[];
@@ -36,6 +37,7 @@ export interface CreateMissionPayload {
 export interface UpdateMissionPayload {
     name: string,
     mapId: number,
+    duration: number;
     aaPositionsToCreate: {
         position: Position
     }[]

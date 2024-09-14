@@ -46,7 +46,7 @@ export class MissionService {
             const mission = new Mission();
             mission.name = data.name;
             mission.map = map;
-            mission.duration = 1000; // TODO
+            mission.duration = data.duration;
 
             // Сохраняем миссию через транзакционный менеджер
             await manager.save(mission);
@@ -92,6 +92,7 @@ export class MissionService {
                 where: { id: data.mapId }
             });
             mission.map = map;
+            mission.duration = data.duration;
 
             // Обновляем AA позиции
             // Удаление

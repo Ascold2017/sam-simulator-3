@@ -16,6 +16,7 @@ export const useMissionEditor = defineStore("mission-editor", () => {
 
   const missionId = ref<number | null>(null);
   const missionName = ref<string>("");
+  const missionDuration = ref(1000)
   const mapId = ref<number | null>(null);
 
   const {
@@ -70,6 +71,7 @@ export const useMissionEditor = defineStore("mission-editor", () => {
       const payload: UpdateMissionPayload = {
         name: missionName.value,
         mapId: mapId.value!,
+        duration: missionDuration.value,
         aaPositionsToDelete: aaPositionsToDelete.value,
         aaPositionsToUpdate: aaPositionsToUpdate.value,
         aaPositionsToCreate: aaPositionsToCreate.value,
@@ -88,6 +90,7 @@ export const useMissionEditor = defineStore("mission-editor", () => {
       const payload: CreateMissionPayload = {
         name: missionName.value,
         mapId: mapId.value!,
+        duration: missionDuration.value,
         aaPositionsToCreate: aaPositionsToCreate.value,
         targetsToCreate: targetsToCreate.value,
       };
@@ -109,6 +112,8 @@ export const useMissionEditor = defineStore("mission-editor", () => {
 
       missionId.value = response.id;
       missionName.value = response.name;
+      missionDuration.value = response.duration;
+      
       mapId.value = response.map.id;
       setAAPositions(response.aaPositions);
       setTargets(response.targets);
@@ -137,6 +142,7 @@ export const useMissionEditor = defineStore("mission-editor", () => {
     isChanged,
     mapId,
     missionName,
+    missionDuration,
     currentMap,
     aaPositions,
     aaPositionsToShow,

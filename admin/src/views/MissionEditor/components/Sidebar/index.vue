@@ -3,6 +3,7 @@
         
         <section class="flex mb-6">
             <BaseInput id="mission-name" v-model="missionName" label="Mission Name" placeholder="Enter mission name" />
+            <BaseInput id="mission-duration" v-model.number="missionDuration" label="Mission duration, s" placeholder="Enter duration" />
 
             <BaseSelect id="map-select" class="ml-auto" v-model.number="mapId" :options="mapsOptions" label="Map" />
         </section>
@@ -34,7 +35,7 @@ const mapsStore = useMaps();
 const targetsStore = useTargets()
 const missionEditor = useMissionEditor()
 const { maps } = storeToRefs(mapsStore)
-const { mapId, missionName } = storeToRefs(missionEditor)
+const { mapId, missionName, missionDuration } = storeToRefs(missionEditor)
 
 const mapsOptions = computed(() =>
     maps.value.map(map => ({ label: map.name, value: map.id }))

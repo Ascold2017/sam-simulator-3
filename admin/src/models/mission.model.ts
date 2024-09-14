@@ -46,6 +46,7 @@ export interface AdmMissionExtended {
         maxHeight: number;
         createdAt: number;
     },
+    duration: number;
     aaPositions: AAPosition[];
     targets: MissionTarget[]
 }
@@ -56,6 +57,7 @@ export type AdmMissionExtendedResponse = AdmMissionExtended
 export interface CreateMissionPayload {
     name: string,
     mapId: number,
+    duration: number;
     aaPositionsToCreate: {
         position: Position
     }[];
@@ -68,6 +70,7 @@ export interface CreateMissionPayload {
 export interface UpdateMissionPayload {
     name: string,
     mapId: number,
+    duration: number;
     aaPositionsToCreate: {
         position: Position
     }[]
