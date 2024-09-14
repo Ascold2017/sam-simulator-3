@@ -6,13 +6,16 @@
 
         <Sphere v-if="flightObject.type === 'target'" :args="[5, 8, 8]" color="blue" />
 
+       
         <!-- Плоскость с текстурой -->
         <TresMesh v-if="camera && flightObject.isCaptured" ref="infoPlane"
             :scale="[infoPlaneScale, infoPlaneScale, infoPlaneScale]">
             <TresPlaneGeometry :args="[1, 1]" />
             <TresMeshBasicMaterial :map="createOutlineTexture()" transparent :side="0" />
         </TresMesh>
+        <SmokeEmitter :position="flightObject.position" />
     </TresGroup>
+   
 </template>
 
 <script setup lang="ts">
@@ -21,6 +24,7 @@ import { ParsedFlightObject } from '../../../../stores/game';
 import { TresObject, useRenderLoop, useTres, } from '@tresjs/core';
 import { Cone, Sphere } from '@tresjs/cientos'
 import { computed, ref } from 'vue';
+import SmokeEmitter from './SmokeEmitter.vue';
 
 const props = defineProps<{
     flightObject: ParsedFlightObject,
