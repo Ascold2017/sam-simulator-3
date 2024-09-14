@@ -21,7 +21,6 @@ app.use('/api', router);
 
 (async () => {
     await AppDataSource.initialize();
-    await AppDataSource.runMigrations();
     const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
         path: '/api/socket.io', 
         cors: {
