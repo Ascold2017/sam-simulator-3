@@ -13,10 +13,10 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="aa in users" :key="aa.id">
-                    <td>{{ aa.id }}</td>
-                    <td>{{ aa.username }}</td>
-                    <td>{{ aa.isPremium ? '+' : '-' }}</td>
+                <tr v-for="user in users" :key="user.id">
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.isPremium ? '+' : '-' }}</td>
                 </tr>
             </tbody>
         </table>
@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useUsers } from '../../stores/users';
 

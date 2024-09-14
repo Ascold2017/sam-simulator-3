@@ -10,7 +10,7 @@
   <script setup lang="ts">
   import { ref } from 'vue';
   
-  const props = defineProps<{ buttonLabel: string }>();
+  defineProps<{ buttonLabel: string }>();
   
   const isOpen = ref(false);
   

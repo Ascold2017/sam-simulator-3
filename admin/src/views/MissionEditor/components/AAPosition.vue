@@ -12,7 +12,7 @@ import { Cone } from '@tresjs/cientos'
 import { Object3D } from 'three';
 import { EditableAAPosition } from '../../../stores/missionEditor/aaPositions';
 
-const props = defineProps<{ aaPosition: EditableAAPosition }>()
+defineProps<{ aaPosition: EditableAAPosition }>()
 
 const emit = defineEmits<{ click: [object: Object3D] }>()
 </script>

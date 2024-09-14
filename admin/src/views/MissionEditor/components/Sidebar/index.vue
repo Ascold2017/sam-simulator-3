@@ -22,7 +22,7 @@ import BaseInput from '../../../../components/BaseInput.vue';
 import BaseSelect from '../../../../components/BaseSelect.vue';
 import AAPositions from './AAPositions.vue';
 import Targets from './Targets.vue';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useMaps } from '../../../../stores/maps';
 import { storeToRefs } from 'pinia';
 import { useMissionEditor } from '../../../../stores/missionEditor/index';
@@ -34,7 +34,7 @@ const mapsStore = useMaps();
 const targetsStore = useTargets()
 const missionEditor = useMissionEditor()
 const { maps } = storeToRefs(mapsStore)
-const { mapId, missionName, isChanged } = storeToRefs(missionEditor)
+const { mapId, missionName } = storeToRefs(missionEditor)
 
 const mapsOptions = computed(() =>
     maps.value.map(map => ({ label: map.name, value: map.id }))

@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 import { useMissions } from '../../stores/missions';
 import { storeToRefs } from 'pinia';
 
