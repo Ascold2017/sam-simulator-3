@@ -42,6 +42,10 @@ router.put('/adm/targets/:id', targetController.putTarget())
 router.delete('/adm/targets/:id', targetController.deleteTarget())
 
 router.get('/adm/users', userController.getUsers())
+router.patch('/adm/users/premium/:id', userController.pathcUserPremium())
+router.patch('/adm/users/role/:id', userController.patchUserRole())
+router.delete('/adm/users/:id', userController.deleteUser())
+
 router.get('/adm/maps', mapController.getMaps())
 
 export default router;

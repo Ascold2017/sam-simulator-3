@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToMany, ManyToOne } from "typeorm";
+import { Entity, Column, ManyToMany, ManyToOne, OneToMany } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { User } from "./user.entity";
 
@@ -22,6 +22,6 @@ export class AA extends BaseEntity {
     @Column({ type: 'double precision' })
     reloadTime: number;
 
-    @ManyToOne(() => User, user => user.aa)
-    users: User[]
+    @OneToMany(() => User, user => user.aa) // Один AA может принадлежать многим пользователям
+    users: User[];
 }

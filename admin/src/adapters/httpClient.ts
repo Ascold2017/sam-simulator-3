@@ -60,6 +60,12 @@ class HttpClient {
     return response.data;
   }
 
+  // Метод для PATCH-запросов
+  public async patch<T>(url: string, data?: any): Promise<T> {
+    const response = await this.instance.patch<T>(url, data);
+    return response.data;
+  }
+
   // Метод для DELETE-запросов
   public async delete<T>(url: string): Promise<T> {
     const response = await this.instance.delete<T>(url);

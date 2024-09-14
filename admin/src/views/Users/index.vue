@@ -10,6 +10,9 @@
                     <th>ID</th>
                     <th>Username</th>
                     <th>Premium</th>
+                    <th>Role</th>
+                    <th>AA</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -17,6 +20,18 @@
                     <td>{{ user.id }}</td>
                     <td>{{ user.username }}</td>
                     <td>{{ user.isPremium ? '+' : '-' }}</td>
+                    <td>{{ user.role }}</td>
+                    <td>{{ user.aa?.name || '-' }}</td>
+                    <td>
+                        <button @click="userstore.pathcUserPremium(user.id, !user.isPremium)" class="button mr-2">
+                            {{ user.isPremium ? 'Unpremium' : 'Premium' }}
+                        </button>
+                        <button v-if="user.role === 'admin'" @click="userstore.patchUserRole(user.id, 'user')"
+                            class="button mr-2">Make as user</button>
+                        <button v-else @click="userstore.patchUserRole(user.id, 'admin')" class="button mr-2">Make as
+                            admin</button>
+                        <button @click="userstore.deleteUser(user.id)" class="button button--danger">Delete</button>
+                    </td>
                 </tr>
             </tbody>
         </table>
