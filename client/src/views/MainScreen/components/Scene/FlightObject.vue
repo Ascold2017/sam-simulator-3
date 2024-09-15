@@ -1,10 +1,8 @@
 <template>
-    <TresGroup :position="[flightObject.position.x, flightObject.position.y, flightObject.position.z]"
-        :rotation="[rotation.x, rotation.y, rotation.z]">
+    <TresGroup :position="[flightObject.position.x, flightObject.position.y, flightObject.position.z]">
 
-        <Cone v-if="flightObject.type === 'active-missile'" :args="[2, 5, 10]" color="red" />
 
-        <Sphere v-if="flightObject.type === 'target'" :args="[5, 8, 8]" color="blue" />
+        <Sphere :args="[5, 8, 8]" :color="flightObject.type === 'active-missile' ? 'red' : 'blue'" />
        
         <!-- Плоскость с текстурой -->
         <TresMesh v-if="camera && flightObject.isCaptured" ref="infoPlane"
@@ -17,10 +15,10 @@
 </template>
 
 <script setup lang="ts">
-import { CanvasTexture, Euler, Matrix4, Vector3 } from 'three';
+import { CanvasTexture } from 'three';
 import { ParsedFlightObject } from '../../../../stores/game';
 import { TresObject, useRenderLoop, useTres, } from '@tresjs/core';
-import { Cone, Sphere } from '@tresjs/cientos'
+import { Sphere } from '@tresjs/cientos'
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
@@ -36,27 +34,6 @@ const infoPlaneScale = computed(() => {
     const distance = camera.value?.position.distanceTo(props.flightObject.position) || 0;
     const fixedSize = 10;
     return distance / fixedSize;
-});
-
-
-const rotation = computed(() => {
-    const velocity = new Vector3(
-        props.flightObject.velocity.x,
-        props.flightObject.velocity.y,
-        props.flightObject.velocity.z
-    );
-    const direction = velocity.normalize();
-    const up = new Vector3(0, 1, 0);
-    // Векторная матрица для поворота модели
-    const matrix = new Matrix4();
-    matrix.lookAt(new Vector3(0, 0, 0), direction, up);
-
-    const rotationEuler = new Euler();
-    rotationEuler.setFromRotationMatrix(matrix);
-
-    // Корректируем поворот по оси X, чтобы конус летел вершиной вперед
-    rotationEuler.x += Math.PI / 2;
-    return rotationEuler;
 });
 
 // Функция создания текстуры для плоскости
