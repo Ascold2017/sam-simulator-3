@@ -18,7 +18,7 @@ const props = defineProps<{
 }>();
 
 const particleSize = 60;
-const particleLifetime = 10;
+const particleLifetime = 5;
 const distanceThreshold = particleSize; // Порог для создания новой частицы
 
 // Загрузка текстуры для частиц
