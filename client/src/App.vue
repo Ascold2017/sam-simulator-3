@@ -2,6 +2,7 @@
 import { RouterView } from 'vue-router'
 import { useGameStore } from './stores/game';
 import { useRooms } from './stores/rooms';
+import Notifications from './components/Notifications.vue';
 
 useRooms()
 useGameStore();
@@ -10,6 +11,7 @@ useGameStore();
 <template>
 <div class="app-layout">
   <RouterView />
+  <Notifications />
 </div>
 </template>
 
