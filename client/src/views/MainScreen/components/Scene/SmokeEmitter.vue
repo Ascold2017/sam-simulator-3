@@ -1,103 +1,96 @@
 <template>
-    <!-- Шаблон не изменяется -->
+    <TresPoints v-for="(emitter, index) in emitters" :key="index" :geometry="emitter.geometry">
+        <TresPointsMaterial :map="emitter.map" :size="50" :color="emitter.color" transparent :opacity="emitter.opacity"
+            :blending="NormalBlending" :depthWrite="false" />
+    </TresPoints>
 </template>
-
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import { Position } from '../../../../models/sockets.model';
-import { useRenderLoop, useTresContext } from '@tresjs/core';
-import { AdditiveBlending, BufferGeometry, Float32BufferAttribute, Points, PointsMaterial, Clock, Vector3 } from 'three';
+import { onMounted, ref, watch } from 'vue';
+import { useRenderLoop } from '@tresjs/core';
+import { BufferGeometry, Float32BufferAttribute, Vector3, TextureLoader, NormalBlending, Color } from 'three';
+import { ParsedFlightObject } from '../../../../stores/game';
 
-const { scene } = useTresContext();
 const { onLoop } = useRenderLoop();
-const clock = new Clock(); // Для анимации
 
-// Props для позиции эмиттера
+// Props для списка объектов
 const props = defineProps<{
-    position: Position;
+    flightObjects: ParsedFlightObject[]
 }>();
 
-const particlesPerUpdate = 1;
-const particleSize = 30;
-const particleLifetime = 30; // Время жизни частиц (в секундах)
+const testGeometry = new BufferGeometry();
+testGeometry.setAttribute('position', new Float32BufferAttribute([0, 100, 0], 3));
 
-// Создаем материал для частиц с поддержкой прозрачности
-const particlesMaterial = new PointsMaterial({
-    color: 0xaaaaaa,
-    size: particleSize,
-    transparent: true,
-    opacity: 1.0, // Полная непрозрачность в начале
-    depthWrite: false,
-    blending: AdditiveBlending
+const particleSize = 30;
+const particleLifetime = 10;
+const distanceThreshold = particleSize / 1.5; // Порог для создания новой частицы
+
+// Загрузка текстуры для частиц
+const textureLoader = new TextureLoader();
+const smokeTexture = ref(null);
+onMounted(() => {
+    smokeTexture.value = textureLoader.load('/smoke.png');
 });
 
-// Массив для хранения всех эмиттеров
-const emitters = ref<Points[]>([]);
+// Массив для хранения эмиттеров
+const emitters = ref([]);
+const lastPositions = ref(new Map()); // Map для хранения последней позиции по id объекта
 
-// Функция для создания частиц в заданной позиции
-function createParticlesAt(position: Position) {
-    const particlesGeometry = new BufferGeometry();
-    const positions = new Float32Array(particlesPerUpdate * 3); // по 3 координаты на каждую частицу
-
-    // Задаем случайные позиции частиц вокруг точки position
-    positions[0] = position.x + (Math.random() - 0.5) * 0.5;
-    positions[1] = position.y + (Math.random() - 0.5) * 0.5;
-    positions[2] = position.z + (Math.random() - 0.5) * 0.5;
-
-    particlesGeometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
-
-    // Создаем частицы и добавляем их в сцену
-    const particles = new Points(particlesGeometry, particlesMaterial.clone());
-    particles.userData.startTime = clock.getElapsedTime(); // Запоминаем время создания
-    particles.userData.origin = new Vector3(position.x, position.y, position.z);
-
-    emitters.value.push(particles);
-    scene.value.add(particles);
-}
-
-function calculateDistance(pos1: Position, pos2: Position): number {
+function calculateDistance(pos1, pos2) {
     const dx = pos1.x - pos2.x;
     const dy = pos1.y - pos2.y;
     const dz = pos1.z - pos2.z;
     return Math.sqrt(dx * dx + dy * dy + dz * dz);
 }
 
-const previousPosition = ref<Position | null>(null);
-// Слежение за изменением позиции, добавляем 3 частицы при каждом изменении
-watch(() => props.position, (newPosition) => {
-    if (previousPosition.value) {
-        const distance = calculateDistance(previousPosition.value, newPosition);
-        if (distance > 10) {
-            createParticlesAt(newPosition);
-            previousPosition.value = { ...newPosition }; // обновляем предыдущую позицию
-        }
-    } else {
-        // Если это первое изменение позиции, создаем частицы
-        createParticlesAt(newPosition);
-        previousPosition.value = { ...newPosition }; // сохраняем начальную позицию
-    }
+// Функция для создания эмиттеров частиц
+function createParticlesAt(flightObject: ParsedFlightObject) {
+    const geometry = new BufferGeometry();
+    const positionsArray = new Float32Array(3); // Для одной частицы
+    positionsArray[0] = flightObject.position.x;
+    positionsArray[1] = flightObject.position.y;
+    positionsArray[2] = flightObject.position.z;
+    geometry.setAttribute('position', new Float32BufferAttribute(positionsArray, 3));
 
-});
-
-// Анимация вращения частиц вокруг их исходной позиции
-function animateParticles() {
-    const currentTime = clock.getElapsedTime();
-
-    emitters.value.forEach((particles, index) => {
-        const elapsedTime = currentTime - particles.userData.startTime;
-
-        // Уменьшаем прозрачность частиц постепенно в течение 30 секунд
-        const remainingTime = particleLifetime - elapsedTime;
-        if (remainingTime > 0) {
-            particles.material.opacity = remainingTime / particleLifetime; // Плавное исчезновение
-        } else {
-            // Удаляем частицы из сцены, когда их время вышло
-            scene.value.remove(particles);
-            emitters.value.splice(index, 1);
-        }
+    emitters.value.push({
+        position: new Vector3(flightObject.position.x, flightObject.position.y, flightObject.position.z),
+        map: smokeTexture.value,
+        geometry: geometry,
+        color: flightObject.isKilled
+            ? new Color(0x696969)
+            : flightObject.type === 'active-missile'
+                ? new Color(0xc0c0c0)
+                : new Color(0xffffff),
+        opacity: 1.0, // Начальная прозрачность
+        startTime: Date.now(),
     });
 }
 
-// Запускаем анимацию на каждом кадре
-onLoop(() => animateParticles());
+// Слежение за изменениями в списке flightObjects
+watch(() => props.flightObjects, (newFlightObjects) => {
+    newFlightObjects.forEach((flightObject) => {
+        const currentPos = new Vector3(flightObject.position.x, flightObject.position.y, flightObject.position.z);
+        const lastPos = lastPositions.value.get(flightObject.id);
+
+        // Если позиции ещё нет или расстояние больше порога, создаём новую частицу
+        if (!lastPos || calculateDistance(currentPos, lastPos) > distanceThreshold) {
+            createParticlesAt(flightObject);
+            lastPositions.value.set(flightObject.id, currentPos); // Обновляем последнюю позицию
+        }
+    });
+});
+
+// Анимация для обновления прозрачности частиц
+onLoop(() => {
+    const currentTime = Date.now();
+    emitters.value.forEach((emitter, index) => {
+        const elapsedTime = (currentTime - emitter.startTime) / 1000; // Время жизни в секундах
+        const remainingTime = particleLifetime - elapsedTime;
+
+        if (remainingTime > 0) {
+            emitter.opacity = remainingTime / particleLifetime; // Плавное исчезновение
+        } else {
+            emitters.value.splice(index, 1); // Удаляем эмиттер, когда время вышло
+        }
+    });
+});
 </script>

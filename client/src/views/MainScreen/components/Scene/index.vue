@@ -2,7 +2,7 @@
     <Suspense>
             <LoadIndicator />
         </Suspense>
-    <TresCanvas window-size antialias alpha shadows preset="realistic">
+    <TresCanvas window-size antialias alpha shadows>
         
         <Sky :azimuth="0" :elevation="sunElevation" :turbidity="10" :mie-coefficient="0.005" :mie-directional-g="0"
             :rayleigh="2" />
@@ -31,6 +31,7 @@
         <!-- Летающие обьекты -->
         <FlightObject v-for="flightObject in parsedFlightObjects" :flight-object="flightObject"
             :key="flightObject.id" />
+        <SmokeEmitter :flight-objects="parsedFlightObjects" />
         <!-- Зенитки-->
         <AAObject v-for="aaObject in aas" :aaObject="aaObject" />
 
@@ -52,6 +53,7 @@ import AAObject from './AAObject.vue';
 import CustomFirstPersonControl from './CustomFirstPersonControl.vue';
 import DeviceOrientationControl from './DeviceOrientationControl.vue';
 import LoadIndicator from './LoadIndicator.vue'
+import SmokeEmitter from './SmokeEmitter.vue';
 import { computed } from 'vue';
 
 const gameStore = useGameStore()
