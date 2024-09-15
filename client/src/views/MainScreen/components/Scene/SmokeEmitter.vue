@@ -1,6 +1,6 @@
 <template>
     <TresPoints v-for="(emitter, index) in emitters" :key="index" :geometry="emitter.geometry">
-        <TresPointsMaterial :map="emitter.map" :size="50" :color="emitter.color" transparent :opacity="emitter.opacity"
+        <TresPointsMaterial :map="emitter.map" :size="particleSize" :color="emitter.color" transparent :opacity="emitter.opacity"
             :blending="NormalBlending" :depthWrite="false" />
     </TresPoints>
 </template>
@@ -17,12 +17,9 @@ const props = defineProps<{
     flightObjects: ParsedFlightObject[]
 }>();
 
-const testGeometry = new BufferGeometry();
-testGeometry.setAttribute('position', new Float32BufferAttribute([0, 100, 0], 3));
-
-const particleSize = 30;
+const particleSize = 60;
 const particleLifetime = 10;
-const distanceThreshold = particleSize / 1.5; // Порог для создания новой частицы
+const distanceThreshold = particleSize; // Порог для создания новой частицы
 
 // Загрузка текстуры для частиц
 const textureLoader = new TextureLoader();
@@ -35,16 +32,16 @@ onMounted(() => {
 const emitters = ref([]);
 const lastPositions = ref(new Map()); // Map для хранения последней позиции по id объекта
 
-function calculateDistance(pos1, pos2) {
-    const dx = pos1.x - pos2.x;
-    const dy = pos1.y - pos2.y;
-    const dz = pos1.z - pos2.z;
-    return Math.sqrt(dx * dx + dy * dy + dz * dz);
-}
+
+
+// Базовая геометрия для частиц
+const baseGeometry = new BufferGeometry();
+const basePositionsArray = new Float32Array(3); // Для одной частицы
+baseGeometry.setAttribute('position', new Float32BufferAttribute(basePositionsArray, 3));
 
 // Функция для создания эмиттеров частиц
 function createParticlesAt(flightObject: ParsedFlightObject) {
-    const geometry = new BufferGeometry();
+    const geometry = baseGeometry.clone();
     const positionsArray = new Float32Array(3); // Для одной частицы
     positionsArray[0] = flightObject.position.x;
     positionsArray[1] = flightObject.position.y;
@@ -65,6 +62,13 @@ function createParticlesAt(flightObject: ParsedFlightObject) {
     });
 }
 
+function calculateDistance(pos1, pos2) {
+    const dx = pos1.x - pos2.x;
+    const dy = pos1.y - pos2.y;
+    const dz = pos1.z - pos2.z;
+    return Math.sqrt(dx * dx + dy * dy + dz * dz);
+}
+
 // Слежение за изменениями в списке flightObjects
 watch(() => props.flightObjects, (newFlightObjects) => {
     newFlightObjects.forEach((flightObject) => {
@@ -82,6 +86,8 @@ watch(() => props.flightObjects, (newFlightObjects) => {
 // Анимация для обновления прозрачности частиц
 onLoop(() => {
     const currentTime = Date.now();
+    const expiredEmitters = [];
+
     emitters.value.forEach((emitter, index) => {
         const elapsedTime = (currentTime - emitter.startTime) / 1000; // Время жизни в секундах
         const remainingTime = particleLifetime - elapsedTime;
@@ -89,8 +95,10 @@ onLoop(() => {
         if (remainingTime > 0) {
             emitter.opacity = remainingTime / particleLifetime; // Плавное исчезновение
         } else {
-            emitters.value.splice(index, 1); // Удаляем эмиттер, когда время вышло
+            expiredEmitters.push(index);
         }
     });
+
+    expiredEmitters.forEach((index) => emitters.value.splice(index, 1));
 });
 </script>

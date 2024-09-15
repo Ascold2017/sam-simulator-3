@@ -2,7 +2,7 @@
     <Suspense>
             <LoadIndicator />
         </Suspense>
-    <TresCanvas window-size antialias alpha shadows>
+    <TresCanvas window-size antialias alpha :precision="'lowp'"  preserveDrawingBuffer>
         
         <Sky :azimuth="0" :elevation="sunElevation" :turbidity="10" :mie-coefficient="0.005" :mie-directional-g="0"
             :rayleigh="2" />
@@ -18,7 +18,7 @@
         <!-- Камера -->
         <TresPerspectiveCamera v-if="currentAA" :fov="75" :far="10000"
             :position="[currentAA.position.x, currentAA.position.y, currentAA.position.z]"
-            :look-at="[currentAA.position.x + 1, currentAA.position.y, currentAA.position.z]" :zoom="zoom" />
+            :look-at="[currentAA.position.x + 1, currentAA.position.y, currentAA.position.z]" />
         <!-- Контролы-->
         <DeviceOrientationControl v-if="deviceStore.isMobile" :min-elevation="0" :max-elevation="Math.PI / 4"
             @update-direction="direction = $event" @update-orientation="deviceStore.orientation = $event" />
@@ -31,7 +31,7 @@
         <!-- Летающие обьекты -->
         <FlightObject v-for="flightObject in parsedFlightObjects" :flight-object="flightObject"
             :key="flightObject.id" />
-        <SmokeEmitter :flight-objects="parsedFlightObjects" />
+        <SmokeEmitter :flight-objects="parsedFlightObjects"/>
         <!-- Зенитки-->
         <AAObject v-for="aaObject in aas" :aaObject="aaObject" />
 
@@ -64,7 +64,6 @@ const { currentAA, parsedFlightObjects, aas, map, direction } = storeToRefs(game
 const sunElevation = 1;
 const sunElevationRad = sunElevation * (Math.PI / 180);
 
-const zoom = computed(() => deviceStore.orientation === 'portrait' ? 3 : 1)
 
 const mapPath = computed(() => `${import.meta.env.VITE_APP_STATIC_URL}/models/${map.value}/scene.gltf`)
 </script>
