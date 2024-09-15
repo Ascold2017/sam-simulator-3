@@ -2,7 +2,7 @@
     <Suspense>
             <LoadIndicator />
         </Suspense>
-    <TresCanvas window-size antialias alpha :precision="'lowp'"  preserveDrawingBuffer>
+    <TresCanvas window-size antialias alpha preset="realistic">
         
         <Sky :azimuth="0" :elevation="sunElevation" :turbidity="10" :mie-coefficient="0.005" :mie-directional-g="0"
             :rayleigh="2" />

@@ -1,12 +1,13 @@
 <template>
-    <button class="map-button" :style="{ transform: `rotate(${azimuth}deg)` }" @click="isShowMap = true">
-        <img src="https://placehold.co/200" alt="Карта" class="map-button__image">
+    <button class="map-button" @click="isShowMap = true">
+        <div class="map-button__azimuth" :style="{ transform: `rotate(${azimuth}rad)` }"></div>
+        <img :src="minimapUrl" alt="Карта" class="map-button__image">
     </button>
 
     <div class="map-popup" v-if="isShowMap">
 
         <div class="map-container">
-            <img src="https://placehold.co/600x600" alt="Карта" class="map-image">
+            <img :src="minimapUrl" alt="Карта" class="map-image">
             <span v-for="aa in gameStore.aaPositions" :key="aa.id"
                 :class="['map-aa', { 'map-aa_current': aa.aaId === gameStore.currentAA.id }]" :style="getAAStyle(aa)"
                 @click="gameStore.selectCurrentAA(aa.id)">
@@ -28,7 +29,7 @@ const gameStore = useGameStore()
 
 const isShowMap = ref(false);
 
-const azimuth = computed(() => gameStore.direction.azimuth * (180 / Math.PI))
+const azimuth = computed(() => gameStore.direction.azimuth)
 
 // Функция для получения стилей для зениток
 const getAAStyle = (aa: any) => {
@@ -45,6 +46,8 @@ const getAAStyle = (aa: any) => {
         top: `${zPercent}%`,
     };
 };
+
+const minimapUrl = computed(() => `${import.meta.env.VITE_APP_STATIC_URL}/models/${gameStore.map}/textures/minimap.jpeg`)
 </script>
 
 <style lang="css" scoped>
@@ -54,6 +57,19 @@ const getAAStyle = (aa: any) => {
     width: 200px;
     height: 200px;
     overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.map-button__azimuth {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 3px;
+    height: 100px;
+    background-color: red;
+    transform-origin: 0 0;
+    transform: rotate(0deg);
 }
 
 .map-popup {
