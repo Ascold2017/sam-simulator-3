@@ -1,20 +1,51 @@
 <template>
-    <button class="map-button" :class="{ 'map-button_mobile': deviceStore.isMobile }">
-        <div class="map-button__azimuth" :style="{ transform: `rotate(${azimuth +Math.PI/2}rad)` }"></div>
+    <button class="map-button" @click="isShowMap = true">
+        <div class="map-button__azimuth" :style="{ transform: `rotate(${azimuth}rad)` }"></div>
         <img :src="minimapUrl" alt="Карта" class="map-button__image">
     </button>
+
+    <div class="map-popup" v-if="isShowMap">
+
+        <div class="map-container">
+            <img :src="minimapUrl" alt="Карта" class="map-image">
+            <span v-for="aa in gameStore.aaPositions" :key="aa.id"
+                :class="['map-aa', { 'map-aa_current': aa.aaId === gameStore.currentAA.id }]" :style="getAAStyle(aa)"
+                @click="gameStore.selectCurrentAA(aa.id)">
+                ▲
+            </span>
+        </div>
+        <button class="close-button" @click="isShowMap = false">
+            <i class="material-icons">expand_more</i>
+        </button>
+    </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { ref } from 'vue';
 import { useGameStore } from '../../../stores/game';
-import { useDevice } from '../../../stores/device';
 
 const gameStore = useGameStore()
-const deviceStore = useDevice()
 
+const isShowMap = ref(false);
 
 const azimuth = computed(() => gameStore.direction.azimuth)
+
+// Функция для получения стилей для зениток
+const getAAStyle = (aa: any) => {
+    const mapSizeKm = 1; // Размер карты в километрах
+    const mapSizeMeters = mapSizeKm * 1000; // Размер карты в метрах
+    const halfMapSizeMeters = mapSizeMeters / 2; // Половина карты в метрах
+
+    // Переводим координаты в проценты от размера карты
+    const xPercent = ((aa.position.x + halfMapSizeMeters) / mapSizeMeters) * 100;
+    const zPercent = ((-aa.position.z + halfMapSizeMeters) / mapSizeMeters) * 100; // Учитываем, что ось z направлена вверх
+
+    return {
+        left: `${xPercent}%`,
+        top: `${zPercent}%`,
+    };
+};
 
 const minimapUrl = computed(() => `${import.meta.env.VITE_APP_STATIC_URL}/models/${gameStore.map}/textures/minimap.jpeg`)
 </script>
@@ -30,19 +61,54 @@ const minimapUrl = computed(() => `${import.meta.env.VITE_APP_STATIC_URL}/models
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.map-button_mobile {
-    width: 70vmin;
-    height: auto;
-    aspect-ratio: 1;
-}
 .map-button__azimuth {
     position: absolute;
     top: 50%;
     left: 50%;
-    height: 2px;
-    width: 100px;
+    width: 3px;
+    height: 100px;
     background-color: red;
     transform-origin: 0 0;
     transform: rotate(0deg);
+}
+
+.map-popup {
+    @apply fixed top-0 left-0 bottom-0 right-0 bg-gray-500 flex flex-col items-center justify-center;
+    z-index: 1;
+}
+
+.map-container {
+    @apply bg-white relative;
+    width: 80%;
+    max-width: 600px;
+    aspect-ratio: 1/1;
+    /* Задает соотношение сторон 1:1 для квадратной карты */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.map-image {
+    @apply w-full h-full object-cover;
+}
+
+.map-aa {
+    @apply absolute text-blue-500;
+    font-size: 24px;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+}
+
+.map-aa_current {
+    @apply text-red-500;
+}
+
+.close-button {
+    @apply block w-full;
+
+}
+
+.close-button i {
+    font-size: 48px;
 }
 </style>
