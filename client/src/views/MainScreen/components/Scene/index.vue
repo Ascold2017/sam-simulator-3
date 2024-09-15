@@ -1,9 +1,9 @@
 <template>
     <Suspense>
-            <LoadIndicator />
-        </Suspense>
-    <TresCanvas window-size antialias alpha preset="realistic">
-        
+        <LoadIndicator />
+    </Suspense>
+    <TresCanvas :windowSize="!deviceStore.isMobile" antialias alpha preset="realistic">
+
         <Sky :azimuth="0" :elevation="sunElevation" :turbidity="10" :mie-coefficient="0.005" :mie-directional-g="0"
             :rayleigh="2" />
 
@@ -16,7 +16,7 @@
             ::position="[0, Math.sin(sunElevationRad) * 100, Math.cos(sunElevationRad) * 100]" :look-at="[0, 0, 0]" />
 
         <!-- Камера -->
-        <TresPerspectiveCamera v-if="currentAA" :fov="75" :far="10000"
+        <TresPerspectiveCamera v-if="currentAA" :fov="60" :far="10000"
             :position="[currentAA.position.x, currentAA.position.y, currentAA.position.z]"
             :look-at="[currentAA.position.x + 1, currentAA.position.y, currentAA.position.z]" />
         <!-- Контролы-->
@@ -26,12 +26,12 @@
             @update-direction="direction = $event" />
 
 
-        
+
 
         <!-- Летающие обьекты -->
         <FlightObject v-for="flightObject in parsedFlightObjects" :flight-object="flightObject"
             :key="flightObject.id" />
-        <SmokeEmitter :flight-objects="parsedFlightObjects"/>
+        <SmokeEmitter :flight-objects="parsedFlightObjects" />
         <!-- Зенитки-->
         <AAObject v-for="aaObject in aas" :aaObject="aaObject" />
 
