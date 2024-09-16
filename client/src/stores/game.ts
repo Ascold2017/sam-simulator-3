@@ -64,6 +64,7 @@ export const useGameStore = defineStore("game", () => {
   });
 
   socketClient.listenToEvent('captured_target', (id) => {
+    if (capturedTargetId.value === id) return;
     capturedTargetId.value = id;
   })
 
