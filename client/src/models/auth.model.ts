@@ -1,15 +1,10 @@
+import { AA } from "./aa.model";
+
 export interface User {
     id: number;
     username: string;
     isPremium: boolean;
-    aa: {
-        id: number;
-        name: string;
-        type: 'active-missile' | 'gun'
-        ammoMaxRange: number;
-        ammoVelocity: number;
-        viewAngle: number;
-    }
+    aa: AA
   }
 
   export interface UserResponse {

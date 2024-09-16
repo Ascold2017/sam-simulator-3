@@ -1,9 +1,7 @@
 <template>
     <div class="action-bar">
-        <button  v-if="isMobile && orientation !== 'portrait'" class="action-button action-button_capture" @click="gameStore.captureTarget">CAPTURE</button>
-
         <Map />
-        <button v-if="isMobile && orientation !== 'landscape'" class="action-button action-button_fire" @click="gameStore.fireTarget">FIRE</button>
+        <button v-if="isMobile" class="action-button action-button_fire" @click="gameStore.fireTarget">FIRE</button>
     </div>
 </template>
 

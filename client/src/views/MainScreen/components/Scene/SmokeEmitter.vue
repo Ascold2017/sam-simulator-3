@@ -54,7 +54,7 @@ function createParticlesAt(flightObject: ParsedFlightObject) {
         geometry: geometry,
         color: flightObject.isKilled
             ? new Color(0x696969)
-            : flightObject.type === 'active-missile'
+            : flightObject.type === 'missile'
                 ? new Color(0xc0c0c0)
                 : new Color(0xffffff),
         opacity: 1.0, // Начальная прозрачность

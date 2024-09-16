@@ -15,9 +15,8 @@ export interface ClientToServerEvents {
   join_mission_room: (roomId: string) => void;
   leave_mission_room: (roomId: string) => void;
   delete_mission_room: (roomId: string) => void;
-  change_aa_position: (positionId: number) => void;
-  capture_target: (payload: { azimuth: number; elevation: number }) => void;
-  fire_target: (payload: { azimuth: number; elevation: number }) => void;
+  update_direction: (payload: { direction: Position }) => void;
+  fire_target: () => void;
   disconnect: () => void;
 }
 
@@ -30,7 +29,7 @@ export interface AAPosition {
 export interface AAObject {
   id: string;
   position: Position;
-  type: "active-missile" | "gun";
+  type: "missile" | "gun";
   ammoVelocity: number;
   ammoMaxRange: number;
   viewAngle: number;
@@ -54,16 +53,11 @@ export interface FlightObject {
   isKilled: boolean;
   position: Position;
   velocity: Position;
-  type: "target" | "active-missile" | "bullet" | "unknown";
+  type: "target" | "missile" | "bullet" | "unknown";
 }
 
-export interface CapturedTarget {
-  aaId: string;
-  targetId: string;
-}
 export interface MissionUpdate {
   flightObjects: FlightObject[];
-  capturedTargets: CapturedTarget[];
 }
 export interface ServerToClientEvents {
   mission_rooms: (missions: MissionRoom[]) => void;

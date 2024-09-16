@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { socketClient } from "../adapters/socketClient";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { MissionUpdate, type MissionData } from "../models/sockets.model";
 import { useNotificationStore } from "./notifications";
 
@@ -17,7 +17,6 @@ export const useGameStore = defineStore("game", () => {
   const aaPositions = ref<MissionData["aaPositions"]>([]);
   const aaId = ref<string | null>(null);
   const flightObjects = ref<FlightObject[]>([]);
-  const capturedTargets = ref<MissionUpdate["capturedTargets"]>([]);
   const direction = ref<{ azimuth: number; elevation: number }>({
     azimuth: 0,
     elevation: 0,
@@ -31,11 +30,21 @@ export const useGameStore = defineStore("game", () => {
   const parsedFlightObjects = computed<ParsedFlightObject[]>(() => {
     return flightObjects.value.map((fo) => ({
       ...fo,
-      isCaptured: capturedTargets.value.some(
-        (ct) => ct.targetId === fo.id && ct.aaId === aaId.value
-      ),
+      isCaptured: false
     }));
   });
+
+  watch(direction, (newDirection) => {
+    const { azimuth, elevation } = newDirection;
+    const direction = {
+      x: -Math.cos(elevation) * Math.sin(azimuth),
+      y: Math.sin(elevation),
+      z: -Math.cos(elevation) * Math.cos(azimuth)
+    };
+    socketClient.send("update_direction", {
+      direction
+    });
+  })
 
   socketClient.listenToEvent("mission_environment", (data) => {
     map.value = data.mapName;
@@ -55,7 +64,6 @@ export const useGameStore = defineStore("game", () => {
 
   socketClient.listenToEvent("mission_update", (update) => {
     flightObjects.value = update.flightObjects;
-    capturedTargets.value = update.capturedTargets;
   });
 
   socketClient.listenToEvent("error", (error) => {
@@ -66,29 +74,14 @@ export const useGameStore = defineStore("game", () => {
     });
   });
 
-  function selectCurrentAA(aaId: number) {
-    socketClient.send("change_aa_position", aaId);
-  }
 
-  function captureTarget() {
-    if (!aaId.value) return;
-    socketClient.send("capture_target", {
-      azimuth: direction.value.azimuth,
-      elevation: direction.value.elevation,
-    });
-  }
 
   function fireTarget() {
     if (!aaId.value) return;
-    socketClient.send("fire_target", {
-      azimuth: direction.value.azimuth,
-      elevation: direction.value.elevation,
-    });
+    socketClient.send("fire_target", undefined);
   }
 
   return {
-    selectCurrentAA,
-    captureTarget,
     fireTarget,
     isInitialized,
     map,

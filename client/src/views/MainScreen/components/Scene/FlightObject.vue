@@ -2,7 +2,7 @@
     <TresGroup :position="[flightObject.position.x, flightObject.position.y, flightObject.position.z]">
 
 
-        <Sphere :args="[5, 8, 8]" :color="flightObject.type === 'active-missile' ? 'red' : 'blue'" />
+        <Sphere :args="[5, 8, 8]" :color="flightObject.type === 'missile' ? 'red' : 'blue'" />
        
         <!-- Плоскость с текстурой -->
         <TresMesh v-if="camera && flightObject.isCaptured" ref="infoPlane"

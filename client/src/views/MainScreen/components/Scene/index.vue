@@ -8,6 +8,8 @@
             :rayleigh="2" />
 
 
+        <!-- The X axis is red. The Y axis is green. The Z axis is blue. -->
+        <TresAxesHelper :args="[100]" :position="[0, 100, 0]" />
         <!-- Освещение -->
         <TresAmbientLight :color="0x404040" :intensity="0.8" />
 

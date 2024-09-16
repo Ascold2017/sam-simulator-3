@@ -1,6 +1,6 @@
 <template>
     <div class="aim-target" :class="{ 'aim-target_landscape': device.orientation === 'landscape' }"
-        :style="aimTargetStyle" @click="gameStore.captureTarget" @contextmenu.prevent="gameStore.fireTarget">
+        :style="aimTargetStyle" @contextmenu.prevent="gameStore.fireTarget">
         <span class="aim-target__elevation">{{ elevation.toFixed(0) }}*</span>
         <svg class="aim-target__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <!-- Верхний левый угол -->
@@ -33,7 +33,7 @@ const device = useDevice()
 const gameStore = useGameStore()
 
 const cameraFov = 75;
-const viewAngle = computed(() => gameStore.currentAA?.viewAngle || 0)
+const viewAngle = computed(() => gameStore.currentAA?.captureAngle || 0)
 const azimuth = computed(() => gameStore.direction.azimuth * (180 / Math.PI))
 const elevation = computed(() => gameStore.direction.elevation * (180 / Math.PI))
 
