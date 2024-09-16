@@ -7,37 +7,32 @@ const router = createRouter({
     {
       path: '/auth',
       name: 'auth',
-      component: () => import('../views/AuthScreen/index.vue')
+      component: () => import('../views/Auth/index.vue')
     },
     {
       path: '/',
       name: 'start',
-      component: () => import('../views/StartScreen/index.vue')
+      component: () => import('../views/Rooms/index.vue')
     },
     {
       path: '/main',
       name: 'main',
-      component: () => import('../views/MainScreen/index.vue')
+      component: () => import('../views/Game/index.vue')
     },
     {
       path: '/profile',
       name: 'profile',
-      component: () => import('../views/ProfileScreen/index.vue')
+      component: () => import('../views/Profile/index.vue')
     },
     {
       path: '/test',
       name: 'test',
-      component: () => import('../views/TestScreen/index.vue')
+      component: () => import('../views/Test/index.vue')
     },
     {
       path: '/heightmap',
       name: 'heightmap',
-      component: () => import('../views/TestScreen/GenerationHeightmap.vue')
-    },
-    {
-      path: '/error',
-      name: 'error',
-      component: () => import('../views/ErrorScreen/index.vue')
+      component: () => import('../views/Test/GenerationHeightmap.vue')
     }
   ]
 })
