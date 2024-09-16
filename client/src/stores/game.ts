@@ -17,6 +17,7 @@ export const useGameStore = defineStore("game", () => {
   const aaPositions = ref<MissionData["aaPositions"]>([]);
   const aaId = ref<string | null>(null);
   const flightObjects = ref<FlightObject[]>([]);
+  const capturedTargetId = ref<string | null>(null);
   const direction = ref<{ azimuth: number; elevation: number }>({
     azimuth: 0,
     elevation: 0,
@@ -30,7 +31,7 @@ export const useGameStore = defineStore("game", () => {
   const parsedFlightObjects = computed<ParsedFlightObject[]>(() => {
     return flightObjects.value.map((fo) => ({
       ...fo,
-      isCaptured: false
+      isCaptured: capturedTargetId.value === fo.id
     }));
   });
 
@@ -58,13 +59,13 @@ export const useGameStore = defineStore("game", () => {
     aas.value = aasData;
   });
 
-  socketClient.listenToEvent("mission_aas_positions_update", (update) => {
-    aaPositions.value = update;
-  });
-
   socketClient.listenToEvent("mission_update", (update) => {
     flightObjects.value = update.flightObjects;
   });
+
+  socketClient.listenToEvent('captured_target', (id) => {
+    capturedTargetId.value = id;
+  })
 
   socketClient.listenToEvent("error", (error) => {
     notifications.openNotification({

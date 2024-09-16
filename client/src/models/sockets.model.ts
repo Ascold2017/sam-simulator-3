@@ -67,9 +67,7 @@ export interface ServerToClientEvents {
   room_deleted: (roomId: string) => void;
   mission_environment: (missionData: MissionData) => void;
   mission_aas_update: (aas: MissionData["aas"]) => void;
-  mission_aas_positions_update: (
-    aaPositions: MissionData["aaPositions"]
-  ) => void;
+  captured_target: (capturedTargetId: string | null) => void;
   mission_update: (missionUpdate: MissionUpdate) => void;
   error: (error: string) => void;
 }

@@ -80,7 +80,8 @@ export class GameInstanceController {
     });
 
     socket.on('update_direction', ({ direction }) => {
-      this.coreInstance.updateAADirection(aaId, direction)
+      const capturedTargetId = this.coreInstance.updateAADirection(aaId, direction);
+      socket.emit('captured_target', capturedTargetId);
     })
     socket.on("fire_target", () => {
       this.coreInstance.fire(aaId);
