@@ -3,7 +3,7 @@
         :style="aimTargetStyle" @contextmenu.prevent="gameStore.fireTarget">
         <span class="aim-target__elevation">{{ elevation.toFixed(0) }}*</span>
         <svg class="aim-target__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="11.5" stroke="red" fill="none" stroke-width="0.1" stroke-dasharray="1" />
+            <circle cx="12" cy="12" r="11.5" stroke="rgb(21, 128, 61)" fill="none" stroke-width="1" stroke-dasharray="1" />
         </svg>
         <span class="aim-target__azimuth">{{ azimuth.toFixed(0) }}*</span>
     </div>
@@ -44,13 +44,13 @@ const aimTargetStyle = computed(() => {
 }
 
 .aim-target__azimuth {
-    @apply text-red-500 absolute left-1/2 transform -translate-x-1/2;
-    bottom: -10px;
+    @apply text-green-700 absolute left-1/2 transform -translate-x-1/2 text-lg font-bold;
+    top: 101%;
 }
 
 .aim-target__elevation {
-    @apply text-red-500 absolute top-1/2 transform -translate-y-1/2;
-    right: -10px;
+    @apply text-green-700 absolute top-1/2 transform -translate-y-1/2 text-lg font-bold;
+    left: 101%;
 
 }
 </style>

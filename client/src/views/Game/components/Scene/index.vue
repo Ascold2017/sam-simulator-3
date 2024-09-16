@@ -42,7 +42,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { TresCanvas } from '@tresjs/core'
-import { Sky, GLTFModel, Box } from '@tresjs/cientos'
+import { Sky, GLTFModel } from '@tresjs/cientos'
 import { useGameStore } from '../../../../stores/game';
 import { useDevice } from '../../../../stores/device';
 import FlightObject from './FlightObject.vue';
