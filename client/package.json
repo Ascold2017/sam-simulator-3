@@ -14,7 +14,7 @@
     "@tresjs/core": "^4.2.10",
     "axios": "^1.7.7",
     "kd-tree-javascript": "^1.0.3",
-    "konva": "^9.3.14",
+    "konva": "^9.3.15",
     "lodash": "^4.17.21",
     "mkcert": "^3.2.0",
     "pinia": "^2.1.7",

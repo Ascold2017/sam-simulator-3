@@ -1,12 +1,12 @@
 <template>
     <div class="action-bar">
-        <Map />
+        <Radar />
         <button v-if="isMobile" class="action-button action-button_fire" @click="gameStore.fireTarget">FIRE</button>
     </div>
 </template>
 
 <script setup lang="ts">
-import Map from './Map.vue';
+import Radar from './Radar/index.vue';
 import { useDevice } from '../../../stores/device';
 import { storeToRefs } from 'pinia';
 import { useGameStore } from '../../../stores/game';
