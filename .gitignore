@@ -1,6 +1,3 @@
 /**/node_modules
-certificate.crt
-certificate.csr
 privkey.pem
 fullchain.pem
-private.key
