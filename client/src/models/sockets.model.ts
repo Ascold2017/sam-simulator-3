@@ -32,7 +32,8 @@ export interface AAObject {
   type: "missile" | "gun";
   ammoVelocity: number;
   ammoMaxRange: number;
-  viewAngle: number;
+  ammoKillRadius: number;
+  captureAngle: number;
 }
 export interface MissionData {
   mapName: string;

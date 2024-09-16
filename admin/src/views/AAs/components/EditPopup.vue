@@ -6,24 +6,26 @@
 
         <template #content>
             <BaseInput id="aa-name" v-model="currentAA.name" label="AA Name" placeholder="Enter AA name" class="mb-3" />
-        <BaseSelect id="aa-type" v-model="currentAA.type" label="AA Type" :options="[
-            { label: 'SAM with Active missiles', value: 'active-missile' },
-            { label: 'Gun', value: 'gun' },
-        ]" class="mb-3" />
-        <BaseInput id="aa-reload-time" v-model="currentAA.reloadTime" label="Reload time"
-            placeholder="Enter reload time, s" class="mb-3" />
-        <BaseInput id="aa-ammo-max-range" v-model="currentAA.ammoMaxRange" label="Ammo max range"
-            placeholder="Enter ammo max range, m" class="mb-3" />
-        <BaseInput id="aa-ammo-velocity" v-model="currentAA.ammoVelocity" label="Ammo  velocity"
-            placeholder="Enter ammo velocity, m/s" class="mb-3" />
-        <BaseInput id="aa-view-angle" v-model="currentAA.viewAngle" label="View angle (capture angle)"
-            placeholder="Enter view angle, rads" />
+            <BaseSelect id="aa-type" v-model="currentAA.type" label="AA Type" :options="[
+                { label: 'SAM with Active missiles', value: 'active-missile' },
+                { label: 'Gun', value: 'gun' },
+            ]" class="mb-3" />
+            <BaseInput id="aa-reload-time" v-model="currentAA.reloadTime" label="Reload time"
+                placeholder="Enter reload time, s" class="mb-3" />
+            <BaseInput id="aa-ammo-max-range" v-model="currentAA.ammoMaxRange" label="Ammo max range"
+                placeholder="Enter ammo max range, m" class="mb-3" />
+            <BaseInput id="aa-ammo-velocity" v-model="currentAA.ammoVelocity" label="Ammo  velocity"
+                placeholder="Enter ammo velocity, m/s" class="mb-3" />
+            <BaseInput id="aa-ammo-kill-radius" v-model="currentAA.ammoKillRadius" label="Ammo kill radius"
+                placeholder="Enter ammo kill radius, m" class="mb-3" />
+            <BaseInput id="aa-capture-angle" v-model="currentAA.captureAngle" label="Capture angle"
+                placeholder="Enter capture angle, rads" />
 
 
 
-        <div class="flex justify-end mt-6">
-            <button class="button" @click="onSave">Save</button>
-        </div>
+            <div class="flex justify-end mt-6">
+                <button class="button" @click="onSave">Save</button>
+            </div>
         </template>
     </Popup>
 </template>

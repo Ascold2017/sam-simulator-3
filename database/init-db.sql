@@ -34,7 +34,8 @@ CREATE TABLE public.aa (
     type character varying NOT NULL,
     "ammoMaxRange" double precision NOT NULL,
     "ammoVelocity" double precision NOT NULL,
-    "viewAngle" double precision NOT NULL,
+    "ammoKillRadius" double precision NOT NULL,
+    "captureAngle" double precision NOT NULL,
     "reloadTime" double precision NOT NULL
 );
 
@@ -379,9 +380,8 @@ ALTER TABLE ONLY public."user" ALTER COLUMN id SET DEFAULT nextval('public.user_
 -- Data for Name: aa; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.aa (id, "createdAt", name, type, "ammoMaxRange", "ammoVelocity", "viewAngle", "reloadTime") FROM stdin;
-2	1726224284628	GAA-3	gun	3000	800	0.523599	0.001
-1	1726224284628	SAM-8	active-missile	8000	900	0.523599	3
+COPY public.aa (id, "createdAt", name, type, "ammoMaxRange", "ammoVelocity", "ammoKillRadius", "captureAngle", "reloadTime") FROM stdin WITH (FORMAT csv, DELIMITER ',', NULL 'NULL');
+1,1726224284628,SAM-8,missile,8000,900,30,0.523599,3
 \.
 
 

@@ -5,11 +5,12 @@ import { AAListResponse, AA } from "../models/aa.model";
 const defaultAA: EditableAA = {
   id: null,
   name: "",
-  type: "active-missile",
-  ammoMaxRange: 0,
-  ammoVelocity: 0,
-  viewAngle: 0,
-  reloadTime: 0,
+  type: "missile",
+  ammoMaxRange: 8000,
+  ammoVelocity: 900,
+  ammoKillRadius: 30,
+  captureAngle: 0.1,
+  reloadTime: 3,
 };
 export interface EditableAA extends AA {
   id: number | null;

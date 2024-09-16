@@ -14,7 +14,8 @@
                     <th>Reload time, s</th>
                     <th>Ammo max range, m</th>
                     <th>Ammo velocity, m/s</th>
-                    <th>View angle, rad</th>
+                    <th>Ammo kill radius, m</th>
+                    <th>Capture angle, rad</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -26,7 +27,8 @@
                     <td>{{ aa.reloadTime }}</td>
                     <td>{{ aa.ammoMaxRange }}</td>
                     <td>{{ aa.ammoVelocity }}</td>
-                    <td>{{ aa.viewAngle }}</td>
+                    <td>{{ aa.ammoKillRadius }}</td>
+                    <td>{{ aa.captureAngle }}</td>
                     <td>
                         <button @click="editAA(aa.id)" class="aas__edit-btn mr-2">Edit</button>
                         <button @click="aaStore.deleteAA(aa.id)" class="aas__delete-btn">Delete</button>

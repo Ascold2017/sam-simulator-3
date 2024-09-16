@@ -13,7 +13,7 @@ import { useGameStore } from '../../../stores/game';
 
 const gameStore = useGameStore()
 const device = useDevice()
-const { orientation, isMobile } = storeToRefs(device)
+const { isMobile } = storeToRefs(device)
 </script>
 
 <style scoped>

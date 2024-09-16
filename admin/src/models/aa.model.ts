@@ -1,10 +1,11 @@
 export interface AA {
     id: number;
     name: string;
-    type:  'active-missile' | 'gun'
+    type: 'missile' | 'gun'
     ammoMaxRange: number;
     ammoVelocity: number;
-    viewAngle: number;
+    ammoKillRadius: number;
+    captureAngle: number;
     reloadTime: number;
 }
 
