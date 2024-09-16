@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { Position, AAObject, FlightObjectDTO, CapturedTarget } from "@core/app"
+import { Position, AAObject, FlightObjectDTO } from "@core/app"
 import { User } from "app/entities/user.entity";
 
 
@@ -14,9 +14,8 @@ export interface ClientToServerEvents {
     join_mission_room: (roomId: string) => void;
     leave_mission_room: (roomId: string) => void;
     delete_mission_room: (roomId: string) => void;
-    change_aa_position: (positionId: number) => void;
-    capture_target: (payload: { azimuth: number; elevation: number }) => void;
-    fire_target: (payload: { azimuth: number; elevation: number }) => void;
+    update_direction: (payload: { direction: Position }) => void;
+    fire_target: () => void;
     disconnect: () => void;
 }
 
@@ -41,7 +40,6 @@ export interface PlayerJoinedData {
 
 export interface MissionUpdate {
     flightObjects: FlightObjectDTO[];
-    capturedTargets: CapturedTarget[]
 }
 export interface ServerToClientEvents {
     mission_rooms: (missions: MissionRoom[]) => void;

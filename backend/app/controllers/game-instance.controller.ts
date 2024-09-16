@@ -64,7 +64,8 @@ export class GameInstanceController {
       type: user.aa.type,
       ammoVelocity: user.aa.ammoVelocity,
       ammoMaxRange: user.aa.ammoMaxRange,
-      viewAngle: user.aa.viewAngle,
+      ammoKillRadius: user.aa.ammoKillRadius,
+      captureAngle: user.aa.captureAngle,
     });
 
     // Отправляем окружение игроку
@@ -78,14 +79,11 @@ export class GameInstanceController {
       aaPositionId: availablePosition.id,
     });
 
-    socket.on("change_aa_position", (positionId) =>
-      this.changePosition(socket, positionId)
-    );
-    socket.on("capture_target", ({ azimuth, elevation }) => {
-      this.coreInstance.captureTargetOnDirection(aaId, azimuth, elevation);
-    });
-    socket.on("fire_target", ({ azimuth, elevation }) => {
-      this.coreInstance.fire(aaId, azimuth, elevation);
+    socket.on('update_direction', ({ direction }) => {
+      this.coreInstance.updateAADirection(aaId, direction)
+    })
+    socket.on("fire_target", () => {
+      this.coreInstance.fire(aaId);
     });
   }
 
@@ -108,54 +106,6 @@ export class GameInstanceController {
     } catch (error) {
       console.error(`Error stopping mission: ${error.message}`);
     }
-  }
-
-  // Смена позиции игрока
-  private changePosition(socket: CustomSocket, positionId: number) {
-    const playerData = this.players.get(socket.id);
-
-    if (!playerData) {
-      socket.emit("error", "Player not found");
-      return;
-    }
-
-    // Проверяем, занята ли новая позиция
-    if (this.isPositionOccupied(positionId)) {
-      socket.emit("error", "Position is already occupied");
-      return;
-    }
-
-    // Освобождаем текущую позицию и обновляем игрока
-    console.log(
-      `Player ${socket.id} is moving from position:`,
-      playerData.aaPositionId
-    );
-
-    // Удаляем старую зенитку из Core и добавляем новую с обновленной позицией
-    this.coreInstance.removeAA(playerData.aaId);
-    const newPosition = this.missionData.aaPositions.find(
-      (p) => p.id === positionId
-    );
-    this.coreInstance.addAA({
-      id: playerData.aaId,
-      position: newPosition.position,
-      type: socket.data.user.aa.type,
-      ammoVelocity: socket.data.user.aa.ammoVelocity,
-      ammoMaxRange: socket.data.user.aa.ammoMaxRange,
-      viewAngle: socket.data.user.aa.viewAngle,
-    });
-
-    // Обновляем позицию игрока в `players`
-    playerData.aaPositionId = positionId;
-    this.players.set(socket.id, playerData);
-
-    console.log(`Player ${socket.id} moved to new position:`, newPosition);
-    this.io
-      .to(this.roomId)
-      .emit("mission_aas_update", this.coreInstance.getAAs());
-    this.io
-      .to(this.roomId)
-      .emit("mission_aas_positions_update", this.getAAPositions());
   }
 
   // Запуск миссии
@@ -194,13 +144,6 @@ export class GameInstanceController {
     );
   }
 
-  // Проверка, занята ли позиция
-  private isPositionOccupied(positionId: number): boolean {
-    return Array.from(this.players.values()).some(
-      (player) => player.aaPositionId === positionId
-    );
-  }
-
   private getAAPositions() {
     return this.missionData.aaPositions.map((aaPosition) => {
       const player = Array.from(this.players.values()).find(
@@ -216,10 +159,9 @@ export class GameInstanceController {
 
   private sendUpdates() {
     const flightObjects = this.coreInstance.getFlightObjects();
-    const capturedTargets = this.coreInstance.getCapturedTargets();
+   
     this.io.to(this.roomId).emit("mission_update", {
       flightObjects,
-      capturedTargets,
     });
   }
 
