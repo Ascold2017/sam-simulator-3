@@ -2,7 +2,7 @@
     <Suspense>
         <LoadIndicator />
     </Suspense>
-    <TresCanvas window-size antialias alpha preset="realistic" shadows>
+    <TresCanvas window-size antialias alpha preset="realistic" shadows renderMode="on-demand">
 
         <Sky :azimuth="0" :elevation="sunElevation"  />
         <TresFog :far="3000" :color="0x404040"/>
@@ -11,7 +11,7 @@
         <TresAmbientLight :color="0x404040" :intensity="0.8" :position="[0, Math.sin(sunElevationRad) * 100, Math.cos(sunElevationRad) * 100]" />
 
         <!-- DirectionalLight с синхронизацией с углом солнца -->
-        <TresDirectionalLight :color="0xffffff" :intensity="1.2"
+        <TresDirectionalLight :color="0xffffff" :intensity="1.2" 
             :position="[0, Math.sin(sunElevationRad) * 100, Math.cos(sunElevationRad) * 100]" :look-at="[0, 0, 0]"
             cast-shadow :shadow-mapSize-width="1024" :shadow-mapSize-height="1024" />
 
@@ -60,7 +60,6 @@ const { currentAA, parsedFlightObjects, aas, map, direction } = storeToRefs(game
 
 const sunElevation = 25;
 const sunElevationRad = sunElevation * (Math.PI / 180);
-
 
 const mapPath = computed(() => `${import.meta.env.VITE_APP_STATIC_URL}/models/${map.value}/scene.gltf`)
 </script>

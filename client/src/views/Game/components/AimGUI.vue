@@ -3,21 +3,7 @@
         :style="aimTargetStyle" @contextmenu.prevent="gameStore.fireTarget">
         <span class="aim-target__elevation">{{ elevation.toFixed(0) }}*</span>
         <svg class="aim-target__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <!-- Верхний левый угол -->
-            <line x1="3" y1="8" x2="3" y2="3" stroke="red" stroke-width="0.5" />
-            <line x1="3" y1="3" x2="8" y2="3" stroke="red" stroke-width="0.5" />
-
-            <!-- Верхний правый угол -->
-            <line x1="16" y1="3" x2="21" y2="3" stroke="red" stroke-width="0.5" />
-            <line x1="21" y1="3" x2="21" y2="8" stroke="red" stroke-width="0.5" />
-
-            <!-- Нижний левый угол -->
-            <line x1="3" y1="16" x2="3" y2="21" stroke="red" stroke-width="0.5" />
-            <line x1="3" y1="21" x2="8" y2="21" stroke="red" stroke-width="0.5" />
-
-            <!-- Нижний правый угол -->
-            <line x1="16" y1="21" x2="21" y2="21" stroke="red" stroke-width="0.5" />
-            <line x1="21" y1="21" x2="21" y2="16" stroke="red" stroke-width="0.5" />
+            <circle cx="12" cy="12" r="11.5" stroke="red" fill="none" stroke-width="0.1" stroke-dasharray="1" />
         </svg>
         <span class="aim-target__azimuth">{{ azimuth.toFixed(0) }}*</span>
     </div>
@@ -41,6 +27,9 @@ const elevation = computed(() => gameStore.direction.elevation * (180 / Math.PI)
 const aimTargetStyle = computed(() => {
     const viewAngleDeg = viewAngle.value * (180 / Math.PI); // Преобразуем viewAngle в градусы
     const sizePercentage = (viewAngleDeg / cameraFov) * 100; // Размер рамки относительно FOV
+    if (device.orientation === 'portrait') return {
+        height: `${sizePercentage}%`,
+    }
 
     return {
         width: `${sizePercentage}%`,
