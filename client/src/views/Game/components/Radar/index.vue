@@ -3,12 +3,12 @@
         <v-layer>
             <!-- Радиальные круги (разметка по радиусу) -->
             <v-circle v-for="radius in radii" :key="radius"
-                :config="{ x: 105, y: 105, radius, stroke: 'rgba(21, 128, 61, 0.5)', strokeWidth: 0.5 }" />
+                :config="{ x: 105, y: 105, radius, stroke: 'rgba(0, 255, 0, 1)', strokeWidth: 0.5 }" />
 
             <!-- Азимутальная разметка (линии под углом) -->
             <v-line v-for="angle in angles" :key="angle" :config="{
                 points: [105, 105, 105 + radius * Math.cos(angle), 105 + radius * Math.sin(angle)],
-                stroke: 'rgba(21, 128, 61, 0.5)',
+                stroke: 'rgba(0, 255, 0, 1)',
                 strokeWidth: 0.5
             }" />
 
@@ -16,7 +16,8 @@
                 x: 105,
                 y: 105,
                 radius,
-                stroke: 'rgb(21, 128, 61)'
+                stroke: 'rgb(21, 128, 61)',
+                fill: 'rgba(21, 128, 61, 0.6)',
             }"></v-circle>
 
             <!-- Указатель текущего азимута -->
@@ -25,7 +26,7 @@
                 y: 105,
                 radius,
                 angle: captureAngle,
-                rotation: azimuth - captureAngle/2,  // Начало сектора на -1.5 градуса от азимута
+                rotation: azimuth - captureAngle / 2,  // Начало сектора на -1.5 градуса от азимута
                 fill: 'rgba(255, 0, 0, 0.5)',
                 stroke: 'rgb(255, 0, 0)',
                 strokeWidth: 1
@@ -78,4 +79,5 @@ const flightObjectsOnRadar = computed(() => {
         };
     });
 });
+
 </script>
