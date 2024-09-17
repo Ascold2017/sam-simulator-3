@@ -25,7 +25,7 @@
                 y: 105,
                 radius,
                 angle: captureAngle,
-                rotation: -azimuth - captureAngle/2,  // Начало сектора на -1.5 градуса от азимута
+                rotation: azimuth - captureAngle/2,  // Начало сектора на -1.5 градуса от азимута
                 fill: 'rgba(255, 0, 0, 0.5)',
                 stroke: 'rgb(255, 0, 0)',
                 strokeWidth: 1
@@ -34,10 +34,8 @@
         <v-layer>
             <!-- Отображение объектов -->
             <v-circle v-for="(object, index) in flightObjectsOnRadar" :key="index" :config="{
-                x: object.x,
-                y: object.y,
-                radius: 3, // радиус объекта на радаре
-                fill: 'yellow'
+                ...object,
+                radius: 3,
             }"></v-circle>
         </v-layer>
     </v-stage>
@@ -49,7 +47,7 @@ import { useGameStore } from '../../../../stores/game';
 
 const gameStore = useGameStore()
 
-const azimuth = computed(() => gameStore.direction.azimuth * (180 / Math.PI))
+const azimuth = computed(() => -gameStore.direction.azimuth * (180 / Math.PI))
 const captureAngle = computed(() => (gameStore.currentAA?.captureAngle || 0) * (180 / Math.PI))
 const flightObjects = computed(() => gameStore.parsedFlightObjects || [])
 const radarPosition = computed(() => gameStore.currentAA?.position || { x: 0, y: 0, z: 0 });
@@ -74,8 +72,9 @@ const flightObjectsOnRadar = computed(() => {
         const normalizedDistance = (distance / maxRadarDistance) * radarRadius; // Масштабирование дистанции
 
         return {
-            x: 105 + normalizedDistance * Math.cos(angle), // перевод в пиксели
-            y: 105 + normalizedDistance * Math.sin(angle)
+            x: 105 + normalizedDistance * Math.cos(-angle - Math.PI), // перевод в пиксели
+            y: 105 + normalizedDistance * Math.sin(-angle - Math.PI),
+            fill: obj.isCaptured ? 'red' : 'yellow'
         };
     });
 });
