@@ -11,14 +11,13 @@
       </li>
       <li class="navbar__item"><RouterLink :to="{ name: 'users' }" class="navbar__link">Users</RouterLink></li>
     </ul>
-    <button @click="logout" class="navbar__logout">Logout</button>
+    <button @click="authStore.logout" class="navbar__logout">Logout</button>
   </nav>
 </template>
 
 <script setup lang="ts">
-const logout = () => {
-  console.log('User logged out');
-}
+import { useAuthStore } from '../stores/auth'
+const authStore = useAuthStore()
 </script>
 
 <style scoped>

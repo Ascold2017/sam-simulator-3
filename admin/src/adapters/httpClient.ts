@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import { useAuthStore } from '../stores/auth';
 
 // Интерфейс для ответа сервера
 
@@ -26,7 +27,10 @@ class HttpClient {
 
   // Интерсептор для добавления токена в заголовки
   private handleRequest(config: InternalAxiosRequestConfig) {
-   /// TODO auth
+    const authStore = useAuthStore();
+    if (authStore.token) {
+      config.headers.Authorization = `${authStore.token}`;
+    }
   
     return config;
   }
@@ -38,7 +42,11 @@ class HttpClient {
 
   // Обработка ошибок
   private handleError(error: any) {
-
+    // Здесь можно добавить логику для обработки различных ошибок (например, 401, 500 и т.д.)
+    if (error.response && error.response.status === 401) {
+      const authStore = useAuthStore();
+      authStore.logout();
+    }
     return Promise.reject(error);
   }
 

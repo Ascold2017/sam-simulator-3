@@ -74,7 +74,16 @@ export const useTargets = () => {
     targets.value.push({
       id: uuidv4(),
       targetId,
-      waypoints: [],
+      waypoints: [
+        {
+          speed: 50,
+          position: {
+            x: 0,
+            y: 100,
+            z: 0,
+          },
+        },
+      ],
       isDeleted: false,
       isEdited: false,
       isNew: true,
@@ -101,10 +110,10 @@ export const useTargets = () => {
       waypoints: [
         ...target.waypoints,
         {
-          speed: 0,
+          speed: 50,
           position: {
             x: 0,
-            y: 0,
+            y: 100,
             z: 0,
           },
         },

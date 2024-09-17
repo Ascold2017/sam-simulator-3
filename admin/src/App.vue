@@ -9,6 +9,8 @@
 
 <script setup lang="ts">
 import NavBar from './components/NavBar.vue';
+import { useAuthStore } from './stores/auth';
+useAuthStore();
 </script>
 
 <style scoped>
