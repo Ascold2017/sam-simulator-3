@@ -56,7 +56,11 @@ export const useAuthStore = defineStore("auth", () => {
       user.value = data.user;
       isAuthenticated.value = true;
       localStorage.setItem("token", token.value);
-      router.push({ name: "start" });
+      if (data.user.role === "admin") {
+        window.location.href = "/admin";
+      } else {
+        router.push({ name: "start" });
+      }
     } catch (error) {
       notifications.openNotification({
         title: "Login error",
