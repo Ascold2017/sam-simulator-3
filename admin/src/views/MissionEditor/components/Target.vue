@@ -11,9 +11,9 @@
 
 <script setup lang="ts">
 import { Object3D } from 'three';
-import { Line2, Sphere, Text3D } from '@tresjs/cientos'
+import { Line2, Sphere } from '@tresjs/cientos'
 import { EditableTarget } from '../../../stores/missionEditor/targets';
-import { computed, watch, ref, watchEffect } from 'vue';
+import { computed } from 'vue';
 
 
 const props = defineProps<{ target: EditableTarget }>()
@@ -22,7 +22,7 @@ const emit = defineEmits<{ click: [object: Object3D] }>()
 
 
 const waypoints = computed(() => props.target.waypoints);
-const linePoints = computed(() => waypoints.value.map((waypoint) => [waypoint.position.x, waypoint.position.y, waypoint.position.z]));
+const linePoints = computed<[number, number, number][]>(() => waypoints.value.map((waypoint) => [waypoint.position.x, waypoint.position.y, waypoint.position.z]));
 const linePointsKey = computed(() => linePoints.value.map(p => p.join(',')).join('-'));
 
 const getSphereColor = (index: number, totalWaypoints: number) => {
