@@ -16,9 +16,11 @@
             cast-shadow :shadow-mapSize-width="1024" :shadow-mapSize-height="1024" />
 
         <!-- Камера -->
-        <TresPerspectiveCamera v-if="currentAA" :fov="75" :far="10000"
+        <TresPerspectiveCamera v-if="currentAA" :fov="75" :far="10000" :zoom="zoom"
             :position="[currentAA.position.x, currentAA.position.y, currentAA.position.z]"
-            :look-at="[currentAA.position.x + 1, currentAA.position.y, currentAA.position.z]" />
+            :look-at="[currentAA.position.x + 1, currentAA.position.y, currentAA.position.z]"
+            :key="zoom + currentAA.position.x + currentAA.position.y + currentAA.position.z"
+        />
         <!-- Контролы-->
         <DeviceOrientationControl v-if="deviceStore.isMobile" :min-elevation="0" :max-elevation="Math.PI / 4"
             @update-direction="direction = $event" @update-orientation="deviceStore.orientation = $event" />
@@ -55,8 +57,12 @@ import { computed } from 'vue';
 
 const gameStore = useGameStore()
 const deviceStore = useDevice()
-const { currentAA, parsedFlightObjects, aas, map, direction } = storeToRefs(gameStore);
+const { currentAA, parsedFlightObjects, aas, map, direction, viewMode } = storeToRefs(gameStore);
 
+const zoom = computed(() => {
+    if (viewMode.value === 'capture') return 3
+    return 1
+})
 
 const sunElevation = 25;
 const sunElevationRad = sunElevation * (Math.PI / 180);

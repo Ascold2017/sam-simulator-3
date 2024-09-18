@@ -18,6 +18,7 @@ export const useGameStore = defineStore("game", () => {
   const aaId = ref<string | null>(null);
   const flightObjects = ref<FlightObject[]>([]);
   const capturedTargetId = ref<string | null>(null);
+  const viewMode = ref<'search' | 'capture'>('search');
   const direction = ref<{ azimuth: number; elevation: number }>({
     azimuth: 0,
     elevation: 0,
@@ -76,6 +77,18 @@ export const useGameStore = defineStore("game", () => {
     });
   });
 
+  window.addEventListener('keypress', (e) => {
+    if (e.code === 'KeyX') {
+      viewMode.value = 'search'
+    }
+    if (e.code === 'KeyC') {
+      viewMode.value = 'capture'
+    }
+    if (e.code === 'Space') {
+      fireTarget()
+    }
+  })
+
 
 
   function fireTarget() {
@@ -92,5 +105,6 @@ export const useGameStore = defineStore("game", () => {
     currentAA,
     parsedFlightObjects,
     direction,
+    viewMode
   };
 });

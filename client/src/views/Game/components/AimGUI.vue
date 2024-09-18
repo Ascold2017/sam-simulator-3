@@ -1,6 +1,6 @@
 <template>
     <div class="aim-target" :class="{ 'aim-target_landscape': device.orientation === 'landscape' }"
-        :style="aimTargetStyle" @contextmenu.prevent="gameStore.fireTarget">
+        :style="aimTargetStyle">
         <span class="aim-target__elevation">{{ elevation.toFixed(0) }}*</span>
         <svg class="aim-target__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="11.5" stroke="rgb(21, 128, 61)" fill="none" stroke-width="1" stroke-dasharray="1" />

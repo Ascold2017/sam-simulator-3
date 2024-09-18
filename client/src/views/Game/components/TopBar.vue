@@ -1,7 +1,5 @@
 <template>
     <div class="top-bar">
-
-        <span>{{ device.orientation === 'landscape' ? 'SEARCH' : 'CAPTURE' }}</span>
         <DownCounter v-if="roomStore.parsedCurrentRoom" :end-date="roomStore.parsedCurrentRoom.endedAt!"/>
         <button class="top-bar__button" @click="roomStore.leaveRoom">
             Exit
@@ -10,17 +8,15 @@
 </template>
 
 <script setup lang="ts">
-import { useDevice } from '../../../stores/device';
 import { useRooms } from '../../../stores/rooms';
 import DownCounter from '../../../components/DownCounter.vue';
 
 const roomStore = useRooms()
-const device = useDevice()
 </script>
 
 <style lang="css" scoped>
 .top-bar {
-    @apply fixed top-0 left-0 w-full text-white p-4 flex justify-between items-center;
+    @apply fixed top-0 left-0 w-full text-gray-400 p-4 flex justify-between items-center;
     z-index: 2;
 }
 
