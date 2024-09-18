@@ -49,15 +49,14 @@ import { useDevice } from '../../../../stores/device';
 import FlightObject from './FlightObject.vue';
 import AAObject from './AAObject.vue';
 import CustomFirstPersonControl from './CustomFirstPersonControl.vue';
-import DeviceOrientationControl from './DeviceOrientationControl.vue';
 import LoadIndicator from './LoadIndicator.vue'
 import SmokeEmitter from './SmokeEmitter.vue';
 import Camera from './Camera.vue';
-import { computed, ref, watch } from 'vue';
+import { computed } from 'vue';
 
 const gameStore = useGameStore()
 const deviceStore = useDevice()
-const { currentAA, parsedFlightObjects, aas, map, direction, viewMode } = storeToRefs(gameStore);
+const { parsedFlightObjects, aas, map, direction } = storeToRefs(gameStore);
 
 const sunElevation = 25;
 const sunElevationRad = sunElevation * (Math.PI / 180);

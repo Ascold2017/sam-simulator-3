@@ -28,9 +28,11 @@ onMounted(() => {
     document.documentElement.requestFullscreen();
   }
 
+  // @ts-ignore
   if (screen?.orientation?.lock) {
     try {
-    screen.orientation.lock('landscape')
+      // @ts-ignore
+      screen.orientation.lock('landscape')
     } catch (e) {
       console.error(e)
     }

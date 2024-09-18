@@ -2,7 +2,7 @@
     <div class="action-bar">
         <Radar class="action-bar__radar" />
         <template v-if="isMobile">
-            <Joystick :min-elevation="0" :max-elevation="Math.PI / 4" :look-speed="1" :direction="direction"
+            <Joystick :min-elevation="0" :max-elevation="Math.PI / 4" :look-speed="lookSpeed" :direction="direction"
                 @change="direction = $event" class="action-bar__joystick" />
 
             <button class="action-bar__fire" @click="gameStore.fireTarget">FIRE</button>
@@ -47,11 +47,17 @@ import Joystick from './Joystick.vue';
 import { useDevice } from '../../../stores/device';
 import { storeToRefs } from 'pinia';
 import { useGameStore } from '../../../stores/game';
+import { computed } from 'vue';
 
 const gameStore = useGameStore()
-const { direction } = storeToRefs(gameStore)
+const { direction, viewMode } = storeToRefs(gameStore)
 const device = useDevice()
 const { isMobile } = storeToRefs(device)
+
+const lookSpeed = computed(() => {
+    if (viewMode.value === 'capture') return 0.5
+    return 1
+})
 </script>
 
 <style scoped>
@@ -65,7 +71,7 @@ const { isMobile } = storeToRefs(device)
 }
 
 .action-bar__joystick {
-    @apply fixed bottom-4 right-4;
+    @apply fixed bottom-6 right-[80px];
 }
 
 .action-bar__fire {
@@ -74,11 +80,11 @@ const { isMobile } = storeToRefs(device)
 }
 
 .action-bar__actions {
-    @apply flex flex-col gap-1 fixed right-0 top-[50%] translate-y-[-50%];
+    @apply flex flex-col gap-1 fixed right-0 bottom-[100px];
 }
 
 .action-button {
-    @apply bg-green-700 text-white w-[60px] h-[60px];
+    @apply bg-green-700 text-white w-[70px] h-[60px] font-bold;
 }
 
 .action-button_active {
