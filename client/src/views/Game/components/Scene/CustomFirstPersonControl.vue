@@ -3,8 +3,10 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import {  useRenderLoop } from '@tresjs/core';
+import { useGameStore } from '../../../../stores/game';
+import { storeToRefs } from 'pinia';
 
 
 const props = withDefaults(defineProps<{
@@ -18,9 +20,8 @@ const props = withDefaults(defineProps<{
 })
 
 const emit = defineEmits<{ updateDirection: [direction: { azimuth: number; elevation: number }] }>()
-
-const currentAzimuth = ref(0);
-const currentElevation = ref(0);
+const gameStore = useGameStore();
+const { direction } = storeToRefs(gameStore);
 
 const rotationSpeedX = ref(0);
 const rotationSpeedY = ref(0);
@@ -37,16 +38,11 @@ const normalizeAngle = (angle: number): number => {
 
 // Обновляем вращение камеры на основе мыши
 const updateCameraRotation = () => {
-    currentAzimuth.value -= rotationSpeedX.value;
-    currentAzimuth.value = normalizeAngle(currentAzimuth.value);
-
-    currentElevation.value -= rotationSpeedY.value;
-    currentElevation.value = Math.max(props.minElevation, Math.min(props.maxElevation, currentElevation.value));
-
-    emit('updateDirection', {
-        azimuth: currentAzimuth.value,
-        elevation: currentElevation.value
-    });
+    const updated = {
+        azimuth: normalizeAngle(direction.value.azimuth - rotationSpeedX.value),
+        elevation: Math.max(props.minElevation, Math.min(props.maxElevation, direction.value.elevation - rotationSpeedY.value))
+    }
+    direction.value = updated;
 };
 
 // Обработчик для движения мыши
@@ -63,7 +59,9 @@ const onMouseMove = (event: MouseEvent) => {
 
 onLoop(() => updateCameraRotation())
 
-
+onMounted(() => {
+    document.body.addEventListener('mousemove', onMouseMove);
+})
 // Очистка при удалении компонента
 onBeforeUnmount(() => {
     document.body.removeEventListener('mousemove', onMouseMove);

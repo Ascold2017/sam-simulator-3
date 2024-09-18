@@ -19,8 +19,7 @@
         <!-- Камера -->
         <Camera />
         <!-- Контролы-->
-        <CustomFirstPersonControl v-if="!deviceStore.isMobile" :min-elevation="0" :max-elevation="Math.PI / 4"
-            :look-speed="0.06" @update-direction="direction = $event" />
+
         <!-- 
         <DeviceOrientationControl  :min-elevation="0" :max-elevation="Math.PI / 4"
             @update-direction="direction = $event" @update-orientation="deviceStore.orientation = $event" />
@@ -38,6 +37,7 @@
             <GLTFModel :path="mapPath" receive-shadow />
         </Suspense>
     </TresCanvas>
+    <CustomFirstPersonControl v-if="!isMobile" :min-elevation="0" :max-elevation="Math.PI / 4" :look-speed="0.06" />
 </template>
 
 <script setup lang="ts">
@@ -56,7 +56,8 @@ import { computed } from 'vue';
 
 const gameStore = useGameStore()
 const deviceStore = useDevice()
-const { parsedFlightObjects, aas, map, direction } = storeToRefs(gameStore);
+const { isMobile } = storeToRefs(deviceStore)
+const { parsedFlightObjects, aas, map } = storeToRefs(gameStore);
 
 const sunElevation = 25;
 const sunElevationRad = sunElevation * (Math.PI / 180);
