@@ -3,6 +3,8 @@
 
 
         <Sphere :args="[5, 8, 8]" :color="flightObject.type === 'missile' ? 'red' : 'blue'" />
+
+        <Sound url="/stable_rocket_launch_sound.wav" loop />
        
         <!-- Плоскость с текстурой -->
         <TresMesh v-if="camera && flightObject.isCaptured" ref="infoPlane"
@@ -20,6 +22,7 @@ import { ParsedFlightObject } from '../../../../stores/game';
 import { TresObject, useRenderLoop, useTres, } from '@tresjs/core';
 import { Sphere } from '@tresjs/cientos'
 import { computed, ref } from 'vue';
+import Sound from './Sound.vue';
 
 const props = defineProps<{
     flightObject: ParsedFlightObject,
