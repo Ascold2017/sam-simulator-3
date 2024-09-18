@@ -3,8 +3,8 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue';
-import { useTres, useLoop } from '@tresjs/core';
+import { onBeforeUnmount, ref } from 'vue';
+import {  useRenderLoop } from '@tresjs/core';
 
 
 const props = withDefaults(defineProps<{
@@ -26,8 +26,7 @@ const rotationSpeedX = ref(0);
 const rotationSpeedY = ref(0);
 
 // Подключаем камеру TresJS
-const { camera } = useTres();
-const { render } = useLoop()
+const { onLoop } = useRenderLoop()
 
 // Функция для нормализации угла
 const normalizeAngle = (angle: number): number => {
@@ -48,7 +47,6 @@ const updateCameraRotation = () => {
         azimuth: currentAzimuth.value,
         elevation: currentElevation.value
     });
-    camera.value?.rotation.set(currentElevation.value, currentAzimuth.value, 0, 'YXZ');
 };
 
 // Обработчик для движения мыши
@@ -63,18 +61,11 @@ const onMouseMove = (event: MouseEvent) => {
     rotationSpeedY.value = (distanceY / centerY) * props.lookSpeed;
 };
 
-// Монтирование компонента
-onMounted(() => {
-    document.body.addEventListener('mousemove', onMouseMove);
-    render(({ renderer, scene, camera }) => {
-        updateCameraRotation();
-        renderer.render(scene, camera)
-        
-    })
-});
+onLoop(() => updateCameraRotation())
+
 
 // Очистка при удалении компонента
-onUnmounted(() => {
+onBeforeUnmount(() => {
     document.body.removeEventListener('mousemove', onMouseMove);
 });
 </script>
