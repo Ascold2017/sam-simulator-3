@@ -19,7 +19,7 @@ const props = defineProps<{
 
 const particleSize = 60;
 const particleLifetime = 5;
-const distanceThreshold = particleSize; // Порог для создания новой частицы
+const distanceThreshold = particleSize / 1.5; // Порог для создания новой частицы
 
 // Загрузка текстуры для частиц
 const textureLoader = new TextureLoader();
@@ -71,7 +71,7 @@ function calculateDistance(pos1, pos2) {
 
 // Слежение за изменениями в списке flightObjects
 watch(() => props.flightObjects, (newFlightObjects) => {
-    newFlightObjects.forEach((flightObject) => {
+    newFlightObjects.filter(fo => fo.isKilled || fo.type === 'missile').forEach((flightObject) => {
         const currentPos = new Vector3(flightObject.position.x, flightObject.position.y, flightObject.position.z);
         const lastPos = lastPositions.value.get(flightObject.id);
 

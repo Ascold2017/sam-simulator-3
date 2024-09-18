@@ -1,6 +1,14 @@
 <template>
     <v-stage :config="{ width: 210, height: 210 }">
         <v-layer>
+            <v-text :config="{
+                x: 175,
+                y: 0,
+                text: '8 km',
+                fill: 'rgb(21, 128, 61)',
+                fontFamily: 'DS-Digital, sans-serif',
+                fontSize: 16
+            }"></v-text>
             <!-- Радиальные круги (разметка по радиусу) -->
             <v-circle v-for="radius in radii" :key="radius"
                 :config="{ x: 105, y: 105, radius, stroke: 'rgba(0, 255, 0, 1)', strokeWidth: 0.5 }" />
@@ -38,6 +46,13 @@
                 ...object,
                 radius: 3,
             }"></v-circle>
+
+            <v-rect v-for="(object, index) in aaObjectsOnRadar" :key="index" :config="{
+                ...object,
+                width: 2,
+                height: 2,
+                fill: 'orange'
+            }"></v-rect>
         </v-layer>
     </v-stage>
 </template>
@@ -51,10 +66,11 @@ const gameStore = useGameStore()
 const azimuth = computed(() => -gameStore.direction.azimuth * (180 / Math.PI))
 const captureAngle = computed(() => (gameStore.currentAA?.captureAngle || 0) * (180 / Math.PI))
 const flightObjects = computed(() => gameStore.parsedFlightObjects || [])
+const aaObjects = computed(() => gameStore.aas || [])
 const radarPosition = computed(() => gameStore.currentAA?.position || { x: 0, y: 0, z: 0 });
 
 const radius = 100;
-
+const maxRadarDistance = 8000;
 // Массив радиальных шагов (1 км = 50px)
 const radii = [25, 50, 75, 100];
 
@@ -67,10 +83,8 @@ const flightObjectsOnRadar = computed(() => {
         const dx = obj.position.x - radarPosition.value.x;
         const dz = obj.position.z - radarPosition.value.z; // z-координата используется для положения на плоскости
         const distance = Math.sqrt(dx * dx + dz * dz); // Евклидово расстояние до объекта
-        const maxRadarDistance = 4000; // 4 км, максимальная дистанция радара
-        const radarRadius = 100; // Радиус радара в пикселях
         const angle = Math.atan2(dx, dz); // Угол до объекта
-        const normalizedDistance = (distance / maxRadarDistance) * radarRadius; // Масштабирование дистанции
+        const normalizedDistance = (distance / maxRadarDistance) * radius; // Масштабирование дистанции
 
         return {
             x: 105 + normalizedDistance * Math.cos(-angle - Math.PI), // перевод в пиксели
@@ -80,4 +94,19 @@ const flightObjectsOnRadar = computed(() => {
     });
 });
 
+const aaObjectsOnRadar = computed(() => {
+    return aaObjects.value.map(obj => {
+        const dx = obj.position.x - radarPosition.value.x;
+        const dz = obj.position.z - radarPosition.value.z; // z-координата используется для положения на плоскости
+        const distance = Math.sqrt(dx * dx + dz * dz); // Евклидово расстояние до объекта
+
+        const angle = Math.atan2(dx, dz); // Угол до объекта
+        const normalizedDistance = (distance / maxRadarDistance) * radius; // Масштабирование дистанции
+
+        return {
+            x: 105 + normalizedDistance * Math.cos(-angle - Math.PI), // перевод в пиксели
+            y: 105 + normalizedDistance * Math.sin(-angle - Math.PI),
+        }
+    });
+})
 </script>
