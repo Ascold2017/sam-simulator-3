@@ -27,6 +27,14 @@ onMounted(() => {
   if (document.documentElement.requestFullscreen) {
     document.documentElement.requestFullscreen();
   }
+
+  if (screen?.orientation?.lock) {
+    try {
+    screen.orientation.lock('landscape')
+    } catch (e) {
+      console.error(e)
+    }
+  }
 })
 
 onBeforeUnmount(() => {

@@ -26,7 +26,7 @@ const elevation = computed(() => gameStore.direction.elevation * (180 / Math.PI)
 // Расчет размера рамки прицела
 const aimTargetStyle = computed(() => {
     const viewAngleDeg = viewAngle.value * (180 / Math.PI); // Преобразуем viewAngle в градусы
-    const sizePercentage = (viewAngleDeg / cameraFov) * 100; // Размер рамки относительно FOV
+    const sizePercentage = (viewAngleDeg / cameraFov) * 100 * (gameStore.viewMode === 'capture' ? 3 : 1); // Размер рамки относительно FOV
     if (device.orientation === 'portrait') return {
         height: `${sizePercentage}%`,
     }

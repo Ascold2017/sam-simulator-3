@@ -4,28 +4,27 @@
     </Suspense>
     <TresCanvas window-size antialias alpha preset="realistic" shadows renderMode="on-demand">
 
-        <Sky :azimuth="0" :elevation="sunElevation"  />
-        <TresFog :far="3000" :color="0x404040"/>
+        <Sky :azimuth="0" :elevation="sunElevation" />
+        <TresFog :far="3000" :color="0x404040" />
 
         <!-- Освещение -->
-        <TresAmbientLight :color="0x404040" :intensity="0.8" :position="[0, Math.sin(sunElevationRad) * 100, Math.cos(sunElevationRad) * 100]" />
+        <TresAmbientLight :color="0x404040" :intensity="0.8"
+            :position="[0, Math.sin(sunElevationRad) * 100, Math.cos(sunElevationRad) * 100]" />
 
         <!-- DirectionalLight с синхронизацией с углом солнца -->
-        <TresDirectionalLight :color="0xffffff" :intensity="1.2" 
+        <TresDirectionalLight :color="0xffffff" :intensity="1.2"
             :position="[0, Math.sin(sunElevationRad) * 100, Math.cos(sunElevationRad) * 100]" :look-at="[0, 0, 0]"
             cast-shadow :shadow-mapSize-width="1024" :shadow-mapSize-height="1024" />
 
         <!-- Камера -->
-        <TresPerspectiveCamera v-if="currentAA" :fov="75" :far="10000" :zoom="zoom"
-            :position="[currentAA.position.x, currentAA.position.y, currentAA.position.z]"
-            :look-at="[currentAA.position.x + 1, currentAA.position.y, currentAA.position.z]"
-            :key="zoom + currentAA.position.x + currentAA.position.y + currentAA.position.z"
-        />
+        <Camera />
         <!-- Контролы-->
-        <DeviceOrientationControl v-if="deviceStore.isMobile" :min-elevation="0" :max-elevation="Math.PI / 4"
+        <CustomFirstPersonControl v-if="!deviceStore.isMobile" :min-elevation="0" :max-elevation="Math.PI / 4"
+            :look-speed="0.06" @update-direction="direction = $event" />
+        <!-- 
+        <DeviceOrientationControl  :min-elevation="0" :max-elevation="Math.PI / 4"
             @update-direction="direction = $event" @update-orientation="deviceStore.orientation = $event" />
-        <CustomFirstPersonControl v-else :min-elevation="0" :max-elevation="Math.PI / 4" :look-speed="0.06"
-            @update-direction="direction = $event" />
+        -->
 
         <!-- Летающие обьекты -->
         <FlightObject v-for="flightObject in parsedFlightObjects" :flight-object="flightObject"
@@ -36,7 +35,7 @@
 
         <!-- Террейн -->
         <Suspense v-if="map">
-            <GLTFModel :path="mapPath" receive-shadow/>
+            <GLTFModel :path="mapPath" receive-shadow />
         </Suspense>
     </TresCanvas>
 </template>
@@ -53,16 +52,12 @@ import CustomFirstPersonControl from './CustomFirstPersonControl.vue';
 import DeviceOrientationControl from './DeviceOrientationControl.vue';
 import LoadIndicator from './LoadIndicator.vue'
 import SmokeEmitter from './SmokeEmitter.vue';
-import { computed } from 'vue';
+import Camera from './Camera.vue';
+import { computed, ref, watch } from 'vue';
 
 const gameStore = useGameStore()
 const deviceStore = useDevice()
 const { currentAA, parsedFlightObjects, aas, map, direction, viewMode } = storeToRefs(gameStore);
-
-const zoom = computed(() => {
-    if (viewMode.value === 'capture') return 3
-    return 1
-})
 
 const sunElevation = 25;
 const sunElevationRad = sunElevation * (Math.PI / 180);

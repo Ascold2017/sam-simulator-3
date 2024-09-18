@@ -105,6 +105,6 @@ export const useGameStore = defineStore("game", () => {
     currentAA,
     parsedFlightObjects,
     direction,
-    viewMode
+    viewMode,
   };
 });
