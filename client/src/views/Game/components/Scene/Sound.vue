@@ -4,7 +4,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useTres } from '@tresjs/core';
 import { AudioListener, AudioLoader, PositionalAudio } from 'three';
 
