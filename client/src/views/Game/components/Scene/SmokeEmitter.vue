@@ -1,7 +1,7 @@
 <template>
     <TresPoints v-for="(emitter, index) in emitters" :key="index" :geometry="emitter.geometry">
-        <TresPointsMaterial :map="emitter.map" :size="particleSize" :color="emitter.color" transparent :opacity="emitter.opacity"
-            :blending="NormalBlending" :depthWrite="false" />
+        <TresPointsMaterial :map="emitter.map" :size="particleSize" :color="emitter.color" transparent
+            :opacity="emitter.opacity" :blending="NormalBlending" :depthWrite="false" />
     </TresPoints>
 </template>
 <script setup lang="ts">
@@ -71,16 +71,26 @@ function calculateDistance(pos1, pos2) {
 
 // Слежение за изменениями в списке flightObjects
 watch(() => props.flightObjects, (newFlightObjects) => {
-    newFlightObjects.filter(fo => fo.isKilled || fo.type === 'missile').forEach((flightObject) => {
-        const currentPos = new Vector3(flightObject.position.x, flightObject.position.y, flightObject.position.z);
-        const lastPos = lastPositions.value.get(flightObject.id);
+    newFlightObjects
+        .filter(fo => {
+            if (fo.type === 'missile' && !fo.isKilled) {
+                return true;
+            }
+            if (fo.type === 'target' && fo.isKilled) {
+                return true;
+            }
+            return false
+        })
+        .forEach((flightObject) => {
+            const currentPos = new Vector3(flightObject.position.x, flightObject.position.y, flightObject.position.z);
+            const lastPos = lastPositions.value.get(flightObject.id);
 
-        // Если позиции ещё нет или расстояние больше порога, создаём новую частицу
-        if (!lastPos || calculateDistance(currentPos, lastPos) > distanceThreshold) {
-            createParticlesAt(flightObject);
-            lastPositions.value.set(flightObject.id, currentPos); // Обновляем последнюю позицию
-        }
-    });
+            // Если позиции ещё нет или расстояние больше порога, создаём новую частицу
+            if (!lastPos || calculateDistance(currentPos, lastPos) > distanceThreshold) {
+                createParticlesAt(flightObject);
+                lastPositions.value.set(flightObject.id, currentPos); // Обновляем последнюю позицию
+            }
+        });
 });
 
 // Анимация для обновления прозрачности частиц

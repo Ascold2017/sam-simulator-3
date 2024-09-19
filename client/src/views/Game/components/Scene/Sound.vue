@@ -10,6 +10,7 @@ import { AudioListener, AudioLoader, PositionalAudio } from 'three';
 
 interface SoundProps {
     url: string;
+    volume?: number;
     loop?: boolean;
 }
 
@@ -34,7 +35,8 @@ onMounted(() => {
         // Присваиваем буфер звуку
         audio.value.setBuffer(buffer);
         audio.value.setLoop(props.loop || false);
-        audio.value.setVolume(20);
+        audio.value.setVolume(props.volume || 1);
+        audio.value.setRolloffFactor(0.005)
         audio.value.play(); // Запускаем воспроизведение звука
     });
 });

@@ -168,7 +168,7 @@ export class GameInstanceController {
 
   private async getHeightmapData(filename: string) {
     try {
-      const imageUrl = `${process.env.STATIC_SERVER_BASE_URL}${filename}/textures/heightmap.png`;
+      const imageUrl = `${process.env.STATIC_SERVER_BASE_URL}/${filename}/textures/heightmap.png`;
       const imageResponse = await fetch(imageUrl);
       const imageBuffer = await imageResponse.arrayBuffer();
       const image = sharp(imageBuffer);
@@ -181,6 +181,7 @@ export class GameInstanceController {
         height,
       };
     } catch (e) {
+      console.log(e)
       return {
         rawImageData: [0, 0, 0, 0, 0, 0, 0, 0],
         width: 1,
