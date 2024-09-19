@@ -73,7 +73,7 @@ function calculateDistance(pos1, pos2) {
 watch(() => props.flightObjects, (newFlightObjects) => {
     newFlightObjects
         .filter(fo => {
-            if (fo.type === 'missile' && !fo.isKilled) {
+            if (fo.type === 'missile' && !fo.isDestroyed) {
                 return true;
             }
             if (fo.type === 'target' && fo.isKilled) {

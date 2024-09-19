@@ -168,7 +168,8 @@ export class GameInstanceController {
 
   private async getHeightmapData(filename: string) {
     try {
-      const imageUrl = `${process.env.STATIC_SERVER_BASE_URL}/${filename}/textures/heightmap.png`;
+      // process.env.STATIC_SERVER_BASE_URL
+      const imageUrl = `${'http://localhost:8080'}/models/${filename}/textures/heightmap.png`;
       const imageResponse = await fetch(imageUrl);
       const imageBuffer = await imageResponse.arrayBuffer();
       const image = sharp(imageBuffer);
@@ -199,7 +200,7 @@ export class GameInstanceController {
     const maxHeight = 650;
 
     // Извлечение данных о пикселях изображения
-
+    /*
     const heightData: number[][] = [];
 
     for (let y = 0; y < height; y++) {
@@ -215,11 +216,12 @@ export class GameInstanceController {
 
     // Рассчитываем элементный размер
     const elementSize = Math.floor(mapSize / width);
+    */
 
     return {
       map: {
-        data: heightData, // Данные высот
-        size: elementSize,
+        data: [[0, 0], [0, 0]], // Данные высот
+        size: 10000,
       },
       aaPositions: this.missionData.aaPositions,
       targets: this.missionData.targets.map((mTarget) => ({

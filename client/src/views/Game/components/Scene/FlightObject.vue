@@ -1,12 +1,12 @@
 <template>
     <TresGroup :position="[flightObject.position.x, flightObject.position.y, flightObject.position.z]">
 
-        <Suspense v-if="modelPath">
+        <Suspense v-if="modelPath && !flightObject.isDestroyed">
             <GLTFModel :path="modelPath" :rotation="[rotation.x, rotation.y, rotation.z]" />
         </Suspense>
 
         <Sound :url="soundUrl" loop :volume="flightObject.type === 'missile' ? 2 : 0.5" v-if="!flightObject.isKilled" />
-        <Sound url="/explosion.mp3" v-if="flightObject.type === 'missile' && flightObject.isKilled" :volume="2" />
+        <Sound url="/explosion.mp3" v-if="flightObject.type === 'missile' && flightObject.isDestroyed" :volume="2" />
 
         <!-- Плоскость с текстурой -->
         <TresMesh v-if="camera && flightObject.isCaptured" ref="infoPlane"

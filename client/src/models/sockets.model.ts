@@ -52,6 +52,7 @@ export interface PlayerJoinedData {
 export interface FlightObject {
   id: string;
   isKilled: boolean;
+  isDestroyed: boolean;
   position: Position;
   velocity: Position;
   type: "target" | "missile" | "bullet" | "unknown";

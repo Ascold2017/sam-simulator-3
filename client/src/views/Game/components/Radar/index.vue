@@ -79,7 +79,7 @@ const angles = Array.from({ length: 36 }, (_, i) => (i * 10 * Math.PI) / 180);
 
 // Рассчет позиции объектов относительно радара
 const flightObjectsOnRadar = computed(() => {
-    return flightObjects.value.map(obj => {
+    return flightObjects.value.filter(fo => !fo.isDestroyed).map(obj => {
         const dx = obj.position.x - radarPosition.value.x;
         const dz = obj.position.z - radarPosition.value.z; // z-координата используется для положения на плоскости
         const distance = Math.sqrt(dx * dx + dz * dz); // Евклидово расстояние до объекта
