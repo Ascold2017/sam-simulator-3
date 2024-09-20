@@ -16,7 +16,7 @@ const { currentAA, direction, viewMode } = storeToRefs(gameStore);
 const { render } = useLoop()
 
 const zoom = computed(() => {
-    if (viewMode.value === 'capture') return 3
+    if (viewMode.value === 'capture') return 8
     return 1
 });
 

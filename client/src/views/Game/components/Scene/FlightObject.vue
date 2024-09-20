@@ -23,7 +23,7 @@
 import { CanvasTexture} from 'three';
 import { ParsedFlightObject } from '../../../../stores/game';
 import { TresObject, useRenderLoop, useTres, } from '@tresjs/core';
-import { GLTFModel, Cone } from '@tresjs/cientos'
+import { GLTFModel } from '@tresjs/cientos'
 import { computed, ref } from 'vue';
 import Sound from './Sound.vue';
 

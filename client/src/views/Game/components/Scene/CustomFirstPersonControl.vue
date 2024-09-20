@@ -10,18 +10,16 @@ import { storeToRefs } from 'pinia';
 
 
 const props = withDefaults(defineProps<{
-    lookSpeed: number;
     minElevation: number;
     maxElevation: number;
 }>(), {
-    lookSpeed: 0.2,
     minElevation: 0,
     maxElevation: Math.PI
 })
 
 const emit = defineEmits<{ updateDirection: [direction: { azimuth: number; elevation: number }] }>()
 const gameStore = useGameStore();
-const { direction } = storeToRefs(gameStore);
+const { direction, viewMode } = storeToRefs(gameStore);
 
 const rotationSpeedX = ref(0);
 const rotationSpeedY = ref(0);
@@ -53,8 +51,8 @@ const onMouseMove = (event: MouseEvent) => {
     const distanceX = event.clientX - centerX;
     const distanceY = event.clientY - centerY;
 
-    rotationSpeedX.value = (distanceX / centerX) * props.lookSpeed;
-    rotationSpeedY.value = (distanceY / centerY) * props.lookSpeed;
+    rotationSpeedX.value = (distanceX / centerX) * (viewMode.value === 'capture' ? 0.01 : 0.06);
+    rotationSpeedY.value = (distanceY / centerY) * (viewMode.value === 'capture' ? 0.01 : 0.06);
 };
 
 onLoop(() => updateCameraRotation())
