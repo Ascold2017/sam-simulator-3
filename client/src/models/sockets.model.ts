@@ -54,7 +54,7 @@ export interface FlightObject {
   isKilled: boolean;
   isDestroyed: boolean;
   position: Position;
-  velocity: Position;
+  quaternion: [number, number, number, number];
   type: "target" | "missile" | "bullet" | "unknown";
 }
 

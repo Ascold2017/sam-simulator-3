@@ -5,12 +5,13 @@
         <TresAmbientLight :color="0x404040" :intensity="0.8" />
         <TresDirectionalLight :color="0xffffff" :intensity="1.2"
             :position="[0, Math.sin(sunElevationRad) * 100, Math.cos(sunElevationRad) * 100]" :look-at="[0, 0, 0]" />
-
+        <TresGridHelper :args="[100, 100]"/>
+        <TresAxesHelper />
         <TresPerspectiveCamera :position="[10, 500, 500]" :far="20000" />
         <CameraControls />
 
         <Suspense>
-            <GLTFModel path="/models/mars/scene.gltf" cast-shadow receive-shadow/>
+            <GLTFModel path="http://localhost:8080/flight-objects/plane/scene.gltf" cast-shadow receive-shadow/>
         </Suspense>
     </TresCanvas>
 </template>

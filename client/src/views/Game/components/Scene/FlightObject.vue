@@ -1,11 +1,12 @@
 <template>
-    <TresGroup :position="[flightObject.position.x, flightObject.position.y, flightObject.position.z]">
+    <TresGroup :position="[flightObject.position.x, flightObject.position.y, flightObject.position.z]" :quaternion="flightObject.quaternion">
 
         <Suspense v-if="modelPath && !flightObject.isDestroyed">
-            <GLTFModel :path="modelPath" :rotation="[rotation.x, rotation.y, rotation.z]" />
+            <GLTFModel :path="modelPath"  />
         </Suspense>
 
-        <Sound :url="soundUrl" loop :volume="flightObject.type === 'missile' ? 2 : 0.5" v-if="!flightObject.isKilled" />
+        <Sound :url="soundUrl" loop :volume="flightObject.type === 'missile' ? 2 : 0.5"
+            v-if="!flightObject.isDestroyed" />
         <Sound url="/explosion.mp3" v-if="flightObject.type === 'missile' && flightObject.isDestroyed" :volume="2" />
 
         <!-- Плоскость с текстурой -->
@@ -19,10 +20,10 @@
 </template>
 
 <script setup lang="ts">
-import { CanvasTexture, Vector3 } from 'three';
+import { CanvasTexture} from 'three';
 import { ParsedFlightObject } from '../../../../stores/game';
 import { TresObject, useRenderLoop, useTres, } from '@tresjs/core';
-import { GLTFModel } from '@tresjs/cientos'
+import { GLTFModel, Cone } from '@tresjs/cientos'
 import { computed, ref } from 'vue';
 import Sound from './Sound.vue';
 
@@ -45,18 +46,13 @@ const soundUrl = computed(() => props.flightObject.type === 'missile' ? '/missil
 
 const modelPath = computed(() => {
     if (props.flightObject.type === 'missile') {
-        return `${import.meta.env.VITE_APP_STATIC_URL}/flight-objects/aim-120/scene.gltf`;
+        return `${import.meta.env.VITE_APP_STATIC_URL}/flight-objects/Missile-M.gltf`;
     } else {
-        return `${import.meta.env.VITE_APP_STATIC_URL}/flight-objects/a-10/scene.gltf`;
+        return `${import.meta.env.VITE_APP_STATIC_URL}/flight-objects/Drone-M.gltf`;
     }
 })
 
-const rotation = computed(() => {
-    const velocity = props.flightObject.velocity;
 
-    const vec = new Vector3(velocity.x, velocity.y, velocity.z).normalize();
-    return vec
-})
 // Функция создания текстуры для плоскости
 function createOutlineTexture() {
     const size = 256;

@@ -17,7 +17,7 @@ const props = defineProps<{
     flightObjects: ParsedFlightObject[]
 }>();
 
-const particleSize = 60;
+const particleSize = 10;
 const particleLifetime = 5;
 const distanceThreshold = particleSize / 1.5; // Порог для создания новой частицы
 
