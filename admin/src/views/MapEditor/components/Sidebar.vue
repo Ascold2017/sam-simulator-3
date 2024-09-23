@@ -1,10 +1,10 @@
 <template>
     <aside class="map-editor-sidebar">
         
-        <section class="flex mb-6">
             <BaseInput id="map-name" v-model="mapName" label="Map Name" placeholder="Enter map name" />
             <BaseInput id="map-filename" v-model="mapFilename" label="Map filename" placeholder="Enter map filename" />
-        </section>
+            <BaseInput id="map-size" v-model.number="mapSize" label="Map size" placeholder="Enter map size, m" />
+
 
 
         <button @click="onSave" class="mission-editor-sidebar__save-btn">Save</button>
@@ -20,7 +20,7 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter()
 const mapsStore = useMaps();
-const { mapName, mapFilename } = storeToRefs(mapsStore)
+const { mapName, mapFilename, mapSize } = storeToRefs(mapsStore)
 
 
 

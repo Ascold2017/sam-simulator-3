@@ -12,6 +12,9 @@
             <TransformControls v-if="selectedObject" :object="selectedObject" mode="translate"
                 @object-change="handleObjectChange" @click="cancelEditing" />
 
+            <Sphere v-for="s in boundingSpheres" :position="s.position" :args="[s.radius]" :userData="s.userData"
+                color="red" @click="editPosition($event.object)" />
+
             <Suspense v-if="terrainPath">
                 <GLTFModel :path="terrainPath" />
             </Suspense>
@@ -21,26 +24,44 @@
 <script setup lang="ts">
 import LoadIndicator from '../../../components/LoadIndicator.vue';
 import { TresCanvas } from '@tresjs/core';
-import { OrbitControls, TransformControls, GLTFModel } from '@tresjs/cientos'
+import { OrbitControls, TransformControls, GLTFModel, Sphere } from '@tresjs/cientos'
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { Object3D } from 'three';
 import { useMaps } from '../../../stores/maps';
 const mapStore = useMaps();
 
-const { mapFilename } = storeToRefs(mapStore);
+const { mapFilename, mapData, mapSize } = storeToRefs(mapStore);
 
 const isDisabledOrbitControls = ref(false)
 const selectedObject = ref<Object3D | null>(null);
 const terrainPath = computed(() => mapFilename.value ? `${import.meta.env.VITE_APP_STATIC_URL}/models/${mapFilename.value}/scene.gltf` : '');
 
-
+const boundingSpheres = computed(() => {
+    const spheres = []
+    for (let i = 0; i < mapData.value.length; i++) {
+        for (let j = 0; j < mapData.value[i].length; j++) {
+            const coordX = mapSize.value / 2 - i * (mapSize.value / 20)
+            const coordY = mapSize.value / 2 - j * (mapSize.value / 20)
+            spheres.push({
+                position: [coordX, mapData.value[i][j], coordY],
+                userData: { i, j },
+                radius: 50
+            })
+        }
+    }
+    return spheres
+})
 
 const handleObjectChange = () => {
     const obj = selectedObject.value
     if (!obj) return
     const userData = obj.userData;
-    
+
+    const updatedData = mapData.value;
+    updatedData[userData.i][userData.j] = obj.position.y
+    mapData.value = updatedData;
+
 }
 
 const editPosition = (object: Object3D) => {

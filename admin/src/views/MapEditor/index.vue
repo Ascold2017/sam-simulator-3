@@ -18,7 +18,7 @@ const route = useRoute();
 const mapsStore = useMaps()
 
 onMounted(() => {
-    route.params.id && mapsStore.getMapById(route.params.id as string);
+    route.params.id && mapsStore.getMapById(+route.params.id);
 });
 
 onUnmounted(() => {
