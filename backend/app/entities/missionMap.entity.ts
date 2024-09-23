@@ -13,8 +13,8 @@ export class MissionMap extends BaseEntity {
     @Column()
     size: number
 
-    @Column()
-    maxHeight: number;
+    @Column('jsonb', { nullable: true })
+    data: number[][];
 
     @OneToMany(() => Mission, target => target.map)
     missions: Mission[];

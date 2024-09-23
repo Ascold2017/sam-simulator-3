@@ -29,7 +29,7 @@ export class GameInstanceController {
 
     this.coreInstance = new Core({
       heightmapTerrain: {
-        data: [ [0, 0], [0, 0]],
+        data: missionData.map.data,
         width: missionData.map.size,
         height: missionData.map.size,
       },
@@ -79,15 +79,15 @@ export class GameInstanceController {
     this.coreInstance.addAA({
       id: aaId,
       position: availablePosition.position,
-      type: 'guided-missile', //user.aa.type,
-      ammoCount: 10,
+      type: user.aa.type,
+      ammoCount: user.aa.ammoCount,
       ammoProps: {
-        minRange: 50,
+        minRange: user.aa.ammoMinRange,
         activeRange: user.aa.ammoMaxRange * 0.5,
         maxRange: user.aa.ammoMaxRange,
         maxVelocity: user.aa.ammoVelocity,
         killRadius: user.aa.ammoKillRadius,
-        maxOverload: 100500
+        maxOverload: user.aa.ammoMaxOverload,
       },
       radarProps: {
         range: user.aa.ammoMaxRange

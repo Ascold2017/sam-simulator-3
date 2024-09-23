@@ -11,10 +11,13 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Type</th>
+                    <th>Ammo count</th>
                     <th>Reload time, s</th>
+                    <th>Ammo min range, m</th>
                     <th>Ammo max range, m</th>
                     <th>Ammo velocity, m/s</th>
                     <th>Ammo kill radius, m</th>
+                    <th>Ammo max overload, G</th>
                     <th>Capture angle, rad</th>
                     <th>Actions</th>
                 </tr>
@@ -24,10 +27,13 @@
                     <td>{{ aa.id }}</td>
                     <td>{{ aa.name }}</td>
                     <td>{{ aa.type }}</td>
+                    <td>{{ aa.ammoCount }}</td>
                     <td>{{ aa.reloadTime }}</td>
+                    <td>{{ aa.ammoMinRange }}</td>
                     <td>{{ aa.ammoMaxRange }}</td>
                     <td>{{ aa.ammoVelocity }}</td>
                     <td>{{ aa.ammoKillRadius }}</td>
+                    <td>{{ aa.ammoMaxOverload }}</td>
                     <td>{{ aa.captureAngle }}</td>
                     <td>
                         <button @click="editAA(aa.id)" class="aas__edit-btn mr-2">Edit</button>

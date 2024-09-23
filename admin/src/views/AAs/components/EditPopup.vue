@@ -7,18 +7,23 @@
         <template #content>
             <BaseInput id="aa-name" v-model="currentAA.name" label="AA Name" placeholder="Enter AA name" class="mb-3" />
             <BaseSelect id="aa-type" v-model="currentAA.type" label="AA Type" :options="[
-                { label: 'SAM with Active missiles', value: 'active-missile' },
-                { label: 'Gun', value: 'gun' },
+                { label: 'SAM with Guided missiles', value: 'guided-missile' },
             ]" class="mb-3" />
-            <BaseInput id="aa-reload-time" v-model="currentAA.reloadTime" label="Reload time"
+            <BaseInput id="aa-ammo-count" v-model.number="currentAA.ammoCount" label="Ammo count" placeholder="Enter count"
+                class="mb-3" />
+            <BaseInput id="aa-reload-time" v-model.number="currentAA.reloadTime" label="Reload time"
                 placeholder="Enter reload time, s" class="mb-3" />
-            <BaseInput id="aa-ammo-max-range" v-model="currentAA.ammoMaxRange" label="Ammo max range"
+            <BaseInput id="aa-ammo-min-range" v-model.number="currentAA.ammoMinRange" label="Ammo min range"
+                placeholder="Enter ammo min range, m" class="mb-3" />
+            <BaseInput id="aa-ammo-max-range" v-model.number="currentAA.ammoMaxRange" label="Ammo max range"
                 placeholder="Enter ammo max range, m" class="mb-3" />
-            <BaseInput id="aa-ammo-velocity" v-model="currentAA.ammoVelocity" label="Ammo  velocity"
+            <BaseInput id="aa-ammo-velocity" v-model.number="currentAA.ammoVelocity" label="Ammo  velocity"
                 placeholder="Enter ammo velocity, m/s" class="mb-3" />
-            <BaseInput id="aa-ammo-kill-radius" v-model="currentAA.ammoKillRadius" label="Ammo kill radius"
+            <BaseInput id="aa-ammo-kill-radius" v-model.number="currentAA.ammoKillRadius" label="Ammo kill radius"
                 placeholder="Enter ammo kill radius, m" class="mb-3" />
-            <BaseInput id="aa-capture-angle" v-model="currentAA.captureAngle" label="Capture angle"
+            <BaseInput id="aa-ammo-max-overload" v-model.number="currentAA.ammoMaxOverload" label="Ammo max overload"
+                placeholder="Enter ammo max overload, G" class="mb-3" />
+            <BaseInput id="aa-capture-angle" v-model.number="currentAA.captureAngle" label="Capture angle"
                 placeholder="Enter capture angle, rads" />
 
 
