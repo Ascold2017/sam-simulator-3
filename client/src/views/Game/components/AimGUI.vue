@@ -19,7 +19,7 @@ const device = useDevice()
 const gameStore = useGameStore()
 
 const cameraFov = 75;
-const viewAngle = computed(() => gameStore.currentAA?.captureAngle || 0)
+const viewAngle = computed(() => 0.06 /*gameStore.currentAA?.captureAngle || 0 */)
 const azimuth = computed(() => gameStore.direction.azimuth * (180 / Math.PI))
 const elevation = computed(() => gameStore.direction.elevation * (180 / Math.PI))
 

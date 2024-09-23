@@ -1,14 +1,14 @@
-import { AAPosition, Core, MissionData } from "../../core/app";
+import { Core } from "../../core/app";
 import { Server } from "socket.io";
 import {
   CustomSocket,
   ClientToServerEvents,
   ServerToClientEvents,
+  AAPosition,
 } from "../types/sockets.model";
 import { v4 as uuidv4 } from "uuid";
 import { Mission } from "../entities/mission.entity";
-import sharp from "sharp";
-import path from "path";
+import { MissionAAPosition } from "app/entities/missionAAPosition";
 
 interface PlayerData {
   socket: CustomSocket; // Сокет игрока
@@ -26,9 +26,27 @@ export class GameInstanceController {
   constructor(roomId: string, missionData: Mission, io: Server) {
     this.io = io;
     this.roomId = roomId;
-    this.coreInstance = new Core();
+
+    this.coreInstance = new Core({
+      heightmapTerrain: {
+        data: [ [0, 0], [0, 0]],
+        width: missionData.map.size,
+        height: missionData.map.size,
+      },
+      targetNPCs: missionData.targets.map(t => ({
+        id: t.id.toString(),
+        rcs: t.target.rcs,
+        size: t.target.size,
+        temperature: t.target.temperature,
+        waypoints: t.waypoints
+      }))
+    });
+
+    this.coreInstance.eventEmitter.on('update_world_state', (state) => {
+      this.io.to(this.roomId).emit('update_world_state', state)
+    })
+
     this.missionData = missionData;
-    this.startMission();
   }
 
   public addPlayer(socket: CustomSocket) {
@@ -61,11 +79,19 @@ export class GameInstanceController {
     this.coreInstance.addAA({
       id: aaId,
       position: availablePosition.position,
-      type: user.aa.type,
-      ammoVelocity: user.aa.ammoVelocity,
-      ammoMaxRange: user.aa.ammoMaxRange,
-      ammoKillRadius: user.aa.ammoKillRadius,
-      captureAngle: user.aa.captureAngle,
+      type: 'guided-missile', //user.aa.type,
+      ammoCount: 10,
+      ammoProps: {
+        minRange: 50,
+        activeRange: user.aa.ammoMaxRange * 0.5,
+        maxRange: user.aa.ammoMaxRange,
+        maxVelocity: user.aa.ammoVelocity,
+        killRadius: user.aa.ammoKillRadius,
+        maxOverload: 100500
+      },
+      radarProps: {
+        range: user.aa.ammoMaxRange
+      }
     });
 
     // Отправляем окружение игроку
@@ -80,11 +106,10 @@ export class GameInstanceController {
     });
 
     socket.on('update_direction', ({ direction }) => {
-      const capturedTargetId = this.coreInstance.updateAADirection(aaId, direction);
-      socket.emit('captured_target', capturedTargetId);
+      this.coreInstance.eventEmitter.emit('update_aa_aim_ray', { aaId: aaId, aimRay: [direction.x, direction.y, direction.z] });
     })
     socket.on("fire_target", () => {
-      this.coreInstance.fire(aaId);
+      this.coreInstance.eventEmitter.emit("fire_aa", { aaId });
     });
   }
 
@@ -103,40 +128,26 @@ export class GameInstanceController {
     try {
       console.log("Game ended");
       this.players.clear();
-      this.coreInstance.stopMission();
+      // this.coreInstance.stopMission();
     } catch (error) {
       console.error(`Error stopping mission: ${error.message}`);
     }
   }
 
-  // Запуск миссии
-  private async startMission() {
-    const parsedMissionData = await this.parseMissionData();
-
-    this.coreInstance.startMission(parsedMissionData);
-    console.log(`Mission ${this.missionData.name} started successfully`);
-
-    this.coreInstance.updateListener = () => {
-      this.sendUpdates();
-    };
-  }
 
   // Отправка окружения игроку
   private sendEnvironment(playerId: string) {
     const playerData = this.players.get(playerId);
-    const heightmapTerrain = this.coreInstance.getHeightmapTerrain();
-    const aas = this.coreInstance.getAAs();
 
     this.io.to(playerId).emit("mission_environment", {
       mapName: this.missionData.map.filename,
-      aas,
       yourAAId: playerData.aaId,
       aaPositions: this.getAAPositions(),
     });
   }
 
   // Получение первой доступной позиции для AA
-  private getAvailablePosition(): AAPosition | undefined {
+  private getAvailablePosition(): MissionAAPosition | undefined {
     const takenAAPositionIds = Array.from(this.players.values()).map(
       (player) => player.aaPositionId
     );
@@ -158,79 +169,4 @@ export class GameInstanceController {
     });
   }
 
-  private sendUpdates() {
-    const flightObjects = this.coreInstance.getFlightObjects();
-   
-    this.io.to(this.roomId).emit("mission_update", {
-      flightObjects,
-    });
-  }
-
-  private async getHeightmapData(filename: string) {
-    try {
-      // process.env.STATIC_SERVER_BASE_URL
-      const imageUrl = `${'http://localhost:8080'}/models/${filename}/textures/heightmap.png`;
-      const imageResponse = await fetch(imageUrl);
-      const imageBuffer = await imageResponse.arrayBuffer();
-      const image = sharp(imageBuffer);
-      const { width, height } = await image.metadata();
-      const rawImageData = await image.raw().toBuffer();
-
-      return {
-        rawImageData,
-        width,
-        height,
-      };
-    } catch (e) {
-      console.log(e)
-      return {
-        rawImageData: [0, 0, 0, 0, 0, 0, 0, 0],
-        width: 1,
-        height: 1,
-      };
-    }
-  }
-
-  private async parseMissionData(): Promise<MissionData> {
-    const { rawImageData, width, height } = await this.getHeightmapData(
-      this.missionData.map.filename
-    );
-
-    const mapSize = this.missionData.map.size;
-    const maxHeight = 650;
-
-    // Извлечение данных о пикселях изображения
-    /*
-    const heightData: number[][] = [];
-
-    for (let y = 0; y < height; y++) {
-      const row: number[] = [];
-      for (let x = 0; x < width; x++) {
-        const index = (y * width + x) * 4;
-        const r = rawImageData[index]; // Используем только красный канал
-        const normalizedHeight = Math.round((r / 255) * maxHeight);
-        row.push(normalizedHeight);
-      }
-      heightData.push(row);
-    }
-
-    // Рассчитываем элементный размер
-    const elementSize = Math.floor(mapSize / width);
-    */
-
-    return {
-      map: {
-        data: [[0, 0], [0, 0]], // Данные высот
-        size: 10000,
-      },
-      aaPositions: this.missionData.aaPositions,
-      targets: this.missionData.targets.map((mTarget) => ({
-        id: mTarget.target.name,
-        rcs: mTarget.target.rcs,
-        temperature: mTarget.target.temperature,
-        size: mTarget.target.size,
-        waypoints: mTarget.waypoints,
-      })),
-    };
-  }
 }

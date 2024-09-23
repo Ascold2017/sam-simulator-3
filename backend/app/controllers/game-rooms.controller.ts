@@ -147,7 +147,7 @@ export class GameRoomsController {
         }
 
         room.gameInstanceController.removePlayer(socket.id);
-        this.io.emit('player_leaved', socket.id);
+        this.io.to(roomId).emit('player_leaved', socket.id);
     }
 
 }

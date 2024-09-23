@@ -42,9 +42,14 @@
         </v-layer>
         <v-layer>
             <!-- Отображение объектов -->
-            <v-circle v-for="(object, index) in flightObjectsOnRadar" :key="index" :config="{
+            <v-circle v-for="(object, index) in targetsOnRadar" :key="index" :config="{
                 ...object,
                 radius: 3,
+            }"></v-circle>
+
+            <v-circle v-for="(object, index) in missilesOnRadar" :key="index" :config="{
+                ...object,
+                radius: 1,
             }"></v-circle>
 
             <v-rect v-for="(object, index) in aaObjectsOnRadar" :key="index" :config="{
@@ -60,14 +65,13 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useGameStore } from '../../../../stores/game';
+import { storeToRefs } from 'pinia';
 
 const gameStore = useGameStore()
+const { currentAA, parsedTargetNPCs, missiles, aas } = storeToRefs(gameStore);
 
 const azimuth = computed(() => -gameStore.direction.azimuth * (180 / Math.PI))
-const captureAngle = computed(() => (gameStore.currentAA?.captureAngle || 0) * (180 / Math.PI))
-const flightObjects = computed(() => gameStore.parsedFlightObjects || [])
-const aaObjects = computed(() => gameStore.aas || [])
-const radarPosition = computed(() => gameStore.currentAA?.position || { x: 0, y: 0, z: 0 });
+const captureAngle = computed(() => 0.06)
 
 const radius = 100;
 const maxRadarDistance = 8000;
@@ -77,11 +81,10 @@ const radii = [25, 50, 75, 100];
 // Массив углов для азимутальной разметки (шаг 10 градусов)
 const angles = Array.from({ length: 36 }, (_, i) => (i * 10 * Math.PI) / 180);
 
-// Рассчет позиции объектов относительно радара
-const flightObjectsOnRadar = computed(() => {
-    return flightObjects.value.filter(fo => !fo.isDestroyed).map(obj => {
-        const dx = obj.position.x - radarPosition.value.x;
-        const dz = obj.position.z - radarPosition.value.z; // z-координата используется для положения на плоскости
+const targetsOnRadar = computed(() => {
+    return parsedTargetNPCs.value.filter(t => currentAA.value.detectedTargetIds.includes(t.id) && !t.isDestroyed).map(obj => {
+        const dx = obj.position[0] - currentAA.value.position[0];
+        const dz = obj.position[2] - currentAA.value.position[2]; // z-координата используется для положения на плоскости
         const distance = Math.sqrt(dx * dx + dz * dz); // Евклидово расстояние до объекта
         const angle = Math.atan2(dx, dz); // Угол до объекта
         const normalizedDistance = (distance / maxRadarDistance) * radius; // Масштабирование дистанции
@@ -91,13 +94,29 @@ const flightObjectsOnRadar = computed(() => {
             y: 105 + normalizedDistance * Math.sin(-angle - Math.PI),
             fill: obj.isCaptured ? 'red' : 'yellow'
         };
-    });
+    })
+});
+
+const missilesOnRadar = computed(() => {
+    return missiles.value.filter(m => !m.isDestroyed).map(obj => {
+        const dx = obj.position[0] - currentAA.value.position[0];
+        const dz = obj.position[2] - currentAA.value.position[2]; // z-координата используется для положения на плоскости
+        const distance = Math.sqrt(dx * dx + dz * dz); // Евклидово расстояние до объекта
+        const angle = Math.atan2(dx, dz); // Угол до объекта
+        const normalizedDistance = (distance / maxRadarDistance) * radius; // Масштабирование дистанции
+
+        return {
+            x: 105 + normalizedDistance * Math.cos(-angle - Math.PI), // перевод в пиксели
+            y: 105 + normalizedDistance * Math.sin(-angle - Math.PI),
+            fill: currentAA.value.launchedMissileIds.includes(obj.id) ? 'red' : 'yellow'
+        };
+    })
 });
 
 const aaObjectsOnRadar = computed(() => {
-    return aaObjects.value.map(obj => {
-        const dx = obj.position.x - radarPosition.value.x;
-        const dz = obj.position.z - radarPosition.value.z; // z-координата используется для положения на плоскости
+    return aas.value.map(obj => {
+        const dx = obj.position[0] - currentAA.value.position[0];
+        const dz = obj.position[2] - currentAA.value.position[2];
         const distance = Math.sqrt(dx * dx + dz * dz); // Евклидово расстояние до объекта
 
         const angle = Math.atan2(dx, dz); // Угол до объекта

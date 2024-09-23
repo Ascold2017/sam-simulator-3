@@ -1,23 +1,24 @@
 import { defineStore } from "pinia";
 import { socketClient } from "../adapters/socketClient";
 import { computed, ref, watch } from "vue";
-import { MissionUpdate, type MissionData } from "../models/sockets.model";
 import { useNotificationStore } from "./notifications";
+import { AAState, GuidedMissileState, MissionData, TargetNPCState } from "../models/sockets.model";
 
-export type FlightObject = MissionUpdate["flightObjects"][number];
-export type AAObject = MissionData["aas"][number];
-export interface ParsedFlightObject extends FlightObject {
+export interface ParsedTargetNPCState extends TargetNPCState {
   isCaptured: boolean;
 }
 export const useGameStore = defineStore("game", () => {
   const notifications = useNotificationStore();
 
   const map = ref<MissionData["mapName"]>("");
-  const aas = ref<AAObject[]>([]);
+  
   const aaPositions = ref<MissionData["aaPositions"]>([]);
   const aaId = ref<string | null>(null);
-  const flightObjects = ref<FlightObject[]>([]);
-  const capturedTargetId = ref<string | null>(null);
+
+  const aas = ref<AAState[]>([]);
+  const targetNPCs = ref<TargetNPCState[]>([]);
+  const missiles = ref<GuidedMissileState[]>([]);
+
   const viewMode = ref<'search' | 'capture'>('search');
   const direction = ref<{ azimuth: number; elevation: number }>({
     azimuth: 0,
@@ -29,10 +30,10 @@ export const useGameStore = defineStore("game", () => {
     return aas.value.find((aa) => aa.id === aaId.value);
   });
 
-  const parsedFlightObjects = computed<ParsedFlightObject[]>(() => {
-    return flightObjects.value.map((fo) => ({
+  const parsedTargetNPCs = computed<ParsedTargetNPCState[]>(() => {
+    return targetNPCs.value.map((fo) => ({
       ...fo,
-      isCaptured: capturedTargetId.value === fo.id
+      isCaptured: true
     }));
   });
 
@@ -50,24 +51,17 @@ export const useGameStore = defineStore("game", () => {
 
   socketClient.listenToEvent("mission_environment", (data) => {
     map.value = data.mapName;
-    aas.value = data.aas;
     aaId.value = data.yourAAId;
     aaPositions.value = data.aaPositions;
     isInitialized.value = true;
   });
 
-  socketClient.listenToEvent("mission_aas_update", (aasData) => {
-    aas.value = aasData;
-  });
 
-  socketClient.listenToEvent("mission_update", (update) => {
-    flightObjects.value = update.flightObjects;
+  socketClient.listenToEvent('update_world_state', (update) => {
+    aas.value = update.filter(e => e.type === 'aa') as AAState[];
+    targetNPCs.value = update.filter(e => e.type === 'target-npc') as TargetNPCState[];
+    missiles.value = update.filter(e => e.type === 'guided-missile') as GuidedMissileState[];
   });
-
-  socketClient.listenToEvent('captured_target', (id) => {
-    if (capturedTargetId.value === id) return;
-    capturedTargetId.value = id;
-  })
 
   socketClient.listenToEvent("error", (error) => {
     notifications.openNotification({
@@ -103,7 +97,8 @@ export const useGameStore = defineStore("game", () => {
     aas,
     aaPositions,
     currentAA,
-    parsedFlightObjects,
+    parsedTargetNPCs,
+    missiles,
     direction,
     viewMode,
   };

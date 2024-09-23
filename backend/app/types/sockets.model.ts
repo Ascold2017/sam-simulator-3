@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { Position, AAObject, FlightObjectDTO } from "@core/app"
+import { EntityState } from "@core/app"
 import { User } from "app/entities/user.entity";
 
 
@@ -9,6 +9,12 @@ export interface MissionRoom {
     missionId: number;
 }
 export type MissionID = number;
+
+export interface Position {
+    x: number;
+    y: number;
+    z: number;
+}
 export interface ClientToServerEvents {
     create_mission_room: (missionId: MissionID) => void;
     join_mission_room: (roomId: string) => void;
@@ -26,7 +32,6 @@ export interface AAPosition {
 }
 export interface MissionData {
     mapName: string;
-    aas: AAObject[];
     yourAAId: string;
     aaPositions: AAPosition[];
 }
@@ -38,9 +43,6 @@ export interface PlayerJoinedData {
     aaPositionId: number
 }
 
-export interface MissionUpdate {
-    flightObjects: FlightObjectDTO[];
-}
 export interface ServerToClientEvents {
     mission_rooms: (missions: MissionRoom[]) => void;
     mission_room_created: (payload: MissionRoom) => void;
@@ -48,9 +50,7 @@ export interface ServerToClientEvents {
     player_leaved: (roomId: string) => void;
     room_deleted: (roomId: string) => void;
     mission_environment: (missionData: MissionData) => void;
-    mission_aas_update: (aas: MissionData['aas']) => void;
-    mission_update: (missionUpdate: MissionUpdate) => void;
-    captured_target: (capturedTargetId: string | null) => void;
+    update_world_state: (state: EntityState[]) => void;
     error: (error: string) => void;
     
 }

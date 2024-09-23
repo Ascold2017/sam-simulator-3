@@ -1,7 +1,7 @@
 <template>
     <TresPerspectiveCamera v-if="currentAA" :fov="75" :far="10000" :zoom="zoom"
-        :position="[currentAA.position.x, currentAA.position.y, currentAA.position.z]"
-        :key="zoom + currentAA.position.x + currentAA.position.y + currentAA.position.z + direction.azimuth + direction.elevation" />
+        :position="currentAA.position"
+        :key="zoom + currentAA.position.join(',') + direction.azimuth + direction.elevation" />
 </template>
 
 <script setup lang="ts">

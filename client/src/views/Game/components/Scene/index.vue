@@ -20,15 +20,9 @@
         <Camera />
         <!-- Контролы-->
 
-        <!-- 
-        <DeviceOrientationControl  :min-elevation="0" :max-elevation="Math.PI / 4"
-            @update-direction="direction = $event" @update-orientation="deviceStore.orientation = $event" />
-        -->
-
         <!-- Летающие обьекты -->
-        <FlightObject v-for="flightObject in parsedFlightObjects" :flight-object="flightObject"
-            :key="flightObject.id" />
-        <SmokeEmitter :flight-objects="parsedFlightObjects" />
+        <TargetNPC v-for="targetNPC in parsedTargetNPCs" :targetNPC="targetNPC" :key="targetNPC.id" />
+        <Missile v-for="missile in missiles" :missile="missile" :key="missile.id" />
         <!-- Зенитки-->
         <AAObject v-for="aaObject in aas" :aaObject="aaObject" />
 
@@ -46,8 +40,9 @@ import { TresCanvas } from '@tresjs/core'
 import { Sky, GLTFModel } from '@tresjs/cientos'
 import { useGameStore } from '../../../../stores/game';
 import { useDevice } from '../../../../stores/device';
-import FlightObject from './FlightObject.vue';
-import AAObject from './AAObject.vue';
+import TargetNPC from './Objects/TargetNPC.vue';
+import Missile from './Objects/Missile.vue';
+import AAObject from './Objects/AAObject.vue';
 import CustomFirstPersonControl from './CustomFirstPersonControl.vue';
 import LoadIndicator from './LoadIndicator.vue'
 import SmokeEmitter from './SmokeEmitter.vue';
@@ -57,7 +52,7 @@ import { computed } from 'vue';
 const gameStore = useGameStore()
 const deviceStore = useDevice()
 const { isMobile } = storeToRefs(deviceStore)
-const { parsedFlightObjects, aas, map } = storeToRefs(gameStore);
+const { parsedTargetNPCs, missiles, aas, map } = storeToRefs(gameStore);
 
 const sunElevation = 25;
 const sunElevationRad = sunElevation * (Math.PI / 180);

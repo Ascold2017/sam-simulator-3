@@ -26,18 +26,8 @@ export interface AAPosition {
   aaId: string;
 }
 
-export interface AAObject {
-  id: string;
-  position: Position;
-  type: "missile" | "gun";
-  ammoVelocity: number;
-  ammoMaxRange: number;
-  ammoKillRadius: number;
-  captureAngle: number;
-}
 export interface MissionData {
   mapName: string;
-  aas: AAObject[];
   yourAAId: string;
   aaPositions: AAPosition[];
 }
@@ -49,18 +39,6 @@ export interface PlayerJoinedData {
   aaPositionId: number;
 }
 
-export interface FlightObject {
-  id: string;
-  isKilled: boolean;
-  isDestroyed: boolean;
-  position: Position;
-  quaternion: [number, number, number, number];
-  type: "target" | "missile" | "bullet" | "unknown";
-}
-
-export interface MissionUpdate {
-  flightObjects: FlightObject[];
-}
 export interface ServerToClientEvents {
   mission_rooms: (missions: MissionRoom[]) => void;
   mission_room_created: (payload: MissionRoom) => void;
@@ -68,8 +46,42 @@ export interface ServerToClientEvents {
   player_leaved: (roomId: string) => void;
   room_deleted: (roomId: string) => void;
   mission_environment: (missionData: MissionData) => void;
-  mission_aas_update: (aas: MissionData["aas"]) => void;
-  captured_target: (capturedTargetId: string | null) => void;
-  mission_update: (missionUpdate: MissionUpdate) => void;
+  update_world_state: (state: EntityState[]) => void;
   error: (error: string) => void;
+}
+
+
+export interface EntityState {
+  id: string;
+  position: [number, number, number];
+  quaternion: [number, number, number, number];
+  isDestroyed: boolean;
+  type: string;
+}
+
+export interface AAState extends EntityState {
+  type: 'aa';
+  ammoCount: number;
+  aimRay: [number, number, number];
+  launchedMissileIds: string[];
+  detectedTargetIds: string[];
+}
+
+export interface FlightObjectState extends EntityState {
+  type: 'flight-object' | string;
+  velocity: [number, number, number];
+  isKilled: boolean;
+}
+
+export interface TargetNPCState extends FlightObjectState {
+  type: 'target-npc';
+  rcs: number;
+  temperature: number;
+  size: number;
+}
+
+export interface GuidedMissileState extends FlightObjectState {
+  type: 'guided-missile';
+  distanceTraveled: number;
+  exploded: boolean;
 }
