@@ -47,5 +47,9 @@ router.patch('/adm/users/role/:id', userController.patchUserRole())
 router.delete('/adm/users/:id', userController.deleteUser())
 
 router.get('/adm/maps', mapController.getMaps())
+router.get('/adm/maps/:id', mapController.getMapById())
+router.post('/adm/maps', mapController.postMap())
+router.put('/adm/maps/:id', mapController.putMap())
+router.delete('/adm/maps/:id', mapController.deleteMap())
 
 export default router;

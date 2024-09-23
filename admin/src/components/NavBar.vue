@@ -9,6 +9,9 @@
       <li class="navbar__item">
         <RouterLink :to="{ name: 'aas' }" class="navbar__link">AAs</RouterLink>
       </li>
+      <li class="navbar__item">
+        <RouterLink :to="{ name: 'maps' }" class="navbar__link">Maps</RouterLink>
+      </li>
       <li class="navbar__item"><RouterLink :to="{ name: 'users' }" class="navbar__link">Users</RouterLink></li>
     </ul>
     <button @click="authStore.logout" class="navbar__logout">Logout</button>

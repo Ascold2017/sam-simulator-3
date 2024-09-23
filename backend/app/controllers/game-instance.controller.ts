@@ -4,7 +4,6 @@ import {
   CustomSocket,
   ClientToServerEvents,
   ServerToClientEvents,
-  AAPosition,
 } from "../types/sockets.model";
 import { v4 as uuidv4 } from "uuid";
 import { Mission } from "../entities/mission.entity";
@@ -102,7 +101,6 @@ export class GameInstanceController {
       roomId: this.roomId,
       userId: user.id,
       username: user.username,
-      aaPositionId: availablePosition.id,
     });
 
     socket.on('update_direction', ({ direction }) => {
@@ -142,7 +140,6 @@ export class GameInstanceController {
     this.io.to(playerId).emit("mission_environment", {
       mapName: this.missionData.map.filename,
       yourAAId: playerData.aaId,
-      aaPositions: this.getAAPositions(),
     });
   }
 
@@ -154,19 +151,6 @@ export class GameInstanceController {
     return this.missionData.aaPositions.find(
       (aaPosition) => !takenAAPositionIds.includes(aaPosition.id)
     );
-  }
-
-  private getAAPositions() {
-    return this.missionData.aaPositions.map((aaPosition) => {
-      const player = Array.from(this.players.values()).find(
-        (playerData) => aaPosition.id === playerData.aaPositionId
-      );
-      return {
-        id: aaPosition.id,
-        position: aaPosition.position,
-        aaId: player?.aaId || null, ///
-      };
-    });
   }
 
 }

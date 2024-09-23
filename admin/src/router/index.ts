@@ -29,6 +29,26 @@ export const router = createRouter({
       ],
     },
     {
+      path: "/maps",
+      children: [
+        {
+          path: "",
+          name: "maps",
+          component: () => import("../views/Maps/index.vue"),
+        },
+        {
+          path: ":id",
+          name: "mapEdit",
+          component: () => import("../views/MapEditor/index.vue"),
+        },
+        {
+          path: "new",
+          name: "mapCreate",
+          component: () => import("../views/MapEditor/index.vue"),
+        }
+      ]
+    },
+    {
       path: "/targets",
       name: "targets",
       component: () => import("../views/Targets/index.vue"),

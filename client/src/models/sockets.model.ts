@@ -20,16 +20,9 @@ export interface ClientToServerEvents {
   disconnect: () => void;
 }
 
-export interface AAPosition {
-  id: number;
-  position: Position;
-  aaId: string;
-}
-
 export interface MissionData {
   mapName: string;
   yourAAId: string;
-  aaPositions: AAPosition[];
 }
 
 export interface PlayerJoinedData {

@@ -3,7 +3,7 @@ export interface Map {
     name: string;
     filename: string;
     size: number;
-    maxHeight: number;
+    data: number[][];
 }
 
 export type AdmMapListResponse = Map[]

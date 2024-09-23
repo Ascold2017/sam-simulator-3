@@ -12,7 +12,6 @@ export const useGameStore = defineStore("game", () => {
 
   const map = ref<MissionData["mapName"]>("");
   
-  const aaPositions = ref<MissionData["aaPositions"]>([]);
   const aaId = ref<string | null>(null);
 
   const aas = ref<AAState[]>([]);
@@ -52,7 +51,6 @@ export const useGameStore = defineStore("game", () => {
   socketClient.listenToEvent("mission_environment", (data) => {
     map.value = data.mapName;
     aaId.value = data.yourAAId;
-    aaPositions.value = data.aaPositions;
     isInitialized.value = true;
   });
 
@@ -95,7 +93,6 @@ export const useGameStore = defineStore("game", () => {
     isInitialized,
     map,
     aas,
-    aaPositions,
     currentAA,
     parsedTargetNPCs,
     missiles,
