@@ -28,11 +28,6 @@ const router = createRouter({
       path: '/test',
       name: 'test',
       component: () => import('../views/Test/index.vue')
-    },
-    {
-      path: '/heightmap',
-      name: 'heightmap',
-      component: () => import('../views/Test/GenerationHeightmap.vue')
     }
   ]
 })

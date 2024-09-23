@@ -11,7 +11,7 @@
         <CameraControls />
 
         <Suspense>
-            <GLTFModel path="http://localhost:8080/flight-objects/plane/scene.gltf" cast-shadow receive-shadow/>
+            <GLTFModel path="http://localhost:8080/models/snow/scene.gltf" cast-shadow receive-shadow/>
         </Suspense>
     </TresCanvas>
 </template>
