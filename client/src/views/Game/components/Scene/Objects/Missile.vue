@@ -19,7 +19,7 @@ import Sound from './Sound.vue';
 import { GuidedMissileState } from '../../../../../models/sockets.model';
 import Smoke from './Smoke.vue';
 
-const props = defineProps<{
+defineProps<{
     missile: GuidedMissileState,
 }>();
 

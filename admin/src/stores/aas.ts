@@ -5,10 +5,13 @@ import { AAListResponse, AA } from "../models/aa.model";
 const defaultAA: EditableAA = {
   id: null,
   name: "",
-  type: "missile",
+  type: "guided-missile",
+  ammoCount: 10,
+  ammoMinRange: 0,
   ammoMaxRange: 8000,
   ammoVelocity: 900,
   ammoKillRadius: 30,
+  ammoMaxOverload: 10,
   captureAngle: 0.1,
   reloadTime: 3,
 };

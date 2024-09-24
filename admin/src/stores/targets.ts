@@ -10,6 +10,8 @@ export interface EditableTarget extends Target {
 const defaultTarget = {
   id: null,
   name: '',
+  modelName: '',
+  soundName: '',
   rcs: 0,
   temperature: 0,
   size: 0

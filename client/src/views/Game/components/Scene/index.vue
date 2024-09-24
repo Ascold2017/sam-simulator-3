@@ -45,7 +45,6 @@ import Missile from './Objects/Missile.vue';
 import AAObject from './Objects/AAObject.vue';
 import CustomFirstPersonControl from './CustomFirstPersonControl.vue';
 import LoadIndicator from './LoadIndicator.vue'
-import SmokeEmitter from './SmokeEmitter.vue';
 import Camera from './Camera.vue';
 import { computed } from 'vue';
 
