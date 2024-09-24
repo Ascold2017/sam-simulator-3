@@ -19,7 +19,7 @@ export const useMaps = defineStore('maps', () => {
     const mapId = ref<number | null>(null);
     const mapName = ref<string>("");
     const mapFilename = ref<string>("");
-    const mapData = ref<number[][]>(genSquareArray(20));
+    const mapData = ref<number[][]>(genSquareArray(10));
     const mapSize = ref<number>(0);
 
 
@@ -33,7 +33,7 @@ export const useMaps = defineStore('maps', () => {
         mapId.value = response.id
         mapName.value = response.name
         mapFilename.value = response.filename
-        mapData.value = response.data || genSquareArray(20)
+        mapData.value = response.data || genSquareArray(10)
         mapSize.value = response.size
     }
 
@@ -68,7 +68,7 @@ export const useMaps = defineStore('maps', () => {
         mapId.value = null
         mapName.value = ''
         mapFilename.value = ''
-        mapData.value = genSquareArray(20);
+        mapData.value = genSquareArray(10);
         mapSize.value = 0
     }
     return {

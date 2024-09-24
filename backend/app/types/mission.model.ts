@@ -1,4 +1,4 @@
-import { Position, Waypoint } from "@core/app";
+import { Position } from "./sockets.model";
 
 export interface Mission {
     id: number;
@@ -14,7 +14,7 @@ export interface AdmMission {
         name: string;
         filename: string;
         size: number;
-        maxHeight: number;
+        data: number[][];
         createdAt: number;
     }
 }
@@ -30,7 +30,7 @@ export interface CreateMissionPayload {
     }[];
     targetsToCreate: {
         targetId: number,
-        waypoints: Waypoint[]
+        waypoints: { speed: number, position: Position }[]
     }[]
 }
 
@@ -48,11 +48,11 @@ export interface UpdateMissionPayload {
     aaPositionsToDelete: number[],
     targetsToCreate: {
         targetId: number,
-        waypoints: Waypoint[]
+        waypoints:  { speed: number, position: Position }[]
     }[]
     targetsToUpdate: {
         id: number,
-        waypoints: Waypoint[]
+        waypoints:  { speed: number, position: Position }[]
     }[],
     targetsToDelete: number[],
 }

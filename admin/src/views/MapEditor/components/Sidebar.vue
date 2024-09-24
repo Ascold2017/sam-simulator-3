@@ -7,7 +7,7 @@
 
 
 
-        <button @click="onSave" class="mission-editor-sidebar__save-btn">Save</button>
+        <button @click="onSave" class="map-editor-sidebar__save-btn mt-6">Save</button>
     </aside>
 
 </template>

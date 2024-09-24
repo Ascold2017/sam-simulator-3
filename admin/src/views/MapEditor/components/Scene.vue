@@ -6,10 +6,10 @@
         <TresCanvas alpha clearColor="#3b82f6">
             <TresAmbientLight :color="0x404040" :intensity="0.8" />
             <TresDirectionalLight :color="0xffffff" :intensity="1.2" :position="[100, 100, 100]" :look-at="[0, 0, 0]" />
-            <TresPerspectiveCamera :far="20000" :position="[0, 100, 0]" />
-            <OrbitControls :enableRotate="!isDisabledOrbitControls" :maxDistance="5000" :minDistance="500" />
+            <TresPerspectiveCamera :far="25000" :position="[0, 100, 0]" />
+            <OrbitControls :enableRotate="!isDisabledOrbitControls" :maxDistance="10000" :minDistance="500" />
 
-            <TransformControls v-if="selectedObject" :object="selectedObject" mode="translate"
+            <TransformControls v-if="selectedObject" :object="selectedObject" mode="translate" axis="Y"
                 @object-change="handleObjectChange" @click="cancelEditing" />
 
             <Sphere v-for="s in boundingSpheres" :position="s.position" :args="[s.radius]" :userData="s.userData"
@@ -41,8 +41,8 @@ const boundingSpheres = computed(() => {
     const spheres = []
     for (let i = 0; i < mapData.value.length; i++) {
         for (let j = 0; j < mapData.value[i].length; j++) {
-            const coordX = mapSize.value / 2 - i * (mapSize.value / 20)
-            const coordY = mapSize.value / 2 - j * (mapSize.value / 20)
+            const coordX = mapSize.value / 2 - i * (mapSize.value / 10)
+            const coordY = mapSize.value / 2 - j * (mapSize.value / 10)
             spheres.push({
                 position: [coordX, mapData.value[i][j], coordY],
                 userData: { i, j },
