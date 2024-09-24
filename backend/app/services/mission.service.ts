@@ -1,6 +1,6 @@
 import { CreateMissionPayload, UpdateMissionPayload } from "app/types/mission.model";
 import { DI } from "../config/dataSource";
-import { EntityManager } from "typeorm";
+import { EntityManager, In } from "typeorm";
 import { Mission } from "../entities/mission.entity";
 import { MissionAAPosition } from "../entities/missionAAPosition";
 import { MissionTarget } from "../entities/missionTarget.entity";
@@ -97,7 +97,7 @@ export class MissionService {
             // Обновляем AA позиции
             // Удаление
             if (data.aaPositionsToDelete.length) {
-                await manager.delete(MissionAAPosition, { id: data.aaPositionsToDelete });
+                await manager.delete(MissionAAPosition, { id: In(data.aaPositionsToDelete) });
             }
 
             // Добавление
@@ -121,7 +121,7 @@ export class MissionService {
             // Обновляем цели
             // Удаление целей
             if (data.targetsToDelete.length) {
-                await manager.delete(MissionTarget, { id: data.targetsToDelete });
+                await manager.delete(MissionTarget, { id: In(data.targetsToDelete) });
             }
 
             // Добавление новых целей
