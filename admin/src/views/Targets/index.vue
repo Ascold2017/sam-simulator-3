@@ -10,6 +10,8 @@
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Model name</th>
+                    <th>Sound name</th>
                     <th>RCS, m^2</th>
                     <th>Temperature, °C</th>
                     <th>Size, m</th>
@@ -20,6 +22,8 @@
                 <tr v-for="target in targets" :key="target.id">
                     <td>{{ target.id }}</td>
                     <td>{{ target.name }}</td>
+                    <td>{{ target.modelName }}</td>
+                    <td>{{ target.soundName }}</td>
                     <td>{{ target.rcs }}</td>
                     <td>{{ target.temperature }}</td>
                     <td>{{ target.size }}</td>

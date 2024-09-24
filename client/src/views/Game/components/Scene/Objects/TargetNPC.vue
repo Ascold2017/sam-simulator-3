@@ -5,7 +5,7 @@
                 <GLTFModel :path="modelPath" :rotation="[0, Math.PI / 2, 0]" />
             </Suspense>
 
-            <Sound url="/airplane.mp3" loop :volume="0.5" />
+            <Sound :url="soundPath" loop :volume="0.5" />
 
             <TresMesh v-if="camera && targetNPC.isCaptured" ref="infoPlane"
                 :scale="[infoPlaneScale, infoPlaneScale, infoPlaneScale]">
@@ -45,7 +45,10 @@ const infoPlaneScale = computed(() => {
 });
 
 const modelPath = computed(() => {
-    return `${import.meta.env.VITE_APP_STATIC_URL}/flight-objects/Drone-M.gltf`;
+    return `${import.meta.env.VITE_APP_STATIC_URL}/flight-objects/${props.targetNPC.targetEntity?.modelName}.gltf`;
+})
+const soundPath = computed(() => {
+    return `${import.meta.env.VITE_APP_STATIC_URL}/flight-objects/${props.targetNPC.targetEntity?.soundName}.mp3`;
 })
 
 
@@ -71,6 +74,7 @@ function createOutlineTexture() {
 
 
 onLoop(() => {
+    console.log(props.targetNPC.entityId)
     // Плоскость с текстурой всегда смотрит на камеру
     if (infoPlane.value && camera.value) {
         infoPlane.value.lookAt(camera.value.position);

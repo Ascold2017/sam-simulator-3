@@ -5,7 +5,7 @@
             <GLTFModel :path="modelPath"  :rotation="[0, Math.PI / 2, 0]"/>
         </Suspense>
 
-        <Sound :url="soundUrl" loop :volume="2" v-if="!missile.isDestroyed" />
+        <Sound :url="soundPath" loop :volume="2" v-if="!missile.isDestroyed" />
         <Sound url="/explosion.mp3" v-if="missile.exploded" :volume="2" />
         <Smoke :position="missile.position" :color="0xc0c0c0" :particle-size="10" />
     </TresGroup>
@@ -27,10 +27,13 @@ const infoPlane = ref<TresObject | null>(null);
 const { camera } = useTres(); // Камера
 const { onLoop } = useRenderLoop(); // Рендер-цикл
 
-const soundUrl = computed(() => '/missile_heavy.mp3')
 
 const modelPath = computed(() => {
     return `${import.meta.env.VITE_APP_STATIC_URL}/flight-objects/Missile-M.gltf`;
+})
+
+const soundPath = computed(() => {
+    return `${import.meta.env.VITE_APP_STATIC_URL}/flight-objects/missile_heavy.mp3`;
 })
 
 

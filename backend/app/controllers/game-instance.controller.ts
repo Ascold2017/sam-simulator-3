@@ -42,7 +42,10 @@ export class GameInstanceController {
     });
 
     this.coreInstance.eventEmitter.on('update_world_state', (state) => {
-      this.io.to(this.roomId).emit('update_world_state', state)
+      this.io.to(this.roomId).emit('update_world_state', state.map(e => ({
+        ...e,
+        entityId: e.type === 'target-npc' ? +e.id : null
+      })))
     })
 
     this.missionData = missionData;

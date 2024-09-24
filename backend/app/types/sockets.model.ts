@@ -36,6 +36,10 @@ export interface PlayerJoinedData {
     username: string;
 }
 
+export interface ExtendedEntityState extends EntityState {
+    entityId: number | null; // id of entity in DB
+}
+
 export interface ServerToClientEvents {
     mission_rooms: (missions: MissionRoom[]) => void;
     mission_room_created: (payload: MissionRoom) => void;
@@ -43,7 +47,7 @@ export interface ServerToClientEvents {
     player_leaved: (roomId: string) => void;
     room_deleted: (roomId: string) => void;
     mission_environment: (missionData: MissionData) => void;
-    update_world_state: (state: EntityState[]) => void;
+    update_world_state: (state: ExtendedEntityState[]) => void;
     error: (error: string) => void;
     
 }

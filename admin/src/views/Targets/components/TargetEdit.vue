@@ -8,6 +8,10 @@
 
             <BaseInput id="target-name" v-model="currentTarget.name" label="Target Name"
                 placeholder="Enter target name" />
+            <BaseInput id="target-modelName" v-model="currentTarget.modelName" label="Target model name"
+                placeholder="Enter model name name" />
+            <BaseInput id="target-soundName" v-model="currentTarget.soundName" label="Target sound name"
+                placeholder="Enter sound name" />
             <BaseInput id="target-rcs" v-model="currentTarget.rcs" label="Target RCS"
                 placeholder="Enter target RCS, m^2" />
             <BaseInput id="target-temperature" v-model="currentTarget.temperature" label="Target temperature"

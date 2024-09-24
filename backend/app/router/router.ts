@@ -21,6 +21,7 @@ router.get('/user', authController.authMiddleware(), (req, res) => authControlle
 
 router.get('/missions', authController.authMiddleware(), missionController.getMissions())
 router.get('/aas', authController.authMiddleware(), aaController.getAAs())
+router.get('/targets', authController.authMiddleware(), targetController.getTargets())
 
 // ADM
 router.get('/adm/missions', missionController.getMissionsExtended())

@@ -47,6 +47,7 @@ export const useMaps = defineStore('maps', () => {
                 size: mapSize.value
             })
             mapId.value = response.id
+            return response.id
         } else {
             const response = await httpClient.post<Map>('/adm/maps', {
                 name: mapName.value,
@@ -55,6 +56,7 @@ export const useMaps = defineStore('maps', () => {
                 size: mapSize.value
             })
             mapId.value = response.id
+            return response.id
         }
     }
 

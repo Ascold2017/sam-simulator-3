@@ -1,13 +1,17 @@
 import { defineStore } from "pinia";
 import { socketClient } from "../adapters/socketClient";
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useNotificationStore } from "./notifications";
 import { AAState, GuidedMissileState, MissionData, TargetNPCState } from "../models/sockets.model";
+import { useTargets } from "./targets";
+import type { Target } from "../models/target.model";
 
 export interface ParsedTargetNPCState extends TargetNPCState {
+  targetEntity: Target | null;
   isCaptured: boolean;
 }
 export const useGameStore = defineStore("game", () => {
+  const targetStore = useTargets();
   const notifications = useNotificationStore();
 
   const map = ref<MissionData["mapName"]>("");
@@ -32,6 +36,7 @@ export const useGameStore = defineStore("game", () => {
   const parsedTargetNPCs = computed<ParsedTargetNPCState[]>(() => {
     return targetNPCs.value.map((fo) => ({
       ...fo,
+      targetEntity: targetStore.targets.find(t => t.id === fo.entityId),
       isCaptured: true
     }));
   });
@@ -46,6 +51,10 @@ export const useGameStore = defineStore("game", () => {
     socketClient.send("update_direction", {
       direction
     });
+  })
+
+  onMounted(() => {
+    targetStore.getTargets()
   })
 
   socketClient.listenToEvent("mission_environment", (data) => {

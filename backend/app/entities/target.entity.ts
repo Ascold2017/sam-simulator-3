@@ -7,6 +7,12 @@ export class Target extends BaseEntity {
     @Column()
     name: string;
     
+    @Column({ nullable: true })
+    modelName: string;
+
+    @Column({ nullable: true })
+    soundName: string;
+    
     @Column({ type: 'double precision' })
     rcs: number;
 

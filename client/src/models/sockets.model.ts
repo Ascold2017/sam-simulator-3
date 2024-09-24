@@ -39,20 +39,21 @@ export interface ServerToClientEvents {
   player_leaved: (roomId: string) => void;
   room_deleted: (roomId: string) => void;
   mission_environment: (missionData: MissionData) => void;
-  update_world_state: (state: EntityState[]) => void;
+  update_world_state: (state: ExtendedEntityState[]) => void;
   error: (error: string) => void;
 }
 
 
-export interface EntityState {
+export interface ExtendedEntityState {
   id: string;
+  entityId: number | null;
   position: [number, number, number];
   quaternion: [number, number, number, number];
   isDestroyed: boolean;
   type: string;
 }
 
-export interface AAState extends EntityState {
+export interface AAState extends ExtendedEntityState {
   type: 'aa';
   ammoCount: number;
   aimRay: [number, number, number];
@@ -60,7 +61,7 @@ export interface AAState extends EntityState {
   detectedTargetIds: string[];
 }
 
-export interface FlightObjectState extends EntityState {
+export interface FlightObjectState extends ExtendedEntityState {
   type: 'flight-object' | string;
   velocity: [number, number, number];
   isKilled: boolean;

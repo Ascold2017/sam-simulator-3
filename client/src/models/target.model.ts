@@ -8,5 +8,4 @@ export interface Target {
     size: number;
 }
 
-
 export type TargetListResponse = Target[]
