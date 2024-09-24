@@ -1,6 +1,6 @@
 <template>
     <TresGroup>
-        <Line2 v-if="linePoints.length > 0" :points="linePoints" :line-width="2" color="white" :key="linePointsKey" />
+        <Line2 v-if="linePoints.length > 0" :points="linePoints" :line-width="2" :color="isHighlighted ? 'red' : 'white'" :key="linePointsKey" />
         <Sphere v-for="(waypoint, index) in waypoints" :args="[30, 10, 10]"
             :position="[waypoint.position.x, waypoint.position.y, waypoint.position.z]"
             :color="getSphereColor(index, target.waypoints.length)"
@@ -16,7 +16,7 @@ import { EditableTarget } from '../../../stores/missionEditor/targets';
 import { computed } from 'vue';
 
 
-const props = defineProps<{ target: EditableTarget }>()
+const props = defineProps<{ target: EditableTarget, isHighlighted: boolean }>()
 
 const emit = defineEmits<{ click: [object: Object3D] }>()
 

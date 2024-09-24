@@ -52,6 +52,7 @@ export interface UpdateMissionPayload {
     }[]
     targetsToUpdate: {
         id: number,
+        targetId: number,
         waypoints:  { speed: number, position: Position }[]
     }[],
     targetsToDelete: number[],

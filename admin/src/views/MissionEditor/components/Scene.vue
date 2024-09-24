@@ -16,7 +16,7 @@
 
             <AAPosition v-for="aaPosition in aaPositionsToShow" :key="aaPosition.id" :aaPosition="aaPosition"
                 @click="editPosition" />
-            <Target v-for="target in targetsToShow" :key="target.id" :target="target" @click="editPosition" />
+            <Target v-for="target in targetsToShow" :key="target.id" :target="target" :is-highlighted="higlihtedTargetId === target.id" @click="editPosition" />
 
             <Suspense v-if="terrainPath">
                 <GLTFModel :path="terrainPath" />
@@ -36,7 +36,7 @@ import { computed, ref } from 'vue';
 import { Object3D } from 'three';
 const missionEditor = useMissionEditor();
 
-const { currentMap, aaPositionsToShow, targetsToShow } = storeToRefs(missionEditor);
+const { currentMap, aaPositionsToShow, targetsToShow, higlihtedTargetId } = storeToRefs(missionEditor);
 
 const isDisabledOrbitControls = ref(false)
 const selectedObject = ref<Object3D | null>(null);

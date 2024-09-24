@@ -18,6 +18,7 @@ export const useMissionEditor = defineStore("mission-editor", () => {
   const missionName = ref<string>("");
   const missionDuration = ref(1000)
   const mapId = ref<number | null>(null);
+  
 
   const {
     aaPositions,
@@ -37,6 +38,7 @@ export const useMissionEditor = defineStore("mission-editor", () => {
     targetsToCreate,
     targetsToUpdate,
     targetsToDelete,
+    higlihtedTargetId,
     setTargets,
     addTarget,
     updateTarget,
@@ -163,5 +165,6 @@ export const useMissionEditor = defineStore("mission-editor", () => {
     addWaypoint,
     updateWaypoint,
     removeWaypoint,
+    higlihtedTargetId
   };
 });

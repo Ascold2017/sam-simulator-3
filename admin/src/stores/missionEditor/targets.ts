@@ -23,6 +23,8 @@ export const useTargets = () => {
     targets.value.filter((target) => !target.isDeleted)
   );
 
+  const higlihtedTargetId = ref<string | null>(null);
+
   const targetsToCreate = computed(() =>
     targets.value
       .filter((target) => target.isNew)
@@ -152,6 +154,7 @@ export const useTargets = () => {
     targetsToCreate,
     targetsToUpdate,
     targetsToDelete,
+    higlihtedTargetId,
     setTargets,
     updateTarget,
     addTarget,

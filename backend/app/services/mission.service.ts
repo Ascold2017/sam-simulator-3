@@ -144,6 +144,9 @@ export class MissionService {
                 });
 
                 missionTarget.waypoints = targetUpdateData.waypoints;
+                missionTarget.target = await manager.findOneOrFail(DI.targetRepository.target, {
+                    where: { id: targetUpdateData.targetId }
+                })
                 
                 manager.save(missionTarget);
             }
