@@ -74,7 +74,6 @@ function createOutlineTexture() {
 
 
 onLoop(() => {
-    console.log(props.targetNPC.entityId)
     // Плоскость с текстурой всегда смотрит на камеру
     if (infoPlane.value && camera.value) {
         infoPlane.value.lookAt(camera.value.position);
