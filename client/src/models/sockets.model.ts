@@ -40,6 +40,7 @@ export interface ServerToClientEvents {
   room_deleted: (roomId: string) => void;
   mission_environment: (missionData: MissionData) => void;
   update_world_state: (state: EntityState[]) => void;
+  target_killed: (state: TargetNPCState) => void;
   error: (error: string) => void;
 }
 

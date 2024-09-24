@@ -70,6 +70,14 @@ export const useGameStore = defineStore("game", () => {
     missiles.value = update.filter(e => e.type === 'guided-missile') as GuidedMissileState[];
   });
 
+  socketClient.listenToEvent('target_killed', target => {
+    notifications.openNotification({
+      title: "Target killed",
+      text: targetStore.targets.find(t => t.id === target.entityId)?.name ?? 'Unknown target',
+      type: "info",
+    })
+  })
+
   socketClient.listenToEvent("error", (error) => {
     notifications.openNotification({
       title: "Error",

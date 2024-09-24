@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { EntityState } from "@core/app"
+import { EntityState, TargetNPCState } from "@core/app"
 import { User } from "app/entities/user.entity";
 
 
@@ -45,6 +45,7 @@ export interface ServerToClientEvents {
     room_deleted: (roomId: string) => void;
     mission_environment: (missionData: MissionData) => void;
     update_world_state: (state: EntityState[]) => void;
+    target_killed: (state: TargetNPCState) => void;
     error: (error: string) => void;
     
 }
