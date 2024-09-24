@@ -32,9 +32,12 @@ CREATE TABLE public.aa (
     "createdAt" bigint DEFAULT (EXTRACT(epoch FROM now()) * (1000)::numeric) NOT NULL,
     name character varying NOT NULL,
     type character varying NOT NULL,
+    "ammoCount" integer NOT NULL,
+    "ammoMinRange" double precision NOT NULL,
     "ammoMaxRange" double precision NOT NULL,
     "ammoVelocity" double precision NOT NULL,
     "ammoKillRadius" double precision NOT NULL,
+    "ammoMaxOverload" double precision NOT NULL,
     "captureAngle" double precision NOT NULL,
     "reloadTime" double precision NOT NULL
 );
@@ -159,7 +162,7 @@ CREATE TABLE public.mission_map (
     name character varying NOT NULL,
     filename character varying NOT NULL,
     size integer NOT NULL,
-    "maxHeight" integer NOT NULL
+    "data" jsonb NOT NULL
 );
 
 
@@ -240,6 +243,8 @@ CREATE TABLE public.target (
     id integer NOT NULL,
     "createdAt" bigint DEFAULT (EXTRACT(epoch FROM now()) * (1000)::numeric) NOT NULL,
     name character varying NOT NULL,
+    "modelName" character varying NOT NULL,
+    "soundName" character varying NOT NULL,
     rcs double precision NOT NULL,
     temperature double precision NOT NULL,
     size double precision NOT NULL
@@ -380,8 +385,8 @@ ALTER TABLE ONLY public."user" ALTER COLUMN id SET DEFAULT nextval('public.user_
 -- Data for Name: aa; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.aa (id, "createdAt", name, type, "ammoMaxRange", "ammoVelocity", "ammoKillRadius", "captureAngle", "reloadTime") FROM stdin WITH (FORMAT csv, DELIMITER ',', NULL 'NULL');
-1,1726224284628,SAM-8,missile,8000,900,30,0.523599,3
+COPY public.aa (id, "createdAt", name, type, "ammoMinRange", "ammoCount", "ammoMaxRange", "ammoVelocity", "ammoKillRadius", "ammoMaxOverload", "captureAngle", "reloadTime") FROM stdin WITH (FORMAT csv, DELIMITER ',', NULL 'NULL');
+1,1726224284628,SAM-8,guided-missile,100,8,8000,900,30,15,0.523599,3
 \.
 
 
@@ -415,8 +420,8 @@ COPY public.mission_aa_position (id, "createdAt", "position", "missionId") FROM 
 -- Data for Name: mission_map; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.mission_map (id, "createdAt", name, filename, size, "maxHeight") FROM stdin;
-1	1726224284628	Mars	mars	8000	938
+COPY public.mission_map (id, "createdAt", name, filename, size, "data") FROM stdin  WITH (FORMAT csv, DELIMITER '|', NULL 'NULL');
+1|1726224284628|Mars|mars|8000|[[389.4787367125882,432.7314779548242,551.6792523675197,396.1066710626569,372.8359489291461,222.64607420493894,150.05543006484686,45.66998247723609,30.924315223805536,27.33902095005425],[432.62715618825166,514.2176338717436,460.41657962861245,301.05758464029464,254.265912537389,114.61912302313829,122.47655414058704,79.05554325657943,76.42181356615242,58.84800871014613],[599.0375159100308,578.1862728532548,457.9108715947324,296.97268832437385,134.29800045781468,74.12286092532929,54.255664542992065,59.10688493072445,69.53685511348544,99.4993638582298],[666.1248798771517,549.6553574340408,402.4738818968109,283.340881709737,94.48407655427883,48.48624470442161,65.26013469635507,60.960167544425474,55.28591662580254,67.49550991973496],[455.06544239723644,293.8452024430776,193.4557050469108,96.59988308138726,32.321412779128536,40.43666973352424,43.509479375648255,42.62038245089062,72.56411539272824,62.00730846850473],[268.99703453285315,186.74493964767487,74.07251423731202,44.84288413468198,40.05587447850809,59.44761505163001,58.01794293779517,62.23337503404201,81.95154440266145,81.62201594219022],[167.37346439016505,57.03886820685881,27.83688055890923,51.59980599423625,113.15905336044557,116.10415644277282,100.84084980031378,101.0139137669999,50.88455502354958,21.44051716552866],[133.92837699324764,23.514072563227444,60.35577740868223,91.0843187060845,117.66075645417072,84.09451393216585,62.88755046742233,43.680925861105266,19.250971742630696,17.690410050893917],[131.99253129214856,27.083495312224386,82.77040097225796,85.70611856931271,110.66578539755284,86.19205158247354,43.55807613115087,53.86527990996501,25.733674869896248,0],[149.04929264050367,63.63447973221798,23.780820155151616,75.37243060203735,127.3216265579004,87.23351530232469,31.21994294460785,32.7889795895872,26.743317039560793,17.462243429079408]]
 \.
 
 
@@ -439,12 +444,12 @@ COPY public.mission_target (id, "createdAt", waypoints, "targetId", "missionId")
 -- Data for Name: target; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.target (id, "createdAt", name, rcs, temperature, size) FROM stdin;
-1	1726224284628	Drone-M	0.5	81	10
-3	1726293281178	Drone-S	0.01	54	3
-4	1726293305495	Drone-L	3	90	12
-5	1726293332474	Fighter	3	200	15
-6	1726293373914	Bomber	10	250	40
+COPY public.target (id, "createdAt", name, "modelName", "soundName", rcs, temperature, size) FROM stdin WITH (FORMAT csv, DELIMITER ',', NULL 'NULL');
+1,1726224284628,Drone-M,Drone-M,Drone-M,0.5,81,10
+3,1726293281178,Drone-S,Drone-S,Drone-S,0.01,54,3
+4,1726293305495,Drone-L,Drone-L,Drone-L,3,90,12
+5,1726293332474,Fighter,Fighter,Fighter,3,200,15
+6,1726293373914,Bomber,Bomber,Bomber,10,250,40
 \.
 
 
