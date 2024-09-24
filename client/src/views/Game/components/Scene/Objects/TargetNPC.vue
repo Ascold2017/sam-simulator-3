@@ -1,18 +1,16 @@
 <template>
     <TresGroup :position="targetNPC.position" :quaternion="targetNPC.quaternion">
-        <template v-if="!targetNPC.isDestroyed">
-            <Suspense>
-                <GLTFModel :path="modelPath" :rotation="[0, Math.PI / 2, 0]" />
-            </Suspense>
+        <Suspense v-if="!targetNPC.isDestroyed">
+            <GLTFModel :path="modelPath" />
+        </Suspense>
 
-            <Sound :url="soundPath" loop :volume="0.5" />
+        <Sound :url="soundPath" loop :volume="0.5" v-if="!targetNPC.isDestroyed" />
 
-            <TresMesh v-if="camera && targetNPC.isCaptured" ref="infoPlane"
-                :scale="[infoPlaneScale, infoPlaneScale, infoPlaneScale]">
-                <TresPlaneGeometry :args="[1, 1]" />
-                <TresMeshBasicMaterial :map="createOutlineTexture()" transparent :side="0" />
-            </TresMesh>
-        </template>
+        <TresMesh v-if="camera && targetNPC.isCaptured && !targetNPC.isDestroyed" ref="infoPlane"
+            :scale="[infoPlaneScale, infoPlaneScale, infoPlaneScale]">
+            <TresPlaneGeometry :args="[1, 1]" />
+            <TresMeshBasicMaterial :map="createOutlineTexture()" transparent :side="0" />
+        </TresMesh>
 
         <Smoke v-if="targetNPC.isKilled" :position="targetNPC.position" :color="0x696969" :particle-size="20" />
 

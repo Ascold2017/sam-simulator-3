@@ -7,12 +7,6 @@
     {
       "name": "Scene",
       "nodes": [
-        0,
-        1,
-        2,
-        6,
-        7,
-        8,
         9
       ]
     }
@@ -39,33 +33,10 @@
         1
       ],
       "name": "Capsule",
+      "extras": {
+        "name": "Capsule"
+      },
       "mesh": 0
-    },
-    {
-      "matrix": [
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        5,
-        10,
-        7.5,
-        1
-      ],
-      "name": "DirectionalLight",
-      "extensions": {
-        "KHR_lights_punctual": {
-          "light": 0
-        }
-      }
     },
     {
       "matrix": [
@@ -87,11 +58,14 @@
         1
       ],
       "name": "Cylinder",
+      "extras": {
+        "name": "Cylinder"
+      },
       "mesh": 1
     },
     {
       "matrix": [
-        0.8941963933864725,
+        0.8941963933864726,
         0,
         0.750319863890643,
         0,
@@ -99,7 +73,7 @@
         1,
         0,
         0,
-        -0.6427876096865394,
+        -0.6427876096865393,
         0,
         0.7660444431189781,
         0,
@@ -109,11 +83,14 @@
         1
       ],
       "name": "Box",
+      "extras": {
+        "name": "Box"
+      },
       "mesh": 2
     },
     {
       "matrix": [
-        0.9002867414251324,
+        0.9002867414251323,
         0,
         -0.7554302726836238,
         0,
@@ -123,14 +100,17 @@
         0,
         0.6427876096865394,
         0,
-        0.7660444431189781,
+        0.766044443118978,
         0,
         -8.38691171449184,
         0,
         0.8546333524568845,
         1
       ],
-      "name": "Box",
+      "name": "Box_1",
+      "extras": {
+        "name": "Box"
+      },
       "mesh": 2
     },
     {
@@ -152,7 +132,10 @@
         0,
         1
       ],
-      "name": "Box",
+      "name": "Box_2",
+      "extras": {
+        "name": "Box"
+      },
       "mesh": 3
     },
     {
@@ -175,10 +158,13 @@
         1
       ],
       "name": "Wings",
+      "extras": {
+        "name": "Wings"
+      },
       "children": [
+        2,
         3,
-        4,
-        5
+        4
       ]
     },
     {
@@ -200,7 +186,10 @@
         0.3258431201818618,
         1
       ],
-      "name": "Box",
+      "name": "Box_3",
+      "extras": {
+        "name": "Box"
+      },
       "mesh": 4
     },
     {
@@ -222,7 +211,10 @@
         -0.010310664440980555,
         1
       ],
-      "name": "Cylinder",
+      "name": "Cylinder_1",
+      "extras": {
+        "name": "Cylinder"
+      },
       "mesh": 1
     },
     {
@@ -245,7 +237,39 @@
         1
       ],
       "name": "Circle",
+      "extras": {
+        "name": "Circle"
+      },
       "mesh": 5
+    },
+    {
+      "matrix": [
+        2.220446049250313e-16,
+        0,
+        -1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        2.220446049250313e-16,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "name": "Drone-S.gltf",
+      "children": [
+        0,
+        1,
+        5,
+        6,
+        7,
+        8
+      ]
     }
   ],
   "bufferViews": [
@@ -892,24 +916,5 @@
         }
       ]
     }
-  ],
-  "extensions": {
-    "KHR_lights_punctual": {
-      "lights": [
-        {
-          "name": "DirectionalLight",
-          "color": [
-            1,
-            1,
-            1
-          ],
-          "intensity": 1,
-          "type": "directional"
-        }
-      ]
-    }
-  },
-  "extensionsUsed": [
-    "KHR_lights_punctual"
   ]
 }
