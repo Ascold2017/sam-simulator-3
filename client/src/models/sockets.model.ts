@@ -55,8 +55,9 @@ export interface EntityState {
 }
 
 export interface AAState extends EntityState {
-  type: 'aa';
+  type: 'aa',
   ammoCount: number;
+  readyToFire: boolean;
   aimRay: [number, number, number];
   launchedMissileIds: string[];
   detectedTargetIds: string[];

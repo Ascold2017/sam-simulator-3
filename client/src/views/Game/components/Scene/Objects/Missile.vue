@@ -12,20 +12,15 @@
 </template>
 
 <script setup lang="ts">
-import { TresObject, useRenderLoop, useTres, } from '@tresjs/core';
 import { GLTFModel } from '@tresjs/cientos'
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import Sound from './Sound.vue';
-import { GuidedMissileState } from '../../../../../models/sockets.model';
+import { MissileState } from '../../../../../models/sockets.model';
 import Smoke from './Smoke.vue';
 
 defineProps<{
-    missile: GuidedMissileState,
+    missile: MissileState,
 }>();
-
-const infoPlane = ref<TresObject | null>(null);
-const { camera } = useTres(); // Камера
-const { onLoop } = useRenderLoop(); // Рендер-цикл
 
 
 const modelPath = computed(() => {
@@ -36,11 +31,4 @@ const soundPath = computed(() => {
     return `${import.meta.env.VITE_APP_STATIC_URL}/flight-objects/missile_heavy.mp3`;
 })
 
-
-onLoop(() => {
-    // Плоскость с текстурой всегда смотрит на камеру
-    if (infoPlane.value && camera.value) {
-        infoPlane.value.lookAt(camera.value.position);
-    }
-});
 </script>
