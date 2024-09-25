@@ -59,7 +59,6 @@ export class AuthService {
 
             return user;
         } catch (e) {
-            console.error(e)
             return Promise.reject(new Error("Authentication error: Invalid token"))
         }
     }
