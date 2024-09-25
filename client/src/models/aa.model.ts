@@ -8,6 +8,7 @@ export interface AA {
     missileMaxOverload: number;
     missileCount: number;
     captureAngle: number;
+    captureChannelCount: number;
     reloadTime: number;
 }
 

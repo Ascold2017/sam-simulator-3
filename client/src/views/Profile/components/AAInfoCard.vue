@@ -8,6 +8,7 @@
         <p><strong>Max oveload:</strong> {{ aa.missileMaxOverload }} G</p>
         <p><strong>Missile speed:</strong> {{ aa.missileVelocity }} m/s</p>
         <p><strong>Capture angle:</strong> {{ viewAngleDegrees.toFixed(2) }}°</p>
+        <p><strong>Capture channel count:</strong>{{ aa.captureChannelCount }}</p>
         <p><strong>Rate of fire:</strong> {{ fireRate.toFixed(2) }} shots per minute</p>
     </div>
 </template>

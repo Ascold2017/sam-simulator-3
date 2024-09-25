@@ -18,6 +18,7 @@
                     <th>Missile kill radius, m</th>
                     <th>Missile max overload, G</th>
                     <th>Capture angle, rad</th>
+                    <th>Capture channel count</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -33,6 +34,7 @@
                     <td>{{ aa.missileKillRadius }}</td>
                     <td>{{ aa.missileMaxOverload }}</td>
                     <td>{{ aa.captureAngle }}</td>
+                    <td>{{ aa.captureChannelCount }}</td>
                     <td>
                         <button @click="editAA(aa.id)" class="aas__edit-btn mr-2">Edit</button>
                         <button @click="aaStore.deleteAA(aa.id)" class="aas__delete-btn">Delete</button>

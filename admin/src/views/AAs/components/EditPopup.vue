@@ -22,6 +22,8 @@
                 placeholder="Enter ammo max overload, G" class="mb-3" />
             <BaseInput id="aa-capture-angle" v-model.number="currentAA.captureAngle" label="Capture angle"
                 placeholder="Enter capture angle, rads" />
+            <BaseInput id="aa-capture-channel-count" v-model.number="currentAA.captureChannelCount" label="Capture channel count"
+                placeholder="Enter capture channel count" />
 
 
 
