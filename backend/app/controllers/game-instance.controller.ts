@@ -78,22 +78,22 @@ export class GameInstanceController {
       availablePosition
     );
 
-    // Добавляем зенитку игрока в Core (используем aa данные и позицию)
+    // Добавляем зенитку игрока в Core
     this.coreInstance.addAA({
       id: aaId,
       position: availablePosition.position,
-      type: user.aa.type,
-      ammoCount: user.aa.ammoCount,
-      ammoProps: {
-        minRange: user.aa.ammoMinRange,
-        activeRange: user.aa.ammoMaxRange * 0.5,
-        maxRange: user.aa.ammoMaxRange,
-        maxVelocity: user.aa.ammoVelocity,
-        killRadius: user.aa.ammoKillRadius,
-        maxOverload: user.aa.ammoMaxOverload,
+      missileCount: user.aa.missileCount,
+      reloadTime: user.aa.reloadTime,
+      missileProps: {
+        minRange: user.aa.missileMinRange,
+        maxRange: user.aa.missileMaxRange,
+        maxVelocity: user.aa.missileVelocity,
+        killRadius: user.aa.missileKillRadius,
+        maxOverload: user.aa.missileMaxOverload,
+
       },
       radarProps: {
-        range: user.aa.ammoMaxRange
+        range: user.aa.missileMaxRange
       }
     });
 
@@ -108,10 +108,10 @@ export class GameInstanceController {
     });
 
     socket.on('update_direction', ({ direction }) => {
-      this.coreInstance.eventEmitter.emit('update_aa_aim_ray', { aaId: aaId, aimRay: [direction.x, direction.y, direction.z] });
+      this.coreInstance.updateAAAimRay(aaId, [direction.x, direction.y, direction.z]);
     })
     socket.on("fire_target", () => {
-      this.coreInstance.eventEmitter.emit("fire_aa", { aaId });
+      this.coreInstance.fireAA(aaId)
     });
   }
 

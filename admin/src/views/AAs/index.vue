@@ -10,14 +10,13 @@
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Type</th>
-                    <th>Ammo count</th>
+                    <th>Missiles count</th>
                     <th>Reload time, s</th>
-                    <th>Ammo min range, m</th>
-                    <th>Ammo max range, m</th>
-                    <th>Ammo velocity, m/s</th>
-                    <th>Ammo kill radius, m</th>
-                    <th>Ammo max overload, G</th>
+                    <th>Missile min range, m</th>
+                    <th>Missile max range, m</th>
+                    <th>Missile velocity, m/s</th>
+                    <th>Missile kill radius, m</th>
+                    <th>Missile max overload, G</th>
                     <th>Capture angle, rad</th>
                     <th>Actions</th>
                 </tr>
@@ -26,14 +25,13 @@
                 <tr v-for="aa in aas" :key="aa.id">
                     <td>{{ aa.id }}</td>
                     <td>{{ aa.name }}</td>
-                    <td>{{ aa.type }}</td>
-                    <td>{{ aa.ammoCount }}</td>
+                    <td>{{ aa.missileCount }}</td>
                     <td>{{ aa.reloadTime }}</td>
-                    <td>{{ aa.ammoMinRange }}</td>
-                    <td>{{ aa.ammoMaxRange }}</td>
-                    <td>{{ aa.ammoVelocity }}</td>
-                    <td>{{ aa.ammoKillRadius }}</td>
-                    <td>{{ aa.ammoMaxOverload }}</td>
+                    <td>{{ aa.missileMinRange }}</td>
+                    <td>{{ aa.missileMaxRange }}</td>
+                    <td>{{ aa.missileVelocity }}</td>
+                    <td>{{ aa.missileKillRadius }}</td>
+                    <td>{{ aa.missileMaxOverload }}</td>
                     <td>{{ aa.captureAngle }}</td>
                     <td>
                         <button @click="editAA(aa.id)" class="aas__edit-btn mr-2">Edit</button>

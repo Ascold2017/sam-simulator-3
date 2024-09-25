@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { socketClient } from "../adapters/socketClient";
 import { computed, onMounted, ref, watch } from "vue";
 import { useNotificationStore } from "./notifications";
-import { AAState, GuidedMissileState, MissionData, TargetNPCState } from "../models/sockets.model";
+import { AAState, MissileState, MissionData, TargetNPCState } from "../models/sockets.model";
 import { useTargets } from "./targets";
 import type { Target } from "../models/target.model";
 
@@ -20,7 +20,7 @@ export const useGameStore = defineStore("game", () => {
 
   const aas = ref<AAState[]>([]);
   const targetNPCs = ref<TargetNPCState[]>([]);
-  const missiles = ref<GuidedMissileState[]>([]);
+  const missiles = ref<MissileState[]>([]);
 
   const viewMode = ref<'search' | 'capture'>('search');
   const direction = ref<{ azimuth: number; elevation: number }>({
@@ -67,7 +67,7 @@ export const useGameStore = defineStore("game", () => {
   socketClient.listenToEvent('update_world_state', (update) => {
     aas.value = update.filter(e => e.type === 'aa') as AAState[];
     targetNPCs.value = update.filter(e => e.type === 'target-npc') as TargetNPCState[];
-    missiles.value = update.filter(e => e.type === 'guided-missile') as GuidedMissileState[];
+    missiles.value = update.filter(e => e.type === 'missile') as MissileState[];
   });
 
   socketClient.listenToEvent('target_killed', target => {

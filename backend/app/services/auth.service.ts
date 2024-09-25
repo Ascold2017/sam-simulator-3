@@ -17,7 +17,7 @@ export class AuthService {
             throw new Error('User already exists');
         }
         const hashedPassword = await argon2.hash(password);
-        const aa = await DI.aaRepository.findOne({ where: { id: 1 }})
+        const aa = await DI.aaRepository.findOne({ where: { name: 'SAM-8' }})
         const user = DI.userRepository.create({ username, password: hashedPassword, aa });
 
         const createdUser = await DI.userRepository.save(user)

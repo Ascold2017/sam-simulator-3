@@ -75,8 +75,7 @@ export interface TargetNPCState extends FlightObjectState {
   size: number;
 }
 
-export interface GuidedMissileState extends FlightObjectState {
-  type: 'guided-missile';
-  distanceTraveled: number;
+export interface MissileState extends FlightObjectState {
+  type: 'missile';
   exploded: boolean;
 }

@@ -19,7 +19,7 @@
             <h3><strong>Anti-aircraft units</strong></h3>
             <swiper :slides-per-view="1">
                 <swiper-slide v-for="aa in aaStore.aas" :key="aa.id">
-                    <AAInfoCard :aa="aa" :is-highlighted="user?.aa.id === aa.id" />
+                    <AAInfoCard :aa="aa" :is-highlighted="user?.aa?.id === aa.id" />
                 </swiper-slide>
             </swiper>
         </div>

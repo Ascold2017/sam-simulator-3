@@ -6,22 +6,19 @@
 
         <template #content>
             <BaseInput id="aa-name" v-model="currentAA.name" label="AA Name" placeholder="Enter AA name" class="mb-3" />
-            <BaseSelect id="aa-type" v-model="currentAA.type" label="AA Type" :options="[
-                { label: 'SAM with Guided missiles', value: 'guided-missile' },
-            ]" class="mb-3" />
-            <BaseInput id="aa-ammo-count" v-model.number="currentAA.ammoCount" label="Ammo count" placeholder="Enter count"
+            <BaseInput id="aa-ammo-count" v-model.number="currentAA.missileCount" label="Missiles count" placeholder="Enter count"
                 class="mb-3" />
             <BaseInput id="aa-reload-time" v-model.number="currentAA.reloadTime" label="Reload time"
                 placeholder="Enter reload time, s" class="mb-3" />
-            <BaseInput id="aa-ammo-min-range" v-model.number="currentAA.ammoMinRange" label="Ammo min range"
+            <BaseInput id="aa-ammo-min-range" v-model.number="currentAA.missileMinRange" label="Missile min range"
                 placeholder="Enter ammo min range, m" class="mb-3" />
-            <BaseInput id="aa-ammo-max-range" v-model.number="currentAA.ammoMaxRange" label="Ammo max range"
+            <BaseInput id="aa-ammo-max-range" v-model.number="currentAA.missileMaxRange" label="Missile max range"
                 placeholder="Enter ammo max range, m" class="mb-3" />
-            <BaseInput id="aa-ammo-velocity" v-model.number="currentAA.ammoVelocity" label="Ammo  velocity"
+            <BaseInput id="aa-ammo-velocity" v-model.number="currentAA.missileVelocity" label="Missile  velocity"
                 placeholder="Enter ammo velocity, m/s" class="mb-3" />
-            <BaseInput id="aa-ammo-kill-radius" v-model.number="currentAA.ammoKillRadius" label="Ammo kill radius"
+            <BaseInput id="aa-ammo-kill-radius" v-model.number="currentAA.missileKillRadius" label="Missile kill radius"
                 placeholder="Enter ammo kill radius, m" class="mb-3" />
-            <BaseInput id="aa-ammo-max-overload" v-model.number="currentAA.ammoMaxOverload" label="Ammo max overload"
+            <BaseInput id="aa-ammo-max-overload" v-model.number="currentAA.missileMaxOverload" label="Missile max overload"
                 placeholder="Enter ammo max overload, G" class="mb-3" />
             <BaseInput id="aa-capture-angle" v-model.number="currentAA.captureAngle" label="Capture angle"
                 placeholder="Enter capture angle, rads" />
@@ -41,7 +38,6 @@ import Popup from '../../../components/Popup.vue';
 import { storeToRefs } from 'pinia';
 import BaseInput from '../../../components/BaseInput.vue';
 import { useAAs } from '../../../stores/aas';
-import BaseSelect from '../../../components/BaseSelect.vue';
 
 const emit = defineEmits(['close-popup'])
 const aaStore = useAAs();

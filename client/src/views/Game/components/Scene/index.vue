@@ -31,7 +31,7 @@
             <GLTFModel :path="mapPath" receive-shadow />
         </Suspense>
     </TresCanvas>
-    <CustomFirstPersonControl v-if="!isMobile" :min-elevation="0" :max-elevation="Math.PI / 4" />
+    <CustomFirstPersonControl v-if="!isMobile" :min-elevation="0" :max-elevation="Math.PI / 2" />
 </template>
 
 <script setup lang="ts">

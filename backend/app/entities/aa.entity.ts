@@ -7,31 +7,28 @@ export class AA extends BaseEntity {
     @Column()
     name: string;
 
-    @Column()
-    type: 'guided-missile'
-
     @Column({ type: 'double precision', default: 100 })
-    ammoMinRange: number;
+    missileMinRange: number;
 
     @Column({ type: 'double precision' })
-    ammoMaxRange: number;
+    missileMaxRange: number;
 
     @Column({ type: 'double precision' })
-    ammoVelocity: number;
+    missileVelocity: number;
 
     @Column({ type: 'double precision', default: 30 }) // default 30m
-    ammoKillRadius: number;
+    missileKillRadius: number;
 
     @Column({ type: 'double precision', default: 15 })
-    ammoMaxOverload: number;
+    missileMaxOverload: number;
 
     @Column({ type: 'double precision', default: 0.174533 }) // default - 10 degs
     captureAngle: number;
 
     @Column({ type: 'double precision', default: 8 })
-    ammoCount: number;
+    missileCount: number;
 
-    @Column({ default: 0})
+    @Column({ default: 0, type: 'double precision',})
     reloadTime: number;
 
     @OneToMany(() => User, user => user.aa) // Один AA может принадлежать многим пользователям
