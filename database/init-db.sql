@@ -31,15 +31,15 @@ CREATE TABLE public.aa (
     id integer NOT NULL,
     "createdAt" bigint DEFAULT (EXTRACT(epoch FROM now()) * (1000)::numeric) NOT NULL,
     name character varying NOT NULL,
-    type character varying NOT NULL,
-    "ammoCount" integer NOT NULL,
-    "ammoMinRange" double precision NOT NULL,
-    "ammoMaxRange" double precision NOT NULL,
-    "ammoVelocity" double precision NOT NULL,
-    "ammoKillRadius" double precision NOT NULL,
-    "ammoMaxOverload" double precision NOT NULL,
+    "missileCount" integer NOT NULL,
+    "missileMinRange" double precision NOT NULL,
+    "missileMaxRange" double precision NOT NULL,
+    "missileVelocity" double precision NOT NULL,
+    "missileKillRadius" double precision NOT NULL,
+    "missileMaxOverload" double precision NOT NULL,
     "captureAngle" double precision NOT NULL,
-    "reloadTime" double precision NOT NULL
+    "reloadTime" double precision NOT NULL,
+    "captureChannelCount" integer NOT NULL
 );
 
 
@@ -385,8 +385,8 @@ ALTER TABLE ONLY public."user" ALTER COLUMN id SET DEFAULT nextval('public.user_
 -- Data for Name: aa; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.aa (id, "createdAt", name, type, "ammoMinRange", "ammoCount", "ammoMaxRange", "ammoVelocity", "ammoKillRadius", "ammoMaxOverload", "captureAngle", "reloadTime") FROM stdin WITH (FORMAT csv, DELIMITER ',', NULL 'NULL');
-1,1726224284628,SAM-8,guided-missile,100,8,8000,900,30,15,0.523599,3
+COPY public.aa (id, "createdAt", name, "missileMinRange", "missileCount", "missileMaxRange", "missileVelocity", "missileKillRadius", "missileMaxOverload", "captureAngle", "reloadTime", "captureChannelCount") FROM stdin WITH (FORMAT csv, DELIMITER ',', NULL 'NULL');
+1,1726224284628,SAM-8,100,8,8000,900,30,15,0.523599,3,8
 \.
 
 

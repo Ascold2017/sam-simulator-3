@@ -25,6 +25,9 @@ export class AA extends BaseEntity {
     @Column({ type: 'double precision', default: 0.174533 }) // default - 10 degs
     captureAngle: number;
 
+    @Column({ default: 8 })
+    captureChannelCount: number;
+
     @Column({ type: 'double precision', default: 8 })
     missileCount: number;
 
