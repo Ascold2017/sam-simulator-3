@@ -118,6 +118,7 @@ export class GameRoomsController {
 
         // Удаление игрока при отключении
         socket.on('disconnect', () => {
+            this.io.to(roomId).emit('player_leaved', socket.id);
             room.gameInstanceController.removePlayer(socket.id);
             console.log(`Player ${socket.id} disconnected and removed from room ${room.id}`);
         });

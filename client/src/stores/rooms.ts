@@ -49,11 +49,14 @@ export const useRooms = defineStore('rooms', () => {
         })
     })
 
-    socketClient.listenToEvent('player_leaved', () => {
-        currentRoom.value = null;
-        router.push({
-            name: 'start'
-        })
+    socketClient.listenToEvent('player_leaved', (socketId) => {
+        if (socketId === socketClient.socketId) {
+            currentRoom.value = null;
+            router.push({
+                name: 'start'
+            })
+        }
+        
     })
 
     socketClient.listenToEvent('room_deleted', (roomId) => {

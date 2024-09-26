@@ -48,6 +48,10 @@ class SocketClient {
     }
   }
 
+  get socketId() {
+    return this.socket?.id;
+  }
+
   send<EventName extends keyof ClientToServerEvents>(eventName: EventName, payload: Parameters<ClientToServerEvents[EventName]>[0]): void {
     this.socket?.emit(eventName, payload);
   }

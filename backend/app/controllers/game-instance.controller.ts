@@ -112,7 +112,7 @@ export class GameInstanceController {
     });
 
     // Отправляем окружение игроку
-    this.sendEnvironment(socket.id);
+    this.sendEnvironment(socket);
 
     console.log(`Player ${socket.id} joined room ${this.roomId}`);
     this.io.to(this.roomId).emit("player_joined", {
@@ -158,10 +158,10 @@ export class GameInstanceController {
 
 
   // Отправка окружения игроку
-  private sendEnvironment(playerId: string) {
-    const playerData = this.players.get(playerId);
+  private sendEnvironment(socket: CustomSocket) {
+    const playerData = this.players.get(socket.id);
 
-    this.io.to(playerId).emit("mission_environment", {
+    socket.emit("mission_environment", {
       mapName: this.missionData.map.filename,
       yourAAId: playerData.aaId,
     });

@@ -12,6 +12,7 @@ const defaultAA: EditableAA = {
   missileKillRadius: 30,
   missileMaxOverload: 10,
   captureAngle: 0.1,
+  captureChannelCount: 3,
   reloadTime: 3,
 };
 export interface EditableAA extends AA {
