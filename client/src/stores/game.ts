@@ -78,6 +78,26 @@ export const useGameStore = defineStore("game", () => {
     })
   })
 
+  socketClient.listenToEvent('missile_over_distance', missile => {
+    if (currentAA.value?.launchedMissileIds?.includes(missile.id)) {
+      notifications.openNotification({
+        title: "Missile over distance",
+        text: null,
+        type: "error",
+      })
+    }
+  })
+
+  socketClient.listenToEvent('missile_overloaded', missile => {
+    if (currentAA.value?.launchedMissileIds?.includes(missile.id)) {
+      notifications.openNotification({
+        title: "Missile overloaded",
+        text: null,
+        type: "error",
+      })
+    }
+  })
+
   socketClient.listenToEvent("error", (error) => {
     notifications.openNotification({
       title: "Error",
