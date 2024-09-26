@@ -45,7 +45,7 @@ export class GameInstanceController {
     this.coreInstance.eventEmitter.on('update_world_state', (state) => {
       this.io.to(this.roomId).emit('update_world_state', state)
     })
-    this.coreInstance.eventEmitter.on('kill_npc', (state) => {
+    this.coreInstance.eventEmitter.on('target_killed', (state) => {
       this.io.to(this.roomId).emit('target_killed', state)
     })
 
@@ -93,7 +93,8 @@ export class GameInstanceController {
 
       },
       radarProps: {
-        range: user.aa.missileMaxRange
+        range: user.aa.missileMaxRange,
+        captureAngle: user.aa.captureAngle
       }
     });
 
@@ -113,6 +114,12 @@ export class GameInstanceController {
     socket.on("fire_target", () => {
       this.coreInstance.fireAA(aaId)
     });
+    socket.on('capture_target', () => {
+      this.coreInstance.captureTarget(aaId)
+    })
+    socket.on('reset_target', () => {
+      this.coreInstance.resetTarget(aaId)
+    })
   }
 
   // Удаление игрока

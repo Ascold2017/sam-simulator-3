@@ -22,6 +22,8 @@ export interface ClientToServerEvents {
     delete_mission_room: (roomId: string) => void;
     update_direction: (payload: { direction: Position }) => void;
     fire_target: () => void;
+    capture_target: () => void;
+    reset_target: () => void;
     disconnect: () => void;
 }
 
