@@ -37,7 +37,7 @@ export const useGameStore = defineStore("game", () => {
     return targetNPCs.value.map((fo) => ({
       ...fo,
       targetEntity: targetStore.targets.find(t => t.id === fo.entityId),
-      isCaptured: true
+      isCaptured: currentAA.value?.capturedTargetId === fo.id
     }));
   });
 
@@ -88,10 +88,12 @@ export const useGameStore = defineStore("game", () => {
 
   window.addEventListener('keypress', (e) => {
     if (e.code === 'KeyX') {
-      viewMode.value = 'search'
+      viewMode.value = 'search';
+      resetTarget()
     }
     if (e.code === 'KeyC') {
       viewMode.value = 'capture'
+      captureTarget()
     }
     if (e.code === 'Space') {
       fireTarget()
@@ -103,6 +105,16 @@ export const useGameStore = defineStore("game", () => {
   function fireTarget() {
     if (!aaId.value) return;
     socketClient.send("fire_target", undefined);
+  }
+
+  function captureTarget() {
+    if (!aaId.value) return;
+    socketClient.send("capture_target", undefined);
+  }
+
+  function resetTarget() {
+    if (!aaId.value) return;
+    socketClient.send("reset_target", undefined);
   }
 
   return {
