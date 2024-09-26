@@ -95,6 +95,7 @@ export class GameInstanceController {
       id: aaId,
       position: availablePosition.position,
       missileCount: user.aa.missileCount,
+      missileChannelCount: user.aa.captureChannelCount,
       reloadTime: user.aa.reloadTime,
       missileProps: {
         minRange: user.aa.missileMinRange,
