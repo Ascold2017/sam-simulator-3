@@ -43,9 +43,11 @@ export interface ServerToClientEvents {
   mission_environment: (missionData: MissionData) => void;
   update_world_state: (state: EntityState[]) => void;
   target_killed: (state: TargetNPCState) => void;
+  missile_launched: (state: MissileState) => void;
+  missile_overloaded: (state: MissileState) => void;
+  missile_over_distance: (state: MissileState) => void;
   error: (error: string) => void;
 }
-
 
 export interface EntityState {
   id: string;
@@ -57,7 +59,7 @@ export interface EntityState {
 }
 
 export interface AAState extends EntityState {
-  type: 'aa',
+  type: "aa";
   ammoCount: number;
   readyToFire: boolean;
   aimRay: [number, number, number];
@@ -67,19 +69,19 @@ export interface AAState extends EntityState {
 }
 
 export interface FlightObjectState extends EntityState {
-  type: 'flight-object' | string;
+  type: "flight-object" | string;
   velocity: [number, number, number];
   isKilled: boolean;
 }
 
 export interface TargetNPCState extends FlightObjectState {
-  type: 'target-npc';
+  type: "target-npc";
   rcs: number;
   temperature: number;
   size: number;
 }
 
 export interface MissileState extends FlightObjectState {
-  type: 'missile';
+  type: "missile";
   exploded: boolean;
 }

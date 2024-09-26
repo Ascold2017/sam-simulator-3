@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { EntityState, TargetNPCState } from "@core/app"
+import { EntityState, MissileState, TargetNPCState } from "@core/app"
 import { User } from "app/entities/user.entity";
 
 
@@ -48,6 +48,9 @@ export interface ServerToClientEvents {
     mission_environment: (missionData: MissionData) => void;
     update_world_state: (state: EntityState[]) => void;
     target_killed: (state: TargetNPCState) => void;
+    missile_launched: (state: MissileState) => void;
+    missile_overloaded: (state: MissileState) => void;
+    missile_over_distance: (state: MissileState) => void;
     error: (error: string) => void;
     
 }

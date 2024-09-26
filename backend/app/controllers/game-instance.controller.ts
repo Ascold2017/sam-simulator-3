@@ -49,6 +49,18 @@ export class GameInstanceController {
       this.io.to(this.roomId).emit('target_killed', state)
     })
 
+    this.coreInstance.eventEmitter.on('missile_launched', (state) => {
+      this.io.to(this.roomId).emit('missile_launched', state)
+    })
+
+    this.coreInstance.eventEmitter.on('missile_overloaded', (state) => {
+      this.io.to(this.roomId).emit('missile_overloaded', state)
+    })
+
+    this.coreInstance.eventEmitter.on('missile_over_distance', (state) => {
+      this.io.to(this.roomId).emit('missile_over_distance', state)
+    })
+
     this.missionData = missionData;
   }
 
