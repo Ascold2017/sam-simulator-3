@@ -5,11 +5,11 @@
             <GLTFModel :path="modelPath"  :rotation="[0, Math.PI / 2, 0]"/>
         </Suspense>
 
-        <Sound :url="soundPath" loop :volume="2" v-if="!missile.isDestroyed" />
+        <Sound :url="soundPath" loop :volume="2" v-if="!missile.isDestroyed && missile.isActiveRange" />
         <Sound url="/explosion.mp3" v-if="missile.exploded" :volume="2" />
         <Smoke :enabled="missile.isActiveRange" :position="missile.position" :color="0xc0c0c0" :particle-size="10" />
     </TresGroup>
-</template>zx
+</template>
 
 <script setup lang="ts">
 import { GLTFModel } from '@tresjs/cientos'

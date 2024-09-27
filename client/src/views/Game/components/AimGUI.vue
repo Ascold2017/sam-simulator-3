@@ -3,7 +3,7 @@
         :style="aimTargetStyle">
         <span class="aim-target__elevation">{{ elevation.toFixed(0) }}*</span>
         <svg class="aim-target__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="11.5" stroke="rgb(21, 128, 61)" fill="none" stroke-width="1" stroke-dasharray="1" />
+            <circle cx="12" cy="12" r="11.5" :stroke="isCaptured ? 'rgb(255, 0, 0)' : 'rgb(21, 128, 61)'" fill="none" stroke-width="1" :stroke-dasharray="isCaptured ? 0 : 1" />
         </svg>
         <span class="aim-target__azimuth">{{ azimuth.toFixed(0) }}*</span>
     </div>
@@ -22,15 +22,15 @@ const cameraFov = 75;
 const viewAngle = computed(() => 0.06 /*gameStore.currentAA?.captureAngle || 0 */)
 const azimuth = computed(() => gameStore.direction.azimuth * (180 / Math.PI))
 const elevation = computed(() => gameStore.direction.elevation * (180 / Math.PI))
+const isCaptured = computed(() => !!gameStore.currentAA?.capturedTargetId)
 
 // Расчет размера рамки прицела
 const aimTargetStyle = computed(() => {
     const viewAngleDeg = viewAngle.value * (180 / Math.PI); // Преобразуем viewAngle в градусы
-    const sizePercentage = (viewAngleDeg / cameraFov) * 100 * (gameStore.viewMode === 'capture' ? 3 : 1); // Размер рамки относительно FOV
+    const sizePercentage = (viewAngleDeg / cameraFov) * 100 * (gameStore.viewMode === 'capture' ? 8 : 1); // Размер рамки относительно FOV
     if (device.orientation === 'portrait') return {
         height: `${sizePercentage}%`,
     }
-
     return {
         width: `${sizePercentage}%`,
     };
