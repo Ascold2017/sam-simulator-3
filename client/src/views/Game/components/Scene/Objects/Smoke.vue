@@ -14,6 +14,7 @@ const props = defineProps<{
     color: number,
     position: [number, number, number],
     particleSize: number
+    enabled: boolean;
 }>();
 
 const particleLifetime = 5;
@@ -62,7 +63,7 @@ watch(() => props.position, (newPosition) => {
 
     // Если позиции ещё нет или расстояние больше порога, создаём новую частицу
     if (!lastPos || currentPos.distanceTo(lastPos) > distanceThreshold.value) {
-        createParticlesAt();
+        props.enabled && createParticlesAt();
         lastPositions.value = currentPos; // Обновляем последнюю позицию
     }
 })

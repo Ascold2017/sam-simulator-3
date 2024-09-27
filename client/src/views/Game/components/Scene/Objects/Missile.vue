@@ -7,9 +7,9 @@
 
         <Sound :url="soundPath" loop :volume="2" v-if="!missile.isDestroyed" />
         <Sound url="/explosion.mp3" v-if="missile.exploded" :volume="2" />
-        <Smoke :position="missile.position" :color="0xc0c0c0" :particle-size="10" />
+        <Smoke :enabled="missile.isActiveRange" :position="missile.position" :color="0xc0c0c0" :particle-size="10" />
     </TresGroup>
-</template>
+</template>zx
 
 <script setup lang="ts">
 import { GLTFModel } from '@tresjs/cientos'

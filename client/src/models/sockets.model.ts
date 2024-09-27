@@ -10,13 +10,14 @@ export interface MissionRoom {
   missionId: number;
 }
 export type MissionID = number;
+export type MissileGuidanceMethod = "default" | "3p" | "1/2";
 export interface ClientToServerEvents {
   create_mission_room: (missionId: MissionID) => void;
   join_mission_room: (roomId: string) => void;
   leave_mission_room: (roomId: string) => void;
   delete_mission_room: (roomId: string) => void;
   update_direction: (payload: { direction: Position }) => void;
-  fire_target: () => void;
+  fire_target: (guidanceMethod: MissileGuidanceMethod) => void;
   capture_target: () => void;
   reset_target: () => void;
   disconnect: () => void;
@@ -84,4 +85,6 @@ export interface TargetNPCState extends FlightObjectState {
 export interface MissileState extends FlightObjectState {
   type: "missile";
   exploded: boolean;
+  guidanceMethod: MissileGuidanceMethod;
+  isActiveRange: boolean;
 }

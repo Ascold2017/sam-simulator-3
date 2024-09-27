@@ -136,7 +136,7 @@ export const useGameStore = defineStore("game", () => {
 
   function fireTarget() {
     if (!aaId.value) return;
-    socketClient.send("fire_target", undefined);
+    socketClient.send("fire_target", 'default');
   }
 
   function captureTarget() {

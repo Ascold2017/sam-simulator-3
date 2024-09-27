@@ -124,8 +124,8 @@ export class GameInstanceController {
     socket.on('update_direction', ({ direction }) => {
       this.coreInstance.updateAAAimRay(aaId, [direction.x, direction.y, direction.z]);
     })
-    socket.on("fire_target", () => {
-      this.coreInstance.fireAA(aaId)
+    socket.on("fire_target", (guidanceMethod) => {
+      this.coreInstance.fireAA(aaId, guidanceMethod)
     });
     socket.on('capture_target', () => {
       this.coreInstance.captureTarget(aaId)

@@ -12,7 +12,7 @@
             <TresMeshBasicMaterial :map="createOutlineTexture()" transparent :side="0" />
         </TresMesh>
 
-        <Smoke v-if="targetNPC.isKilled" :position="targetNPC.position" :color="0x696969" :particle-size="20" />
+        <Smoke :enabled="targetNPC.isKilled" :position="targetNPC.position" :color="0x696969" :particle-size="20" />
 
     </TresGroup>
 

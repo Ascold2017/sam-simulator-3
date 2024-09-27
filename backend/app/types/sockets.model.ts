@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { EntityState, MissileState, TargetNPCState } from "@core/app"
+import { EntityState, MissileState, TargetNPCState, MissileGuidanceMethod } from "@core/app"
 import { User } from "app/entities/user.entity";
 
 
@@ -21,7 +21,7 @@ export interface ClientToServerEvents {
     leave_mission_room: (roomId: string) => void;
     delete_mission_room: (roomId: string) => void;
     update_direction: (payload: { direction: Position }) => void;
-    fire_target: () => void;
+    fire_target: (guidanceMethod: MissileGuidanceMethod) => void;
     capture_target: () => void;
     reset_target: () => void;
     disconnect: () => void;
