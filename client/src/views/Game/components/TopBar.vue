@@ -16,11 +16,11 @@ const roomStore = useRooms()
 
 <style lang="css" scoped>
 .top-bar {
-    @apply fixed top-0 left-0 w-full text-gray-400 p-4 flex justify-between items-center;
+    @apply fixed top-0 left-0 w-full text-gray-400 p-4 flex justify-between items-start;
     z-index: 2;
 }
 
 .top-bar__button {
-    @apply bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded;
+    @apply bg-transparent hover:bg-red-700 font-bold;
 }
 </style>

@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import Scene from './components/Scene/index.vue';
 import TopBar from './components/TopBar.vue';
-import AimGUI from './components/AimGUI.vue'
+import AimGUI from './components/GUI.vue'
 import ActionBar from './components/ActionBar.vue';
 import { onBeforeUnmount, onMounted } from 'vue';
 import { useRouter } from 'vue-router';

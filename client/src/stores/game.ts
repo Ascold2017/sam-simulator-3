@@ -10,6 +10,7 @@ import {
 } from "../models/sockets.model";
 import { useTargets } from "./targets";
 import type { Target } from "../models/target.model";
+import { Vector3 } from "three";
 
 export interface ParsedTargetNPCState extends TargetNPCState {
   targetEntity: Target | null;
@@ -51,6 +52,15 @@ export const useGameStore = defineStore("game", () => {
       (t) => t.id === currentAA.value?.capturedTargetId
     );
   });
+
+  const parsedCapturedTarget = computed(() => {
+    if (!capturedTarget.value) return null;
+    return {
+      distance: new Vector3(...currentAA.value.position).sub(new Vector3(...capturedTarget.value.position)).length(),
+      speed: new Vector3(...capturedTarget.value.velocity).length(),
+      altitude: capturedTarget.value.position[1],
+    }
+  })
 
   watch(direction, (newDirection) => {
     const { azimuth, elevation } = newDirection;
@@ -184,6 +194,7 @@ export const useGameStore = defineStore("game", () => {
     map,
     aas,
     currentAA,
+    parsedCapturedTarget,
     parsedTargetNPCs,
     missiles,
     direction,

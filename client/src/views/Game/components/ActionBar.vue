@@ -6,16 +6,9 @@
 
             <button class="action-bar__fire" @click="gameStore.fireTarget">FIRE</button>
 
-            <div class="action-bar__actions">
-
-                <button class="action-button action-button_search"
-                    :class="{ 'action-button_active': gameStore.viewMode === 'search' }"
-                    @click="gameStore.resetTarget">SEARCH</button>
-                <button class="action-button action-button_capture"
-                    :class="{ 'action-button_active': gameStore.viewMode === 'capture' }"
-                    @click="gameStore.captureTarget">CAPTURE</button>
-
-            </div>
+            <button class="action-bar__capture" @click="toggleCapture">
+                {{ gameStore.viewMode === 'search' ? 'CAPTURE' : 'SEARCH' }}
+            </button>
         </template>
         <div class="action-bar__hints" v-else>
             <button class="action-bar__hints-hint">
@@ -59,6 +52,15 @@ const lookSpeed = computed(() => {
     if (viewMode.value === 'capture') return 0.2
     return 1
 })
+
+
+const toggleCapture = () => {
+    if (viewMode.value === 'search') {
+        gameStore.captureTarget()
+    } else {
+        gameStore.resetTarget()
+    }
+}
 </script>
 
 <style scoped>
@@ -72,11 +74,16 @@ const lookSpeed = computed(() => {
 }
 
 .action-bar__joystick {
-    @apply fixed bottom-6 right-[80px];
+    @apply fixed bottom-[40px] right-[80px];
 }
 
 .action-bar__fire {
-    @apply fixed bottom-4 left-[240px] rounded bg-red-500 text-white w-[90px] h-[90px];
+    @apply fixed bottom-4 left-[250px] rounded bg-red-500 text-white w-[90px] h-[90px];
+    border-radius: 50%;
+}
+
+.action-bar__capture {
+    @apply fixed bottom-[150px] right-[20px] rounded bg-green-500 text-white w-[70px] h-[70px];
     border-radius: 50%;
 }
 
