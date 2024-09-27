@@ -31,7 +31,6 @@
             <GLTFModel :path="mapPath" receive-shadow />
         </Suspense>
     </TresCanvas>
-    <CustomFirstPersonControl v-if="!isMobile" :min-elevation="0" :max-elevation="Math.PI / 2" />
 </template>
 
 <script setup lang="ts">
@@ -39,18 +38,14 @@ import { storeToRefs } from 'pinia';
 import { TresCanvas } from '@tresjs/core'
 import { Sky, GLTFModel } from '@tresjs/cientos'
 import { useGameStore } from '../../../../stores/game';
-import { useDevice } from '../../../../stores/device';
 import TargetNPC from './Objects/TargetNPC.vue';
 import Missile from './Objects/Missile.vue';
 import AAObject from './Objects/AAObject.vue';
-import CustomFirstPersonControl from './CustomFirstPersonControl.vue';
 import LoadIndicator from './LoadIndicator.vue'
 import Camera from './Camera.vue';
 import { computed } from 'vue';
 
 const gameStore = useGameStore()
-const deviceStore = useDevice()
-const { isMobile } = storeToRefs(deviceStore)
 const { parsedTargetNPCs, missiles, aas, map } = storeToRefs(gameStore);
 
 const sunElevation = 25;

@@ -9,10 +9,14 @@ import { storeToRefs } from 'pinia';
 import { useGameStore } from '../../../../stores/game';
 import { computed, onMounted } from 'vue';
 import { useLoop } from '@tresjs/core';
+import { Vector3 } from 'three';
 
 const gameStore = useGameStore()
-const { currentAA, direction, viewMode } = storeToRefs(gameStore);
+const { currentAA, direction, viewMode, parsedTargetNPCs } = storeToRefs(gameStore);
 
+const currentTarget = computed(() => {
+    return parsedTargetNPCs.value.find(t => t.id === currentAA.value?.capturedTargetId)
+})
 const { render } = useLoop()
 
 const zoom = computed(() => {
@@ -23,7 +27,12 @@ const zoom = computed(() => {
 
 onMounted(() => {
     render(({ renderer, scene, camera }) => {
-        camera.rotation.set(direction.value.elevation, direction.value.azimuth, 0, 'YXZ');
+        if (currentTarget.value) {
+            camera.lookAt(new Vector3(...currentTarget.value.position));
+        } else {
+            camera.rotation.set(direction.value.elevation, direction.value.azimuth, 0, 'YXZ');
+        }
+        
         renderer.render(scene, camera);
     });
 })

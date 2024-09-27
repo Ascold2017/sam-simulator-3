@@ -2,8 +2,7 @@
     <div class="action-bar">
         <Radar class="action-bar__radar" />
         <template v-if="isMobile">
-            <Joystick :min-elevation="0" :max-elevation="Math.PI / 4" :look-speed="lookSpeed" :direction="direction"
-                @change="direction = $event" class="action-bar__joystick" />
+
 
             <button class="action-bar__fire" @click="gameStore.fireTarget">FIRE</button>
 
@@ -11,33 +10,35 @@
 
                 <button class="action-button action-button_search"
                     :class="{ 'action-button_active': gameStore.viewMode === 'search' }"
-                    @click="gameStore.viewMode = 'search'">SEARCH</button>
+                    @click="gameStore.resetTarget">SEARCH</button>
                 <button class="action-button action-button_capture"
                     :class="{ 'action-button_active': gameStore.viewMode === 'capture' }"
-                    @click="gameStore.viewMode = 'capture'">CAPTURE</button>
+                    @click="gameStore.captureTarget">CAPTURE</button>
 
             </div>
         </template>
         <div class="action-bar__hints" v-else>
             <button class="action-bar__hints-hint">
                 <span>
-                    < X >
+                    < X>
                 </span>
                 <span>SEARCH</span>
             </button>
             <button class="action-bar__hints-hint">
                 <span>
-                    < C >
+                    < C>
                 </span>
                 <span>CAPTURE</span>
             </button>
             <button class="action-bar__hints-hint">
                 <span>
-                    < Space >
+                    < Space>
                 </span>
                 <span>Fire</span>
             </button>
         </div>
+        <Joystick :min-elevation="0" :max-elevation="1.29154" :look-speed="lookSpeed" :direction="direction"
+            @change="direction = $event" class="action-bar__joystick" />
     </div>
 </template>
 
@@ -55,7 +56,7 @@ const device = useDevice()
 const { isMobile } = storeToRefs(device)
 
 const lookSpeed = computed(() => {
-    if (viewMode.value === 'capture') return 0.5
+    if (viewMode.value === 'capture') return 0.2
     return 1
 })
 </script>
