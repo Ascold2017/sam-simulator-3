@@ -1,9 +1,9 @@
 <template>
     <div class="top-bar">
-        <DownCounter v-if="roomStore.parsedCurrentRoom" :end-date="roomStore.parsedCurrentRoom.endedAt!"/>
         <button class="top-bar__button" @click="roomStore.leaveRoom">
             Exit
         </button>
+        <DownCounter v-if="roomStore.parsedCurrentRoom" :end-date="roomStore.parsedCurrentRoom.endedAt!"/>
     </div>
 </template>
 
