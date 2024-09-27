@@ -39,13 +39,18 @@ export class AuthController {
 
     }
 
-    public authMiddleware() {
+    public authMiddleware(role?: string) {
         return async (req: Request, res: Response, next: NextFunction) => {
             const token = req.headers['authorization'];
 
             if (token) {
                 try {
                     req.body.userState = await authService.verifyToken(token);
+                    if (role) {
+                        if (req.body.userState.role !== role) {
+                            return res.status(401).json({ error: 'Unauthorized' });
+                        }
+                    }
                     next();
                 } catch (error) {
                     console.error(error);
