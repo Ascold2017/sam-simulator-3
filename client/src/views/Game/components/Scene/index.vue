@@ -1,7 +1,4 @@
 <template>
-    <Suspense>
-        <LoadIndicator />
-    </Suspense>
     <TresCanvas window-size antialias alpha preset="realistic" shadows renderMode="on-demand">
 
         <Sky :azimuth="0" :elevation="sunElevation" />
@@ -41,7 +38,6 @@ import { useGameStore } from '../../../../stores/game';
 import TargetNPC from './Objects/TargetNPC.vue';
 import Missile from './Objects/Missile.vue';
 import AAObject from './Objects/AAObject.vue';
-import LoadIndicator from './LoadIndicator.vue'
 import Camera from './Camera.vue';
 import { computed } from 'vue';
 

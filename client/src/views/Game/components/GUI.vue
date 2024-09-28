@@ -20,18 +20,28 @@
             </svg>
         </div>
         <!-- Search rectangle -->
-        <div class="gui__search-rect" v-else :style="aimTargetStyle">
+        <div class="gui__search-rect" v-else :style="searchRectStyle">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <rect x="0" y="0" width="24" height="24" stroke="rgb(21, 128, 61)" fill="none" stroke-width="1"
                     stroke-dasharray="12" stroke-dashoffset="6" />
             </svg>
         </div>
-
+        <!-- Captured target info -->
         <div class="gui__target-info" v-if="gameStore.parsedCapturedTarget">
             <p>D: {{ gameStore.parsedCapturedTarget.distance.toFixed(0) }}</p>
             <p>V: {{ gameStore.parsedCapturedTarget.speed.toFixed(0) }}</p>
             <p>H: {{ gameStore.parsedCapturedTarget.altitude.toFixed(0) }}</p>
         </div>
+
+        <!-- Detected targets (frames) -->
+    <div v-for="target in detectedTargetsOnScreen" :key="target.id" class="gui__target-frame"
+         :style="{ left: target.screenPosition.x + 'px', top: target.screenPosition.y + 'px' }">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <rect x="0" y="0" width="24" height="24" stroke="rgb(0, 255, 0)" fill="none" stroke-width="1"
+              stroke-dasharray="12" stroke-dashoffset="6" />
+      </svg>
+    </div>
+    
     </div>
 
 </template>
@@ -39,27 +49,49 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useDevice } from '../../../stores/device';
-import { useGameStore } from '../../../stores/game';
+import { CAMERA_SETTINGS, useGameStore } from '../../../stores/game';
+import { Vector3 } from 'three';
 
 const device = useDevice()
 const gameStore = useGameStore()
 
-const cameraFov = 75;
-const viewAngle = computed(() => 0.06 /*gameStore.currentAA?.captureAngle || 0 */)
+const viewAngle = computed(() => gameStore.currentAA?.captureAngle || 0)
 const azimuth = computed(() => gameStore.direction.azimuth * (180 / Math.PI))
 const elevation = computed(() => gameStore.direction.elevation * (180 / Math.PI))
 const isCaptured = computed(() => !!gameStore.currentAA?.capturedTargetId)
 
 // Расчет размера рамки прицела
-const aimTargetStyle = computed(() => {
+const searchRectStyle = computed(() => {
     const viewAngleDeg = viewAngle.value * (180 / Math.PI); // Преобразуем viewAngle в градусы
-    const sizePercentage = (viewAngleDeg / cameraFov) * 100 * (gameStore.viewMode === 'capture' ? 8 : 1); // Размер рамки относительно FOV
-    if (device.orientation === 'portrait') return {
+    const sizePercentage = (viewAngleDeg / CAMERA_SETTINGS.fov) * 100; // Размер рамки относительно FOV
+    return {
         height: `${sizePercentage}%`,
     }
-    return {
-        width: `${sizePercentage}%`,
-    };
+});
+
+const detectedTargetsOnScreen = computed(() => {
+  if (!gameStore.currentAA || !gameStore.cameraLink) return [];
+
+  const camera = gameStore.cameraLink;
+  const targets = gameStore.parsedTargetNPCs;
+
+  return targets
+    .filter(target => !target.isDestroyed)
+    .map(target => {
+      // Преобразуем мировые координаты в экранные
+      const worldPosition = new Vector3(...target.position);
+      const screenPosition = worldPosition.project(camera);
+
+      return {
+        id: target.id,
+        screenPosition: {
+          x: ((screenPosition.x + 1) / 2) * window.innerWidth,
+          y: ((1 - screenPosition.y) / 2) * window.innerHeight,
+        },
+      };
+    })
+    .filter(target => target.screenPosition.x >= 0 && target.screenPosition.x <= window.innerWidth
+      && target.screenPosition.y >= 0 && target.screenPosition.y <= window.innerHeight);
 });
 </script>
 
@@ -67,6 +99,7 @@ const aimTargetStyle = computed(() => {
 .gui {
     @apply fixed top-0 left-0 right-0 bottom-0 font-bold text-green-600;
     font-size: 14px;
+    z-index: 1;
 }
 
 .gui__missiles {
@@ -108,11 +141,15 @@ const aimTargetStyle = computed(() => {
 }
 
 .gui__search-rect {
-    @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
+    @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 aspect-square; 
     transform-origin: center;
 }
 
 .gui__target-info {
     @apply absolute top-1/2 left-1/2 transform -translate-y-1/2 translate-x-[90px] font-bold w-[70px];
+}
+
+.gui__target-frame {
+    @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[30px] h-[30px];
 }
 </style>

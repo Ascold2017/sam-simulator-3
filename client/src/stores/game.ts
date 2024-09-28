@@ -10,11 +10,20 @@ import {
 } from "../models/sockets.model";
 import { useTargets } from "./targets";
 import type { Target } from "../models/target.model";
-import { Vector3 } from "three";
+import { Camera, Vector3 } from "three";
 
 export interface ParsedTargetNPCState extends TargetNPCState {
   targetEntity: Target | null;
   isCaptured: boolean;
+}
+
+export const CAMERA_SETTINGS = {
+  fov: 75,
+  near: 0.1,
+  far: 20000,
+  aspect: 1,
+  defaultZoom: 1,
+  captureZoom: 8,
 }
 export const useGameStore = defineStore("game", () => {
   const targetStore = useTargets();
@@ -33,6 +42,7 @@ export const useGameStore = defineStore("game", () => {
     azimuth: 0,
     elevation: 0,
   });
+ 
   const isInitialized = ref(false);
 
   const currentAA = computed(() => {
@@ -151,18 +161,17 @@ export const useGameStore = defineStore("game", () => {
 
   function captureTarget() {
     if (!aaId.value) return;
-    viewMode.value = "capture";
     socketClient.send("capture_target", undefined);
   }
 
   function resetTarget() {
     if (!aaId.value) return;
-    viewMode.value = "search";
     socketClient.send("reset_target", undefined);
   }
 
   watch(capturedTarget, (target) => {
     if (target) {
+      viewMode.value = 'capture';
       const aaPosition = currentAA.value.position; // Позиция зенитки
       const targetPosition = target.position; // Позиция цели
 
@@ -183,8 +192,12 @@ export const useGameStore = defineStore("game", () => {
         azimuth: azimuth < 0 ? azimuth + 2 * Math.PI : azimuth,
         elevation,
       };
+    } else {
+      viewMode.value = 'search';
     }
   });
+
+  let cameraLink = null;
 
   return {
     fireTarget,
@@ -199,5 +212,6 @@ export const useGameStore = defineStore("game", () => {
     missiles,
     direction,
     viewMode,
+    cameraLink
   };
 });

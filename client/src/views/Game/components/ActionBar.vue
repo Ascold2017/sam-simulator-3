@@ -2,8 +2,6 @@
     <div class="action-bar">
         <Radar class="action-bar__radar" />
         <template v-if="isMobile">
-
-
             <button class="action-bar__fire" @click="gameStore.fireTarget">FIRE</button>
 
             <button class="action-bar__capture" @click="toggleCapture">
@@ -13,19 +11,19 @@
         <div class="action-bar__hints" v-else>
             <button class="action-bar__hints-hint">
                 <span>
-                    < X>
+                    < X >
                 </span>
                 <span>SEARCH</span>
             </button>
             <button class="action-bar__hints-hint">
                 <span>
-                    < C>
+                    < C >
                 </span>
                 <span>CAPTURE</span>
             </button>
             <button class="action-bar__hints-hint">
                 <span>
-                    < Space>
+                    < Space >
                 </span>
                 <span>Fire</span>
             </button>
@@ -66,6 +64,7 @@ const toggleCapture = () => {
 <style scoped>
 .action-bar {
     @apply fixed bottom-0 left-0 right-0 flex py-2 px-4 items-end;
+    z-index: 2;
 }
 
 

@@ -64,6 +64,7 @@ export interface AAState extends EntityState {
   ammoCount: number;
   readyToFire: boolean;
   aimRay: [number, number, number];
+  captureAngle: number;
   launchedMissileIds: string[];
   capturedTargetId: string | null;
   detectedTargetIds: string[];
