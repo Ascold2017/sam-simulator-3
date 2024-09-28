@@ -10,7 +10,7 @@ import {
 } from "../models/sockets.model";
 import { useTargets } from "./targets";
 import type { Target } from "../models/target.model";
-import { Camera, Vector3 } from "three";
+import { Vector3 } from "three";
 
 export interface ParsedTargetNPCState extends TargetNPCState {
   targetEntity: Target | null;

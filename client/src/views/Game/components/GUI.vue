@@ -34,25 +34,23 @@
         </div>
 
         <!-- Detected targets (frames) -->
-    <div v-for="target in detectedTargetsOnScreen" :key="target.id" class="gui__target-frame"
-         :style="{ left: target.screenPosition.x + 'px', top: target.screenPosition.y + 'px' }">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <rect x="0" y="0" width="24" height="24" stroke="rgb(0, 255, 0)" fill="none" stroke-width="1"
-              stroke-dasharray="12" stroke-dashoffset="6" />
-      </svg>
-    </div>
-    
+        <div v-for="target in detectedTargetsOnScreen" :key="target.id" class="gui__target-frame"
+            :style="{ left: target.screenPosition.x + 'px', top: target.screenPosition.y + 'px' }">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <rect x="0" y="0" width="24" height="24" stroke="rgb(0, 255, 0)" fill="none" stroke-width="1"
+                    stroke-dasharray="12" stroke-dashoffset="6" />
+            </svg>
+        </div>
+
     </div>
 
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useDevice } from '../../../stores/device';
 import { CAMERA_SETTINGS, useGameStore } from '../../../stores/game';
 import { Vector3 } from 'three';
 
-const device = useDevice()
 const gameStore = useGameStore()
 
 const viewAngle = computed(() => gameStore.currentAA?.captureAngle || 0)
@@ -70,28 +68,28 @@ const searchRectStyle = computed(() => {
 });
 
 const detectedTargetsOnScreen = computed(() => {
-  if (!gameStore.currentAA || !gameStore.cameraLink) return [];
+    if (!gameStore.currentAA || !gameStore.cameraLink) return [];
 
-  const camera = gameStore.cameraLink;
-  const targets = gameStore.parsedTargetNPCs;
+    const camera = gameStore.cameraLink;
+    const targets = gameStore.parsedTargetNPCs;
 
-  return targets
-    .filter(target => !target.isDestroyed)
-    .map(target => {
-      // Преобразуем мировые координаты в экранные
-      const worldPosition = new Vector3(...target.position);
-      const screenPosition = worldPosition.project(camera);
+    return targets
+        .filter(target => !target.isDestroyed)
+        .map(target => {
+            // Преобразуем мировые координаты в экранные
+            const worldPosition = new Vector3(...target.position);
+            const screenPosition = worldPosition.project(camera);
 
-      return {
-        id: target.id,
-        screenPosition: {
-          x: ((screenPosition.x + 1) / 2) * window.innerWidth,
-          y: ((1 - screenPosition.y) / 2) * window.innerHeight,
-        },
-      };
-    })
-    .filter(target => target.screenPosition.x >= 0 && target.screenPosition.x <= window.innerWidth
-      && target.screenPosition.y >= 0 && target.screenPosition.y <= window.innerHeight);
+            return {
+                id: target.id,
+                screenPosition: {
+                    x: ((screenPosition.x + 1) / 2) * window.innerWidth,
+                    y: ((1 - screenPosition.y) / 2) * window.innerHeight,
+                },
+            };
+        })
+        .filter(target => target.screenPosition.x >= 0 && target.screenPosition.x <= window.innerWidth
+            && target.screenPosition.y >= 0 && target.screenPosition.y <= window.innerHeight);
 });
 </script>
 
@@ -141,7 +139,7 @@ const detectedTargetsOnScreen = computed(() => {
 }
 
 .gui__search-rect {
-    @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 aspect-square; 
+    @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 aspect-square;
     transform-origin: center;
 }
 
