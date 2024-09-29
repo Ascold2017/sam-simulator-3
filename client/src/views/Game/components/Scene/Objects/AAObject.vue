@@ -1,8 +1,11 @@
 <template>
-    <TresMesh :position="aaObject.position">
-        <TresConeGeometry :args="[3, 8, 5, 5]" />
-        <TresMeshBasicMaterial :color="0x00ff00"/>
-    </TresMesh>
+    <TresGroup :position="aaObject.position">
+        <TresMesh :position="[0, -5, 0]">
+            <TresConeGeometry :args="[3, 8, 32, 32]" />
+            <TresMeshBasicMaterial :color="0x00ff00" />
+        </TresMesh>
+    </TresGroup>
+
 </template>
 
 <script setup lang="ts">
