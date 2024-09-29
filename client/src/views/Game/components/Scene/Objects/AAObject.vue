@@ -1,7 +1,7 @@
 <template>
     <TresGroup :position="aaObject.position">
-        <TresMesh :position="[0, -5, 0]">
-            <TresConeGeometry :args="[3, 8, 32, 32]" />
+        <TresMesh :position="[0, -7.5, 0]">
+            <TresConeGeometry :args="[3, 15, 32, 32]" />
             <TresMeshBasicMaterial :color="0x00ff00" />
         </TresMesh>
     </TresGroup>
