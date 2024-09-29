@@ -83,6 +83,7 @@ const radii = [28.25, 57.5, 83.75, 115];
 const angles = Array.from({ length: 36 }, (_, i) => (i * 10 * Math.PI) / 180);
 
 const targetsOnRadar = computed(() => {
+    if (!currentAA.value) return [];
     return parsedTargetNPCs.value.filter(t => currentAA.value.detectedTargetIds.includes(t.id) && !t.isDestroyed).map(obj => {
         const dx = obj.position[0] - currentAA.value.position[0];
         const dz = obj.position[2] - currentAA.value.position[2]; // z-координата используется для положения на плоскости
@@ -99,6 +100,7 @@ const targetsOnRadar = computed(() => {
 });
 
 const missilesOnRadar = computed(() => {
+    if (!currentAA.value) return [];
     return missiles.value.filter(m => !m.isDestroyed).map(obj => {
         const dx = obj.position[0] - currentAA.value.position[0];
         const dz = obj.position[2] - currentAA.value.position[2]; // z-координата используется для положения на плоскости
@@ -115,6 +117,7 @@ const missilesOnRadar = computed(() => {
 });
 
 const aaObjectsOnRadar = computed(() => {
+    if (!currentAA.value) return [];
     return aas.value.map(obj => {
         const dx = obj.position[0] - currentAA.value.position[0];
         const dz = obj.position[2] - currentAA.value.position[2];

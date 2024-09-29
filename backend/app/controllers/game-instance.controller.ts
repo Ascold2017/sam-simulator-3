@@ -93,6 +93,8 @@ export class GameInstanceController {
     // Добавляем зенитку игрока в Core
     this.coreInstance.addAA({
       id: aaId,
+      userId: user.id,
+      username: user.username,
       position: availablePosition.position,
       missileCount: user.aa.missileCount,
       missileChannelCount: user.aa.captureChannelCount,

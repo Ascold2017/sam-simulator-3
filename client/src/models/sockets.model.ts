@@ -61,6 +61,8 @@ export interface EntityState {
 
 export interface AAState extends EntityState {
   type: "aa";
+  userId: number;
+  username: string;
   ammoCount: number;
   readyToFire: boolean;
   aimRay: [number, number, number];
