@@ -55,8 +55,8 @@
 
             <v-rect v-for="(object, index) in aaObjectsOnRadar" :key="index" :config="{
                 ...object,
-                width: 2,
-                height: 2,
+                width: 3,
+                height: 3,
                 fill: 'orange'
             }"></v-rect>
         </v-layer>
