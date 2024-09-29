@@ -1,7 +1,7 @@
 <template>
     <div class="action-bar">
-        <Radar class="action-bar__radar" ref="radar"/>
-        <button class="action-bar__radar-scale" @click="$refs.radar.toggleScale">SCALE</button>
+        <Radar class="action-bar__radar" ref="radarRef"/>
+        <button class="action-bar__radar-scale" @click="radarRef?.toggleScale">SCALE</button>
         <template v-if="isMobile">
             <button class="action-bar__fire" @click="gameStore.fireTarget">FIRE</button>
 
@@ -40,7 +40,7 @@ import Joystick from './Joystick.vue';
 import { useDevice } from '../../../stores/device';
 import { storeToRefs } from 'pinia';
 import { useGameStore } from '../../../stores/game';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 const gameStore = useGameStore()
 const { direction, viewMode } = storeToRefs(gameStore)
@@ -51,6 +51,8 @@ const lookSpeed = computed(() => {
     if (viewMode.value === 'capture') return 0.2
     return 1
 })
+
+const radarRef = ref<InstanceType<typeof Radar> | null>(null)
 
 
 const toggleCapture = () => {
