@@ -68,6 +68,7 @@ export const useGameStore = defineStore("game", () => {
     const aaPosition = new Vector3(...currentAA.value.position);
     const targetPosition = new Vector3(...capturedTarget.value.position);
     const targetVelocity = new Vector3(...capturedTarget.value.velocity);
+    const speed = targetVelocity.length();
 
     // Вектор направления от зенитки до цели
     const directionToTarget = aaPosition
@@ -80,10 +81,11 @@ export const useGameStore = defineStore("game", () => {
     // Угол между направлением на цель и вектором её скорости
     const cosTheta = directionToTarget.dot(targetVelocity.normalize()); // Скалярное произведение
     const theta = Math.acos(cosTheta) * (180 / Math.PI); // Преобразуем в градусы
+    
 
     return {
       distance: aaPosition.distanceTo(targetPosition),
-      speed: targetVelocity.length(),
+      speed,
       altitude: capturedTarget.value.position[1],
       radialSpeed, // Радиальная скорость
       targetDirection: theta,
