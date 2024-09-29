@@ -1,6 +1,7 @@
 <template>
     <div class="action-bar">
-        <Radar class="action-bar__radar" />
+        <Radar class="action-bar__radar" ref="radar"/>
+        <button class="action-bar__radar-scale" @click="$refs.radar.toggleScale">SCALE</button>
         <template v-if="isMobile">
             <button class="action-bar__fire" @click="gameStore.fireTarget">FIRE</button>
 
@@ -76,13 +77,18 @@ const toggleCapture = () => {
     @apply fixed bottom-[40px] right-[80px];
 }
 
+.action-bar__radar-scale {
+    @apply fixed bottom-[250px] left-4 rounded bg-green-600 text-white w-[70px] h-[70px];
+    border-radius: 50%;
+}
+
 .action-bar__fire {
-    @apply fixed bottom-4 left-[250px] rounded bg-red-500 text-white w-[90px] h-[90px];
+    @apply fixed bottom-4 left-[250px] rounded bg-red-600 text-white w-[90px] h-[90px];
     border-radius: 50%;
 }
 
 .action-bar__capture {
-    @apply fixed bottom-[150px] right-[20px] rounded bg-green-500 text-white w-[70px] h-[70px];
+    @apply fixed bottom-[150px] right-[20px] rounded bg-green-600 text-white w-[70px] h-[70px];
     border-radius: 50%;
 }
 
@@ -108,11 +114,11 @@ const toggleCapture = () => {
 }
 
 .action-bar__hints-hint span:nth-child(1) {
-    @apply text-lg text-gray-500;
+    @apply text-lg text-gray-600;
 }
 
 .action-bar__hints-hint span:nth-child(2) {
-    @apply rounded bg-gray-500 px-1 text-xl flex flex-col items-center justify-center w-[80px];
+    @apply rounded bg-gray-600 px-1 text-xl flex flex-col items-center justify-center w-[80px];
     aspect-ratio: 1;
 }
 </style>

@@ -70,6 +70,8 @@ export interface AAState extends EntityState {
   launchedMissileIds: string[];
   capturedTargetId: string | null;
   detectedTargetIds: string[];
+  maxRange: number;
+  minRange: number;
 }
 
 export interface FlightObjectState extends EntityState {
