@@ -24,7 +24,7 @@ export const CAMERA_SETTINGS = {
   aspect: 1,
   defaultZoom: 1,
   captureZoom: 8,
-}
+};
 export const useGameStore = defineStore("game", () => {
   const targetStore = useTargets();
   const notifications = useNotificationStore();
@@ -42,7 +42,7 @@ export const useGameStore = defineStore("game", () => {
     azimuth: 0,
     elevation: 0,
   });
- 
+
   const isInitialized = ref(false);
 
   const currentAA = computed(() => {
@@ -65,12 +65,30 @@ export const useGameStore = defineStore("game", () => {
 
   const parsedCapturedTarget = computed(() => {
     if (!capturedTarget.value) return null;
+    const aaPosition = new Vector3(...currentAA.value.position);
+    const targetPosition = new Vector3(...capturedTarget.value.position);
+    const targetVelocity = new Vector3(...capturedTarget.value.velocity);
+
+    // Вектор направления от зенитки до цели
+    const directionToTarget = aaPosition
+      .sub(targetPosition.clone())
+      .normalize();
+
+    // Проекция скорости на вектор направления (радикальная скорость)
+    const radialSpeed = targetVelocity.dot(directionToTarget);
+
+    // Угол между направлением на цель и вектором её скорости
+    const cosTheta = directionToTarget.dot(targetVelocity.normalize()); // Скалярное произведение
+    const theta = Math.acos(cosTheta) * (180 / Math.PI); // Преобразуем в градусы
+
     return {
-      distance: new Vector3(...currentAA.value.position).sub(new Vector3(...capturedTarget.value.position)).length(),
-      speed: new Vector3(...capturedTarget.value.velocity).length(),
+      distance: aaPosition.distanceTo(targetPosition),
+      speed: targetVelocity.length(),
       altitude: capturedTarget.value.position[1],
-    }
-  })
+      radialSpeed, // Радиальная скорость
+      targetDirection: theta,
+    };
+  });
 
   watch(direction, (newDirection) => {
     const { azimuth, elevation } = newDirection;
@@ -156,7 +174,7 @@ export const useGameStore = defineStore("game", () => {
 
   function fireTarget() {
     if (!aaId.value) return;
-    socketClient.send("fire_target", 'default');
+    socketClient.send("fire_target", "default");
   }
 
   function captureTarget() {
@@ -171,7 +189,7 @@ export const useGameStore = defineStore("game", () => {
 
   watch(capturedTarget, (target) => {
     if (target) {
-      viewMode.value = 'capture';
+      viewMode.value = "capture";
       const aaPosition = currentAA.value.position; // Позиция зенитки
       const targetPosition = target.position; // Позиция цели
 
@@ -193,7 +211,7 @@ export const useGameStore = defineStore("game", () => {
         elevation,
       };
     } else {
-      viewMode.value = 'search';
+      viewMode.value = "search";
     }
   });
 
@@ -212,6 +230,6 @@ export const useGameStore = defineStore("game", () => {
     missiles,
     direction,
     viewMode,
-    cameraLink
+    cameraLink,
   };
 });

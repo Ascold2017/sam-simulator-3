@@ -30,8 +30,24 @@
         <div class="gui__target-info" v-if="gameStore.parsedCapturedTarget">
             <p>D: {{ gameStore.parsedCapturedTarget.distance.toFixed(0) }}</p>
             <p>V: {{ gameStore.parsedCapturedTarget.speed.toFixed(0) }}</p>
+            <p>Vr: {{ gameStore.parsedCapturedTarget.radialSpeed.toFixed(0) }}</p>
             <p>H: {{ gameStore.parsedCapturedTarget.altitude.toFixed(0) }}</p>
+
+            <!-- Стрелка направления цели -->
+            <div class="gui__target-direction">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="direction-arrow"
+                    :style="{ transform: 'rotate(' + (-gameStore.parsedCapturedTarget.targetDirection + 90) + 'deg)' }">
+                    <!-- Линия стрелки -->
+                    <line x1="10" y1="50" x2="90" y2="50" stroke="rgb(21, 128, 61)" stroke-width="2" />
+                    <!-- Кольцо на начале стрелки -->
+                    <circle cx="10" cy="50" r="5" fill="rgb(21, 128, 61)" stroke-width="2" />
+                    <!-- Маленькая стрелка на конце -->
+                    <polygon points="90,45 100,50 90,55" fill="rgb(21, 128, 61)" />
+                </svg>
+            </div>
         </div>
+
+
 
         <!-- Detected targets (frames) -->
         <div v-for="target in detectedTargetsOnScreen" :key="target.id" class="gui__target-frame"
@@ -149,5 +165,16 @@ const detectedTargetsOnScreen = computed(() => {
 
 .gui__target-frame {
     @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[30px] h-[30px];
+}
+
+.gui__target-direction {
+    @apply absolute top-1/2 -left-[60px] transform -translate-x-1/2 translate-y-[90px];
+    margin: 10px auto;
+}
+
+.direction-arrow {
+    width: 50px;
+    height: 50px;
+    transform-origin: 50% 0;
 }
 </style>

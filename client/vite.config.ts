@@ -13,9 +13,6 @@ export default defineConfig({
     
     VitePWA({
       registerType: "autoUpdate",
-      devOptions: {
-        enabled: true
-      },
       manifest: {
         name: "AA Simulator 3.0",
         short_name: "AA Sim 3.0",
