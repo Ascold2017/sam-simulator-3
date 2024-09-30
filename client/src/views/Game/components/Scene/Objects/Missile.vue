@@ -6,8 +6,9 @@
         </Suspense>
 
         <Sound :url="soundPath" loop :volume="2" v-if="!missile.isDestroyed && missile.isActiveRange" />
-        <Sound url="/explosion.mp3" v-if="missile.exploded" :volume="2" />
         <Smoke :enabled="missile.isActiveRange" :position="missile.position" :color="0xc0c0c0" :particle-size="10" />
+
+        <Explosion v-if="missile.exploded"/>
     </TresGroup>
 </template>
 
@@ -17,6 +18,7 @@ import { computed } from 'vue';
 import Sound from './Sound.vue';
 import { MissileState } from '../../../../../models/sockets.model';
 import Smoke from './Smoke.vue';
+import Explosion from './Explosion.vue';
 
 defineProps<{
     missile: MissileState,
