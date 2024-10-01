@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRenderLoop } from '@tresjs/core';
 import { BufferGeometry, Float32BufferAttribute, Vector3, TextureLoader, NormalBlending, Color } from 'three';
 
@@ -26,8 +26,28 @@ const textureLoader = new TextureLoader();
 const smokeTexture = ref(null);
 onMounted(() => {
     smokeTexture.value = textureLoader.load('/smoke.png');
+
+    onLoop(() => {
+        const currentTime = Date.now();
+        const expiredEmitters = [];
+
+        emitters.value.forEach((emitter, index) => {
+            const elapsedTime = (currentTime - emitter.startTime) / 1000; // Время жизни в секундах
+            const remainingTime = particleLifetime - elapsedTime;
+            if (remainingTime > 0) {
+                emitter.opacity = remainingTime / particleLifetime; // Плавное исчезновение
+            } else {
+                expiredEmitters.push(index);
+            }
+        });
+
+        expiredEmitters.forEach((index) => emitters.value.splice(index, 1));
+    });
 });
 
+onBeforeUnmount(() => {
+    emitters.value = [];
+})
 
 const emitters = ref([]);
 const lastPositions = ref<Vector3 | null>(null);
@@ -68,21 +88,6 @@ watch(() => props.position, (newPosition) => {
     }
 })
 
-onLoop(() => {
-    const currentTime = Date.now();
-    const expiredEmitters = [];
 
-    emitters.value.forEach((emitter, index) => {
-        const elapsedTime = (currentTime - emitter.startTime) / 1000; // Время жизни в секундах
-        const remainingTime = particleLifetime - elapsedTime;
-        if (remainingTime > 0) {
-            emitter.opacity = remainingTime / particleLifetime; // Плавное исчезновение
-        } else {
-            expiredEmitters.push(index);
-        }
-    });
-
-    expiredEmitters.forEach((index) => emitters.value.splice(index, 1));
-});
 
 </script>
