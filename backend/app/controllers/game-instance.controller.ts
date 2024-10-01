@@ -124,16 +124,16 @@ export class GameInstanceController {
     });
 
     socket.on('update_direction', ({ direction }) => {
-      this.coreInstance.updateAAAimRay(aaId, [direction.x, direction.y, direction.z]);
+      this.coreInstance?.updateAAAimRay(aaId, [direction.x, direction.y, direction.z]);
     })
     socket.on("fire_target", (guidanceMethod) => {
-      this.coreInstance.fireAA(aaId, guidanceMethod)
+      this.coreInstance?.fireAA(aaId, guidanceMethod)
     });
     socket.on('capture_target', () => {
-      this.coreInstance.captureTarget(aaId)
+      this.coreInstance?.captureTarget(aaId)
     })
     socket.on('reset_target', () => {
-      this.coreInstance.resetTarget(aaId)
+      this.coreInstance?.resetTarget(aaId)
     })
   }
 
