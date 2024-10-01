@@ -95,7 +95,8 @@ const detectedTargetsOnScreen = computed(() => {
             // Преобразуем мировые координаты в экранные
             const worldPosition = new Vector3(...target.position);
             const screenPosition = worldPosition.project(camera);
-
+            // Проверка: если z отрицательно, объект позади камеры
+            if (screenPosition.z < 0 || screenPosition.z > 1) return null;
             return {
                 id: target.id,
                 screenPosition: {
@@ -104,7 +105,7 @@ const detectedTargetsOnScreen = computed(() => {
                 },
             };
         })
-        .filter(target => target.screenPosition.x >= 0 && target.screenPosition.x <= window.innerWidth
+        .filter(target => target && target.screenPosition.x >= 0 && target.screenPosition.x <= window.innerWidth
             && target.screenPosition.y >= 0 && target.screenPosition.y <= window.innerHeight);
 });
 </script>
