@@ -32,38 +32,48 @@ export class GameInstanceController {
         width: missionData.map.size,
         height: missionData.map.size,
       },
-      targetNPCs: missionData.targets.map(t => ({
+      targetNPCs: missionData.targets.map((t) => ({
         id: t.id.toString(),
         rcs: t.target.rcs,
         size: t.target.size,
         temperature: t.target.temperature,
         waypoints: t.waypoints,
-        entityId: t.target.id
-      }))
+        entityId: t.target.id,
+      })),
     });
 
-    this.coreInstance.eventEmitter.on('update_world_state', (state) => {
-      this.io.to(this.roomId).emit('update_world_state', state)
-    })
-    this.coreInstance.eventEmitter.on('target_killed', (state) => {
-      this.io.to(this.roomId).emit('target_killed', state)
-    })
+    this.coreInstance.eventEmitter.on("update_world_state", (state) => {
+      this.io.to(this.roomId).emit("update_world_state", state);
+    });
+    this.coreInstance.eventEmitter.on("target_killed", (state) => {
+      this.io.to(this.roomId).emit("target_killed", state);
+    });
 
-    this.coreInstance.eventEmitter.on('missile_launched', (state) => {
-      this.io.to(this.roomId).emit('missile_launched', state)
-    })
+    this.coreInstance.eventEmitter.on("missile_launched", (state) => {
+      this.io.to(this.roomId).emit("missile_launched", state);
+    });
 
-    this.coreInstance.eventEmitter.on('missile_overloaded', (state) => {
-      this.io.to(this.roomId).emit('missile_overloaded', state)
-    })
+    this.coreInstance.eventEmitter.on("missile_overloaded", (state) => {
+      this.io.to(this.roomId).emit("missile_overloaded", state);
+    });
 
-    this.coreInstance.eventEmitter.on('missile_over_distance', (state) => {
-      this.io.to(this.roomId).emit('missile_over_distance', state)
-    })
+    this.coreInstance.eventEmitter.on("missile_over_distance", (state) => {
+      this.io.to(this.roomId).emit("missile_over_distance", state);
+    });
 
     this.missionData = missionData;
   }
 
+  public getUserPlayers() {
+    const players = [];
+    this.players.forEach((player) => {
+      players.push({
+        id: player.socket.data.user.id,
+        username: player.socket.data.user.username,
+      });
+    });
+    return players;
+  }
   public addPlayer(socket: CustomSocket) {
     const user = socket.data.user;
 
@@ -105,36 +115,41 @@ export class GameInstanceController {
         maxVelocity: user.aa.missileVelocity,
         killRadius: user.aa.missileKillRadius,
         maxOverload: user.aa.missileMaxOverload,
-
       },
       radarProps: {
         range: user.aa.missileMaxRange,
-        captureAngle: user.aa.captureAngle
-      }
+        captureAngle: user.aa.captureAngle,
+      },
     });
 
     // Отправляем окружение игроку
     this.sendEnvironment(socket);
 
     console.log(`Player ${socket.id} joined room ${this.roomId}`);
-    this.io.to(this.roomId).emit("player_joined", {
+    this.io.emit("player_joined", {
       roomId: this.roomId,
-      userId: user.id,
-      username: user.username,
+      user: {
+        id: user.id,
+        username: user.username,
+      },
     });
 
-    socket.on('update_direction', ({ direction }) => {
-      this.coreInstance?.updateAAAimRay(aaId, [direction.x, direction.y, direction.z]);
-    })
-    socket.on("fire_target", (guidanceMethod) => {
-      this.coreInstance?.fireAA(aaId, guidanceMethod)
+    socket.on("update_direction", ({ direction }) => {
+      this.coreInstance?.updateAAAimRay(aaId, [
+        direction.x,
+        direction.y,
+        direction.z,
+      ]);
     });
-    socket.on('capture_target', () => {
-      this.coreInstance?.captureTarget(aaId)
-    })
-    socket.on('reset_target', () => {
-      this.coreInstance?.resetTarget(aaId)
-    })
+    socket.on("fire_target", (guidanceMethod) => {
+      this.coreInstance?.fireAA(aaId, guidanceMethod);
+    });
+    socket.on("capture_target", () => {
+      this.coreInstance?.captureTarget(aaId);
+    });
+    socket.on("reset_target", () => {
+      this.coreInstance?.resetTarget(aaId);
+    });
   }
 
   // Удаление игрока
@@ -158,7 +173,6 @@ export class GameInstanceController {
     }
   }
 
-
   // Отправка окружения игроку
   private sendEnvironment(socket: CustomSocket) {
     const playerData = this.players.get(socket.id);
@@ -178,5 +192,4 @@ export class GameInstanceController {
       (aaPosition) => !takenAAPositionIds.includes(aaPosition.id)
     );
   }
-
 }

@@ -19,7 +19,7 @@
           @click="createMissionRoom"
           :disabled="!selectedMissionId"
         >
-          Create mission
+          New mission
         </button>
       </div>
   
@@ -30,6 +30,7 @@
             <tr>
               <th>Mission</th>
               <th>Time left</th>
+              <th>Joined players</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -37,6 +38,7 @@
             <tr v-for="room in parsedMissionRooms" :key="room.id">
               <td>{{ room.name }}</td>
               <td><DownCounter :end-date="room.endedAt"/></td>
+              <td>{{ room.users.join(', ') }}</td>
               <td>
                 <button class="start-screen__button" @click="joinRoom(room.id)">
                   Join

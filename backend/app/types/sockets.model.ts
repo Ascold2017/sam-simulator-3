@@ -7,6 +7,7 @@ export interface MissionRoom {
     id: string;
     endedAt: number;
     missionId: number;
+    users: User[]
 }
 export type MissionID = number;
 
@@ -34,8 +35,10 @@ export interface MissionData {
 
 export interface PlayerJoinedData {
     roomId: string
-    userId: number;
-    username: string;
+    user: {
+        id: number;
+        username: string;
+    }
 }
 
 
@@ -43,7 +46,7 @@ export interface ServerToClientEvents {
     mission_rooms: (missions: MissionRoom[]) => void;
     mission_room_created: (payload: MissionRoom) => void;
     player_joined: (data: PlayerJoinedData) => void;
-    player_leaved: (roomId: string) => void;
+    player_leaved: (data: PlayerJoinedData) => void;
     room_deleted: (roomId: string) => void;
     mission_environment: (missionData: MissionData) => void;
     update_world_state: (state: EntityState[]) => void;

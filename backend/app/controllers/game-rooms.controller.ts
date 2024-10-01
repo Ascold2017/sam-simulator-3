@@ -73,6 +73,7 @@ export class GameRoomsController {
         id: mr.id,
         endedAt: mr.endedAt,
         missionId: mr.missionId,
+        users: mr.gameInstanceController.getUserPlayers()
       }));
 
       socket.emit("mission_rooms", result);
@@ -105,6 +106,7 @@ export class GameRoomsController {
         id: missionRoom.id,
         missionId,
         endedAt,
+        users: []
       });
     } catch (e) {
       this.io.emit("error", e?.message);
@@ -124,7 +126,13 @@ export class GameRoomsController {
 
     // Удаление игрока при отключении
     socket.on("disconnect", () => {
-      this.io.to(roomId).emit("player_leaved", socket.id);
+      this.io.emit("player_leaved", {
+        roomId,
+        user: {
+          id: socket.data.user.id,
+          username: socket.data.user.username
+        }
+      });
       room.gameInstanceController.removePlayer(socket.id);
       console.log(
         `Player ${socket.id} disconnected and removed from room ${room.id}`
@@ -156,7 +164,10 @@ export class GameRoomsController {
     }
 
     room.gameInstanceController.removePlayer(socket.id);
-    this.io.to(roomId).emit("player_leaved", socket.id);
+    this.io.emit("player_leaved", {
+      roomId,
+      user: socket.data.user,
+    });
     socket.leave(roomId);
   }
 }

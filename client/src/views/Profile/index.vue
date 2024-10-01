@@ -7,7 +7,7 @@
             
             <router-link class="logout-button" :to="{ name: 'start' }">Rooms</router-link>
         </header>
-
+        
         <section class="profile-info card">
             <p><strong>ID:</strong> #{{ user?.id }}</p>
             <p><strong>Username:</strong> {{ user?.username }}</p>
@@ -15,7 +15,7 @@
         </section>
 
         <!-- Карусель зениток -->
-        <div class="aa-carousel card">
+        <div class="aa-carousel card" v-if="false">
             <h3><strong>Anti-aircraft units</strong></h3>
             <swiper :slides-per-view="1">
                 <swiper-slide v-for="aa in aaStore.aas" :key="aa.id">
