@@ -29,7 +29,7 @@
                 <span>Fire</span>
             </button>
         </div>
-        <Joystick :min-elevation="0" :max-elevation="1.29154" :look-speed="lookSpeed" :direction="direction"
+        <Joystick :min-elevation="0" :max-elevation="0.872" :look-speed="lookSpeed" :direction="direction"
             @change="direction = $event" class="action-bar__joystick" />
     </div>
 </template>
