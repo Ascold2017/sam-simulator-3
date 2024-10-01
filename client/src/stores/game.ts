@@ -219,6 +219,18 @@ export const useGameStore = defineStore("game", () => {
 
   let cameraLink = null;
 
+  function $reset() {
+    aaId.value = null;
+    aas.value = []
+    map.value = '';
+    targetNPCs.value = [];
+    missiles.value = [];
+    direction.value = { azimuth: 0, elevation: 0 };
+    viewMode.value = "search";
+    cameraLink = null;
+    isInitialized.value = false;
+  }
+
   return {
     fireTarget,
     captureTarget,
@@ -233,5 +245,6 @@ export const useGameStore = defineStore("game", () => {
     direction,
     viewMode,
     cameraLink,
+    $reset
   };
 });

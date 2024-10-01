@@ -152,7 +152,7 @@ export class GameInstanceController {
     try {
       console.log("Game ended");
       this.players.clear();
-      // this.coreInstance.stopMission();
+      this.coreInstance = null;
     } catch (error) {
       console.error(`Error stopping mission: ${error.message}`);
     }

@@ -19,9 +19,12 @@ import ActionBar from './components/ActionBar.vue';
 import { onBeforeUnmount, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useRooms } from '../../stores/rooms';
+import { useGameStore } from '../../stores/game';
 
 const roomStore = useRooms();
 const router = useRouter()
+const gameStore = useGameStore();
+
 onMounted(() => {
   if (!roomStore.currentRoom) {
     router.push({ name: 'start' })
@@ -46,5 +49,6 @@ onBeforeUnmount(() => {
   if (document.fullscreenElement && document.exitFullscreen) {
     document.exitFullscreen();
   }
+  gameStore.$reset();
 });
 </script>
