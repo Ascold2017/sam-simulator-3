@@ -25,7 +25,7 @@ const zoom = computed(() => {
 });
 
 // Смещение камеры по радиусу (по оси z от currentAA.position)
-const radius = 15; // Радиус для вращения камеры вокруг зенитки
+const radius = 9; // Радиус для вращения камеры вокруг зенитки
 
 // Смещение камеры относительно currentAA.position
 const cameraPosition = computed<[number, number, number]>(() => {

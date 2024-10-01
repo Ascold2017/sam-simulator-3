@@ -2,7 +2,7 @@
     <TresCanvas window-size antialias alpha preset="realistic" shadows renderMode="on-demand">
 
         <Sky :azimuth="0" :elevation="sunElevation" />
-        <Fog :far="5000" :color="0x404040" />
+        <TresFog :far="5000" :color="0x404040" />
 
         <!-- Освещение -->
         <TresAmbientLight :color="0x404040" :intensity="0.8"

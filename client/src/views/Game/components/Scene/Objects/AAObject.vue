@@ -1,9 +1,8 @@
 <template>
     <TresGroup :position="aaObject.position">
-        <TresMesh :position="[0, -7.5, 0]">
-            <TresConeGeometry :args="[3, 12, 32, 32]" />
-            <TresMeshBasicMaterial :color="0x00ff00" />
-        </TresMesh>
+        <Suspense>
+            <AAModel :direction="aaObject.aimRay" />
+        </Suspense>
 
         <!-- Спрайт с юзернеймом -->
         <TresSprite :position="[0, 10, 0]" :scale="[spriteScale, spriteScale, spriteScale]" v-if="aaObject.userId !== authStore.user?.id">
@@ -19,6 +18,7 @@ import { AAState } from '../../../../../models/sockets.model';
 import { useRenderLoop } from '@tresjs/core';
 import { useGameStore } from '../../../../../stores/game';
 import { useAuthStore } from '../../../../../stores/auth';
+import AAModel from './AAModel.vue';
 
 const gameStore = useGameStore();
 const authStore = useAuthStore()
@@ -33,6 +33,7 @@ const spriteScale = ref(1);
 const { onLoop } = useRenderLoop();
 
 const offLoop = ref<Function | null>(null);
+
 onMounted(() => {
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
