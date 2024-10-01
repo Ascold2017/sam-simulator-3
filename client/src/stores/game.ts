@@ -78,17 +78,17 @@ export const useGameStore = defineStore("game", () => {
     // Проекция скорости на вектор направления (радикальная скорость)
     const radialSpeed = targetVelocity.dot(directionToTarget);
 
-    // Угол между направлением на цель и вектором её скорости
-    const cosTheta = directionToTarget.dot(targetVelocity.normalize()); // Скалярное произведение
-    const theta = Math.acos(cosTheta) * (180 / Math.PI); // Преобразуем в градусы
-    
+    // Проекция скорости на перпендикулярное направление (для targetDirectionK)
+    const perpToDirection = new Vector3().crossVectors(directionToTarget, new Vector3(0, 1, 0)).normalize();
+    const targetDirectionK = -targetVelocity.dot(perpToDirection);
 
     return {
       distance: aaPosition.distanceTo(targetPosition),
       speed,
       altitude: capturedTarget.value.position[1],
       radialSpeed, // Радиальная скорость
-      targetDirection: theta,
+      targetDirectionK: Math.atan2(radialSpeed < 0 ? -1 : 1, Math.min(Math.max(targetDirectionK, -1), 1)) * (180 / Math.PI),
+  
     };
   });
 

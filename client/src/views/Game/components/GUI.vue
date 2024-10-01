@@ -36,7 +36,7 @@
             <!-- Стрелка направления цели -->
             <div class="gui__target-direction">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="direction-arrow"
-                    :style="{ transform: 'rotate(' + (-gameStore.parsedCapturedTarget.targetDirection + 90) + 'deg)' }">
+                    :style="{ transform: 'rotate(' + gameStore.parsedCapturedTarget.targetDirectionK + 'deg)' }">
                     <!-- Линия стрелки -->
                     <line x1="10" y1="50" x2="90" y2="50" stroke="rgb(21, 128, 61)" stroke-width="2" />
                     <!-- Кольцо на начале стрелки -->
@@ -168,13 +168,13 @@ const detectedTargetsOnScreen = computed(() => {
 }
 
 .gui__target-direction {
-    @apply absolute top-1/2 -left-[60px] transform -translate-x-1/2 translate-y-[90px];
+    @apply absolute top-1/2 -left-[60px] transform -translate-x-1/2 translate-y-[68px];
     margin: 10px auto;
 }
 
 .direction-arrow {
     width: 50px;
     height: 50px;
-    transform-origin: 50% 0;
+    transform-origin: 0;
 }
 </style>
