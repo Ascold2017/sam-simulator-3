@@ -1,15 +1,12 @@
 <template>
     <TresCanvas window-size antialias alpha preset="realistic" shadows renderMode="on-demand">
 
-        <Sky :azimuth="0" :elevation="sunElevation" />
+        <Sky :distance="450000" :inclination="0.49" :azimuth="0.25" :turbidity="0.1" :rayleigh="2" :elevation="-20" />
         <TresFog :far="5000" :color="0x404040" />
 
-        <!-- Освещение -->
-        <TresAmbientLight :color="0x404040" :intensity="0.8"
-            :position="[0, Math.sin(sunElevationRad) * 100, Math.cos(sunElevationRad) * 100]" />
 
         <!-- DirectionalLight с синхронизацией с углом солнца -->
-        <TresDirectionalLight :color="0xffffff" :intensity="1.2"
+        <TresDirectionalLight :color="0xffffff" :intensity="0.3"
             :position="[0, Math.sin(sunElevationRad) * 100, Math.cos(sunElevationRad) * 100]" :look-at="[0, 0, 0]"
             cast-shadow :shadow-mapSize-width="1024" :shadow-mapSize-height="1024" />
 

@@ -1,7 +1,17 @@
 <template>
     <div class="action-bar">
-        <Radar class="action-bar__radar" ref="radarRef"/>
+        <Radar class="action-bar__radar" ref="radarRef" />
         <button class="action-bar__radar-scale" @click="radarRef?.toggleScale">SCALE</button>
+
+        <div class="action-bar__guidance-methods" :class="{ 'action-bar__guidance-methods--mobile': isMobile }">
+            <button class="action-bar__guidance-method"
+                :class="{ 'action-bar__guidance-method--active': gameStore.guidanceMethod === '3p' }"
+                @click="gameStore.guidanceMethod = '3p'">3P</button>
+            <button class="action-bar__guidance-method"
+                :class="{ 'action-bar__guidance-method--active': gameStore.guidanceMethod === '1/2' }"
+                @click="gameStore.guidanceMethod = '1/2'">1/2</button>
+
+        </div>
         <template v-if="isMobile">
             <button class="action-bar__fire" @click="gameStore.fireTarget">FIRE</button>
 
@@ -12,19 +22,19 @@
         <div class="action-bar__hints" v-else>
             <button class="action-bar__hints-hint">
                 <span>
-                    < X >
+                    < X>
                 </span>
                 <span>SEARCH</span>
             </button>
             <button class="action-bar__hints-hint">
                 <span>
-                    < C >
+                    < C>
                 </span>
                 <span>CAPTURE</span>
             </button>
             <button class="action-bar__hints-hint">
                 <span>
-                    < Space >
+                    < Space>
                 </span>
                 <span>Fire</span>
             </button>
@@ -123,4 +133,21 @@ const toggleCapture = () => {
     @apply rounded bg-gray-600 px-1 text-xl flex flex-col items-center justify-center w-[80px];
     aspect-ratio: 1;
 }
+
+.action-bar__guidance-methods {
+    @apply flex gap-2 fixed bottom-4 left-[270px];
+}
+.action-bar__guidance-methods.action-bar__guidance-methods--mobile {
+    @apply right-[50%] translate-x-[50%] left-auto;
+}
+
+.action-bar__guidance-method {
+    @apply rounded bg-blue-600 text-white w-[60px] h-[60px];
+    border-radius: 50%;
+}
+
+.action-bar__guidance-method--active {
+    @apply text-red-600;
+}
+
 </style>

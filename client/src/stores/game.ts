@@ -4,6 +4,7 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useNotificationStore } from "./notifications";
 import {
   AAState,
+  MissileGuidanceMethod,
   MissileState,
   MissionData,
   TargetNPCState,
@@ -38,6 +39,7 @@ export const useGameStore = defineStore("game", () => {
   const missiles = ref<MissileState[]>([]);
 
   const viewMode = ref<"search" | "capture">("search");
+  const guidanceMethod = ref<MissileGuidanceMethod>('3p');
   const direction = ref<{ azimuth: number; elevation: number }>({
     azimuth: 0,
     elevation: 0,
@@ -176,7 +178,7 @@ export const useGameStore = defineStore("game", () => {
 
   function fireTarget() {
     if (!aaId.value) return;
-    socketClient.send("fire_target", "default");
+    socketClient.send("fire_target", guidanceMethod.value);
   }
 
   function captureTarget() {
@@ -245,6 +247,7 @@ export const useGameStore = defineStore("game", () => {
     direction,
     viewMode,
     cameraLink,
+    guidanceMethod,
     $reset
   };
 });
