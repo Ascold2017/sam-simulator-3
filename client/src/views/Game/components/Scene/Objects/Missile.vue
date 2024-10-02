@@ -30,7 +30,7 @@ const modelPath = computed(() => {
 })
 
 const soundPath = computed(() => {
-    return `${import.meta.env.VITE_APP_STATIC_URL}/flight-objects/missile_heavy.mp3`;
+    return `${import.meta.env.VITE_APP_STATIC_URL}/flight-objects/missile_loop.mp3`;
 })
 
 </script>

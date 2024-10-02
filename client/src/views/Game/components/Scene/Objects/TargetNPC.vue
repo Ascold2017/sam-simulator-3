@@ -1,10 +1,10 @@
 <template>
     <TresGroup :position="targetNPC.position" :quaternion="targetNPC.quaternion">
-        <Suspense v-if="!targetNPC.isDestroyed">
+        <Suspense v-if="!targetNPC.isDestroyed && modelPath">
             <GLTFModel :path="modelPath" />
         </Suspense>
 
-        <Sound :url="soundPath" loop :volume="0.5" v-if="!targetNPC.isDestroyed" />
+        <Sound :url="soundPath" loop :volume="0.5" v-if="!targetNPC.isDestroyed && soundPath" />
         <Smoke :enabled="targetNPC.isKilled" :position="targetNPC.position" :color="0x696969" :particle-size="20" />
     </TresGroup>
 </template>
@@ -21,9 +21,11 @@ const props = defineProps<{
 }>();
 
 const modelPath = computed(() => {
-    return `${import.meta.env.VITE_APP_STATIC_URL}/flight-objects/${props.targetNPC.targetEntity?.modelName}.gltf`;
+    if (!props.targetNPC.targetEntity) return '';
+    return `${import.meta.env.VITE_APP_STATIC_URL}/flight-objects/${props.targetNPC.targetEntity.modelName}.gltf`;
 })
 const soundPath = computed(() => {
-    return `${import.meta.env.VITE_APP_STATIC_URL}/flight-objects/${props.targetNPC.targetEntity?.soundName}.mp3`;
+    if (!props.targetNPC.targetEntity) return '';
+    return `${import.meta.env.VITE_APP_STATIC_URL}/flight-objects/${props.targetNPC.targetEntity.soundName}.mp3`;
 })
 </script>
