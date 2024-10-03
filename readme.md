@@ -17,6 +17,7 @@ https://t.me/sam_simulator
 
 ![image](/screenshot_1.png)
 ![image](/screenshot_2.png)
+![image](/screenshot_3.png)
 
 ## For setup production
 
