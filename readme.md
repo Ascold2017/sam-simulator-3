@@ -15,8 +15,8 @@ Pseudo-simulator of the surface-to-air system, based on Vue 3, TresJS, Cannon-es
 
 https://t.me/sam_simulator
 
-![image](/Screenshot_1.png)
-![image](/Screenshot_2.png)
+![image](/screenshot_1.png)
+![image](/screenshot_2.png)
 
 ## For setup production
 
