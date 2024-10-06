@@ -1,4 +1,4 @@
-import { Core } from "../../core/app";
+import { Core } from "../../core";
 import { Server } from "socket.io";
 import {
   CustomSocket,

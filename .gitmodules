@@ -1,3 +1,0 @@
-[submodule "backend/core"]
-	path = backend/core
-	url = https://github.com/Ascold2017/sam-simulator-core.git
